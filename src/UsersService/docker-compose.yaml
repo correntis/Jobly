@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  users-sqlserver:
+    container_name: users-sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "LZpb8R9Ozsrab6Vaez6L2oNsP1z79o2v"
+      ACCEPT_EULA: "Y"
+    ports: 
+      - "1433:1433"
+
+  users-mongodb:
+    container_name: users-mongodb
+    image: mongodb/mongodb-community-server:latest
+    ports:
+     - "27017:27017"
