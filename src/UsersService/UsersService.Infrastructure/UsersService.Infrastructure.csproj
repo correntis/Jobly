@@ -31,8 +31,4 @@
     <ProjectReference Include="..\UsersService.Application\UsersService.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NoSQL\Repositories\" />
-  </ItemGroup>
-
 </Project>
