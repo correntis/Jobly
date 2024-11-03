@@ -39,7 +39,6 @@
   <ItemGroup>
     <Folder Include="Contracts\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Middleware\" />
   </ItemGroup>
 
 </Project>
