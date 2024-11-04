@@ -20,32 +20,18 @@ namespace UsersService.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Add(AddUserCommand addUserCommand, CancellationToken cancellationToken)
-        {
-            await _mediator.Send(addUserCommand, cancellationToken);
-
-            return Ok();
-        }
+            => Ok(await _mediator.Send(addUserCommand, cancellationToken));
 
         [HttpPut]
         public async Task<IActionResult> Update(UpdateUserCommand updateUserCommand, CancellationToken cancellationToken)
-        {
-            await _mediator.Send(updateUserCommand, cancellationToken);
+            => Ok(await _mediator.Send(updateUserCommand, cancellationToken));
 
-            return Ok();
-        }
-
-        [HttpDelete("/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
-        {
-            await _mediator.Send(new DeleteUserCommand(id), cancellationToken);
+            => Ok(await _mediator.Send(new DeleteUserCommand(id), cancellationToken));
 
-            return Ok();
-        }
-
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
-        {
-            return Ok(await _mediator.Send(new GetUserQuery(id), cancellationToken));
-        }
+            => Ok(await _mediator.Send(new GetUserQuery(id), cancellationToken));
     }
 }

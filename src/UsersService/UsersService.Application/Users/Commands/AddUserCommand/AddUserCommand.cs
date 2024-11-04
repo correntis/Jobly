@@ -7,5 +7,5 @@ namespace UsersService.Application.Users.Commands.AddUserCommand
         string LastName,
         string Email,
         string Password,
-        string Type) : IRequest;
+        string Type) : IRequest<int>;
 }

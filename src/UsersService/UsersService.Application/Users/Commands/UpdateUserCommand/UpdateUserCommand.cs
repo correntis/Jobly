@@ -6,5 +6,5 @@ namespace UsersService.Application.Users.Commands.UpdateUserCommand
         int Id,
         string FirstName,
         string LastName,
-        string Phone) : IRequest;
+        string Phone) : IRequest<int>;
 }

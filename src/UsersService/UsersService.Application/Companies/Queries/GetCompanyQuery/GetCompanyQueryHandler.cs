@@ -5,16 +5,16 @@ using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Exceptions;
 using UsersService.Domain.Models;
 
-namespace UsersService.Application.Users.Queries.GetUserQuery
+namespace UsersService.Application.Companies.Queries.GetCompanyQuery
 {
-    public class GetUserQueryHandler : IRequestHandler<GetUserQuery, User>
+    public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, Company>
     {
-        private readonly ILogger<GetUserQueryHandler> _logger;
+        private readonly ILogger<GetCompanyQueryHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetUserQueryHandler(
-            ILogger<GetUserQueryHandler> logger,
+        public GetCompanyQueryHandler(
+            ILogger<GetCompanyQueryHandler> logger,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
@@ -23,16 +23,16 @@ namespace UsersService.Application.Users.Queries.GetUserQuery
             _mapper = mapper;
         }
 
-        async Task<User> IRequestHandler<GetUserQuery, User>.Handle(GetUserQuery request, CancellationToken cancellationToken)
+        public async Task<Company> Handle(GetCompanyQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start handling {query}", request.GetType().Name);
 
-            var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.Id, cancellationToken)
-                ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
+            var companyEntity = await _unitOfWork.CompaniesRepository.GetAsync(request.Id, cancellationToken)
+                ?? throw new EntityNotFoundException($"Company with id {request.Id} not found");
 
             _logger.LogInformation("Successfully handled {query}", request.GetType().Name);
 
-            return _mapper.Map<User>(userEntity);
+            return _mapper.Map<Company>(companyEntity);
         }
     }
 }

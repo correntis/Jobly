@@ -7,7 +7,7 @@ using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Users.Commands.AddUserCommand
 {
-    public class AddUserCommandHandler : IRequestHandler<AddUserCommand>
+    public class AddUserCommandHandler : IRequestHandler<AddUserCommand, int>
     {
         private readonly ILogger<AddUserCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,9 +23,9 @@ namespace UsersService.Application.Users.Commands.AddUserCommand
             _mapper = mapper;
         }
 
-        public async Task Handle(AddUserCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", nameof(AddUserCommand));
+            _logger.LogInformation("Start handling {command}", request.GetType().Name);
 
             if (await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email, cancellationToken) is not null)
             {
@@ -42,7 +42,9 @@ namespace UsersService.Application.Users.Commands.AddUserCommand
 
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully handled {command}", nameof(AddUserCommand));
+            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+
+            return userEntity.Id;
         }
     }
 }
