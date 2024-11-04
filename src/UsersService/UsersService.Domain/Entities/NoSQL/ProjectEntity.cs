@@ -1,6 +1,6 @@
 ﻿namespace UsersService.Domain.Entities.NoSQL
 {
-    public class Project
+    public class ProjectEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }

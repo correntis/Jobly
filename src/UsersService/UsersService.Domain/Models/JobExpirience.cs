@@ -1,4 +1,4 @@
-﻿namespace UsersService.Domain.Entities.NoSQL
+﻿namespace UsersService.Domain.Models
 {
     public class JobExpirience
     {

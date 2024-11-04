@@ -1,6 +1,6 @@
 ﻿namespace UsersService.Domain.Entities.NoSQL
 {
-    public class Certification
+    public class CertificationEntity
     {
         public string Name { get; set; }
         public string Issuer { get; set; }

@@ -6,7 +6,7 @@ namespace UsersService.Domain.Entities.NoSQL
     public class ResumeEntity
     {
         [BsonId]
-        [BsonRepresentation(BsonType.String)]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public int UserId { get; set; }
         public string Title { get; set; }
@@ -15,10 +15,10 @@ namespace UsersService.Domain.Entities.NoSQL
         public DateTime UpdatedAt { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Tags { get; set; }
-        public List<JobExpirience> JobExpiriences { get; set; }
-        public List<Education> Educations { get; set; }
-        public List<Certification> Certifications { get; set; }
-        public List<Project> Projects { get; set; }
-        public List<Language> Languages { get; set; }
+        public List<JobExpirienceEntity> JobExpiriences { get; set; }
+        public List<EducationEntity> Educations { get; set; }
+        public List<CertificationEntity> Certifications { get; set; }
+        public List<ProjectEntity> Projects { get; set; }
+        public List<LanguageEntity> Languages { get; set; }
     }
 }

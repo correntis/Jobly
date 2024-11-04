@@ -1,6 +1,6 @@
 ﻿namespace UsersService.Domain.Entities.NoSQL
 {
-    public class Education
+    public class EducationEntity
     {
         public string Institution { get; set; }
         public string Degree { get; set; }
