@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Exceptions;
@@ -10,7 +9,6 @@ namespace UsersService.Application.Resumes.Commands.DeleteResumeCommand
     {
         private readonly ILogger<DeleteResumeCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         public DeleteResumeCommandHandler(
             ILogger<DeleteResumeCommandHandler> logger,

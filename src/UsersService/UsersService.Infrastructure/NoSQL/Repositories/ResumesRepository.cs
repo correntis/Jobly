@@ -30,6 +30,26 @@ namespace UsersService.Infrastructure.NoSQL.Repositories
             await _context.Resumes.ReplaceOneAsync(filter, resumeEntity, options, cancellationToken);
         }
 
+        public async Task UpdateByAsync<TValue>(
+            string id,
+            Expression<Func<ResumeEntity, object>> field,
+            TValue value,
+            CancellationToken cancellationToken)
+            where TValue : IEnumerable<object>
+        {
+            var filter = Builders<ResumeEntity>.Filter.Eq(r => r.Id, id);
+            var update = Builders<ResumeEntity>.Update.Set(field, value);
+
+            UpdateOptions options = null;
+
+            if (value is null)
+            {
+                update = Builders<ResumeEntity>.Update.Unset(field);
+            }
+
+            await _context.Resumes.UpdateOneAsync(filter, update, options, cancellationToken);
+        }
+
         public async Task DeleteAsync(string entityId, CancellationToken cancellationToken)
         {
             var filter = Builders<ResumeEntity>.Filter.Eq(r => r.Id, entityId);

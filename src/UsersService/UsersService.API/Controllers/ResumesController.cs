@@ -2,6 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using UsersService.Application.Resumes.Commands.AddResumeCommand;
 using UsersService.Application.Resumes.Commands.DeleteResumeCommand;
+using UsersService.Application.Resumes.Commands.UpdateCertificationCommand;
+using UsersService.Application.Resumes.Commands.UpdateEducationCommand;
+using UsersService.Application.Resumes.Commands.UpdateJobExperienceCommand;
+using UsersService.Application.Resumes.Commands.UpdateLanguageCommand;
+using UsersService.Application.Resumes.Commands.UpdateProjectCommand;
 using UsersService.Application.Resumes.Commands.UpdateResumeCommand;
 using UsersService.Application.Resumes.Queries.GetResumeByUser;
 using UsersService.Application.Resumes.Queries.GetResumeQuery;
@@ -26,6 +31,26 @@ namespace UsersService.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(UpdateResumeCommand updateResumeCommand, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(updateResumeCommand, cancellationToken));
+
+        [HttpPut("certifications")]
+        public async Task<IActionResult> UpdateCertification(UpdateCertificationCommand updateCertificationCommand, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(updateCertificationCommand, cancellationToken));
+
+        [HttpPut("educations")]
+        public async Task<IActionResult> UpdateEducation(UpdateEducationCommand updateEducationCommand, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(updateEducationCommand, cancellationToken));
+
+        [HttpPut("experiences")]
+        public async Task<IActionResult> UpdateExperiences(UpdateJobExperienceCommand updateJobExperienceCommand, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(updateJobExperienceCommand, cancellationToken));
+
+        [HttpPut("languages")]
+        public async Task<IActionResult> UpdateLanguages(UpdateLanguageCommand updateLanguageCommand, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(updateLanguageCommand, cancellationToken));
+
+        [HttpPut("projects")]
+        public async Task<IActionResult> UpdateProjects(UpdateProjectCommand updateProjectCommand, CancellationToken cancellationToken)
+            => Ok(await _mediator.Send(updateProjectCommand, cancellationToken));
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
