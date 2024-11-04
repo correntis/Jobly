@@ -11,7 +11,7 @@
         {
         }
 
-        public EntityNotFoundException(string message, Exception inner) 
+        public EntityNotFoundException(string message, Exception inner)
             : base(message, inner)
         {
         }

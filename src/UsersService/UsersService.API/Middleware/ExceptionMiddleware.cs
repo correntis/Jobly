@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using System.Text.Json;
 using UsersService.Domain.Exceptions;
 
 namespace UsersService.API.Middleware
@@ -19,35 +18,52 @@ namespace UsersService.API.Middleware
             {
                 await next(context);
             }
+            catch (ValidationException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+                await WriteExceptionToResponseAsync(context, ex, JsonSerializer.Serialize(ex.Errors));
+            }
             catch (EntityNotFoundException ex)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
 
-                await WriteErrorToResponseAsync(context, ex);
+                await WriteExceptionToResponseAsync(context, ex);
             }
             catch (EntityAlreadyExistsException ex)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
 
-                await WriteErrorToResponseAsync(context, ex);
+                await WriteExceptionToResponseAsync(context, ex);
             }
             catch (Exception ex)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-                await WriteErrorToResponseAsync(context, ex);
+                await WriteExceptionToResponseAsync(context, ex);
             }
         }
 
-        private async Task WriteErrorToResponseAsync(HttpContext context, Exception ex)
+        private async Task WriteExceptionToResponseAsync(HttpContext context, Exception ex)
         {
             _logger.LogError("Error: {ex}", ex.ToString());
 
             context.Response.ContentType = "application/json";
 
-            var responseBody = new ApiException(context.Response.StatusCode, ex.Message, ex.ToString());
+            var apiException = new ApiException(context.Response.StatusCode, ex.Message, ex.ToString());
 
-            await context.Response.WriteAsync(JsonSerializer.Serialize(responseBody));
+            await context.Response.WriteAsJsonAsync(apiException);
+        }
+
+        private async Task WriteExceptionToResponseAsync(HttpContext context, Exception ex, string details)
+        {
+            _logger.LogError("Error: {ex}", details);
+
+            context.Response.ContentType = "application/json";
+
+            var apiException = new ApiException(context.Response.StatusCode, ex.Message, details);
+
+            await context.Response.WriteAsJsonAsync(apiException);
         }
     }
 }

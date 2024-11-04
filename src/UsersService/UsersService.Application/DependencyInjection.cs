@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using UsersService.Application.Behaviors;
 
 namespace UsersService.Application
 {
@@ -8,9 +10,13 @@ namespace UsersService.Application
         {
             var assembly = typeof(DependencyInjection).Assembly;
 
+            services.AddValidatorsFromAssembly(assembly);
+
             services.AddMediatR(config =>
             {
                 config.RegisterServicesFromAssembly(assembly);
+
+                config.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
 
             services.AddAutoMapper(assembly);

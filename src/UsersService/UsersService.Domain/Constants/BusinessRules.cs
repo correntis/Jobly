@@ -10,6 +10,7 @@
             public const int MaxEmailLength = 30;
             public const int MaxPhoneLength = 20;
             public const int MinPasswordLength = 6;
+            public static string[] Types { get; } = ["company", "user"];
         }
 
         public static class Company
