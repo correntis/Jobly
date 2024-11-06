@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UsersService.API.Middleware.Authentication;
 using UsersService.Application.Users.Commands.DeleteUserCommand;
 using UsersService.Application.Users.Commands.UpdateUserCommand;
 using UsersService.Application.Users.Queries.GetUserQuery;
 using UsersService.Domain.Constants;
+using UsersService.Presentation.Middleware.Authentication;
 
-namespace UsersService.API.Controllers.Http
+namespace UsersService.Presentation.Controllers.Http
 {
     [ApiController]
     [Route("/users")]

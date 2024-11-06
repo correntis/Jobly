@@ -1,6 +1,6 @@
-using UsersService.API;
 using UsersService.Application;
 using UsersService.Infrastructure;
+using UsersService.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;

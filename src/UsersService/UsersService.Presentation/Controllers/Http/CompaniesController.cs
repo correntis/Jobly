@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UsersService.API.Middleware.Authentication;
 using UsersService.Application.Companies.Commands.AddCompanyCommand;
 using UsersService.Application.Companies.Commands.DeleteCompanyCommand;
 using UsersService.Application.Companies.Commands.UpdateCompanyCommand;
 using UsersService.Application.Companies.Queries.GetCompanyQuery;
 using UsersService.Domain.Constants;
+using UsersService.Presentation.Middleware.Authentication;
 
-namespace UsersService.API.Controllers.Http
+namespace UsersService.Presentation.Controllers.Http
 {
     [ApiController]
     [Route("/companies")]

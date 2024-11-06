@@ -1,8 +1,10 @@
-﻿using UsersService.API.Abstractions;
-using UsersService.API.Middleware;
-using UsersService.API.Middleware.Authentication;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using UsersService.Presentation.Abstractions;
+using UsersService.Presentation.Middleware;
+using UsersService.Presentation.Middleware.Authentication;
 
-namespace UsersService.API
+namespace UsersService.Presentation
 {
     public static class DependencyInjection
     {

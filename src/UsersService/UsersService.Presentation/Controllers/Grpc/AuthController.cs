@@ -1,10 +1,11 @@
 ﻿using Grpc.Core;
 using Jobly.Protobufs.Authorization;
 using Jobly.Protobufs.Authorization.Server;
+using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Enums;
 
-namespace UsersService.API.Controllers.Grpc
+namespace UsersService.Presentation.Controllers.Grpc
 {
     public class AuthController : AuthorizationGrpcService.AuthorizationGrpcServiceBase
     {

@@ -1,9 +1,10 @@
-﻿using UsersService.API.Abstractions;
+﻿using Microsoft.AspNetCore.Http;
 using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Constants;
 using UsersService.Domain.Enums;
+using UsersService.Presentation.Abstractions;
 
-namespace UsersService.API.Middleware.Authentication
+namespace UsersService.Presentation.Middleware.Authentication
 {
     public class AuthorizationHandler : IAuthorizationHandler
     {
@@ -16,28 +17,28 @@ namespace UsersService.API.Middleware.Authentication
 
         public async Task<bool> HandleAsync(HttpContext context, IEnumerable<string> roles)
         {
-            if(!context.Request.Cookies.TryGetValue(BusinessRules.Token.AccessTokenName, out string accessToken))
+            if (!context.Request.Cookies.TryGetValue(BusinessRules.Token.AccessTokenName, out string accessToken))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
                 return false;
             }
 
-            if(!IsValidToken(accessToken, out TokenValidationResults tokenValidationResult))
+            if (!IsValidToken(accessToken, out TokenValidationResults tokenValidationResult))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
                 return false;
             }
 
-            if(!IsValidRoles(accessToken, roles))
+            if (!IsValidRoles(accessToken, roles))
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
 
                 return false;
             }
 
-            if(tokenValidationResult == TokenValidationResults.SuccessExpired)
+            if (tokenValidationResult == TokenValidationResults.SuccessExpired)
             {
                 return await TryRefreshExpiredToken(context);
             }
@@ -59,7 +60,7 @@ namespace UsersService.API.Middleware.Authentication
 
         private async Task<bool> TryRefreshExpiredToken(HttpContext context)
         {
-            if(!context.Request.Cookies.TryGetValue(BusinessRules.Token.RefreshTokenName, out string refreshToken))
+            if (!context.Request.Cookies.TryGetValue(BusinessRules.Token.RefreshTokenName, out string refreshToken))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
@@ -68,7 +69,7 @@ namespace UsersService.API.Middleware.Authentication
 
             var accessToken = await _authService.RefreshTokenAsync(refreshToken, context.RequestAborted);
 
-            if(accessToken == null)
+            if (accessToken == null)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 

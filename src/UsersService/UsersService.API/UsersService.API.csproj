@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\..\shared\Jobly.Protobufs\Jobly.Protobufs.csproj" />
     <ProjectReference Include="..\UsersService.Application\UsersService.Application.csproj" />
     <ProjectReference Include="..\UsersService.Infrastructure\UsersService.Infrastructure.csproj" />
+    <ProjectReference Include="..\UsersService.Presentation\UsersService.Presentation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

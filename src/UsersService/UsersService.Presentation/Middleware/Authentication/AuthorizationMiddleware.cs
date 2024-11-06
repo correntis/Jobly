@@ -1,10 +1,13 @@
-﻿namespace UsersService.API.Middleware.Authentication
+﻿using Microsoft.AspNetCore.Http;
+using UsersService.Presentation.Abstractions;
+
+namespace UsersService.Presentation.Middleware.Authentication
 {
     public class AuthorizationMiddleware : IMiddleware
     {
-        private readonly AuthorizationHandler _authorizationHandler;
+        private readonly IAuthorizationHandler _authorizationHandler;
 
-        public AuthorizationMiddleware(AuthorizationHandler authorizationHandler)
+        public AuthorizationMiddleware(IAuthorizationHandler authorizationHandler)
         {
             _authorizationHandler = authorizationHandler;
         }

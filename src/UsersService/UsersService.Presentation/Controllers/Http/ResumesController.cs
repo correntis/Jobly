@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UsersService.API.Middleware.Authentication;
 using UsersService.Application.Resumes.Commands.AddResumeCommand;
 using UsersService.Application.Resumes.Commands.DeleteResumeCommand;
 using UsersService.Application.Resumes.Commands.UpdateCertificationCommand;
@@ -12,8 +11,9 @@ using UsersService.Application.Resumes.Commands.UpdateResumeCommand;
 using UsersService.Application.Resumes.Queries.GetResumeByUser;
 using UsersService.Application.Resumes.Queries.GetResumeQuery;
 using UsersService.Domain.Constants;
+using UsersService.Presentation.Middleware.Authentication;
 
-namespace UsersService.API.Controllers.Http
+namespace UsersService.Presentation.Controllers.Http
 {
     [ApiController]
     [Route("/resumes")]

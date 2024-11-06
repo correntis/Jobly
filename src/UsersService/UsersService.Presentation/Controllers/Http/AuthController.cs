@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UsersService.Application.Auth.Commands.LoginUserCommand;
 using UsersService.Application.Auth.Commands.RegisterUserCommand;
 using UsersService.Domain.Constants;
 using UsersService.Domain.Models;
 
-namespace UsersService.API.Controllers.Http
+namespace UsersService.Presentation.Controllers.Http
 {
     [ApiController]
     [Route("/auth")]

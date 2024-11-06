@@ -1,4 +1,6 @@
-﻿namespace UsersService.API.Abstractions
+﻿using Microsoft.AspNetCore.Http;
+
+namespace UsersService.Presentation.Abstractions
 {
     public interface IAuthorizationHandler
     {

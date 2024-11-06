@@ -1,7 +1,9 @@
-﻿using System.Text.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using UsersService.Domain.Exceptions;
 
-namespace UsersService.API.Middleware
+namespace UsersService.Presentation.Middleware
 {
     public class ExceptionMiddleware : IMiddleware
     {
