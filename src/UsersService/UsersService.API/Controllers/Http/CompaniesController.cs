@@ -1,11 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using UsersService.API.Middleware.Authentication;
 using UsersService.Application.Companies.Commands.AddCompanyCommand;
 using UsersService.Application.Companies.Commands.DeleteCompanyCommand;
 using UsersService.Application.Companies.Commands.UpdateCompanyCommand;
 using UsersService.Application.Companies.Queries.GetCompanyQuery;
+using UsersService.Domain.Constants;
 
-namespace UsersService.API.Controllers
+namespace UsersService.API.Controllers.Http
 {
     [ApiController]
     [Route("/companies")]
@@ -23,14 +25,17 @@ namespace UsersService.API.Controllers
             => Ok(await _mediator.Send(addCompanyCommand, cancellationToken));
 
         [HttpPut]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<IActionResult> Update(UpdateCompanyCommand updateCompanyCommand, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(updateCompanyCommand, cancellationToken));
 
         [HttpDelete("{id}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new DeleteCompanyCommand(id), cancellationToken));
 
         [HttpGet("{id}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new GetCompanyQuery(id), cancellationToken));
     }

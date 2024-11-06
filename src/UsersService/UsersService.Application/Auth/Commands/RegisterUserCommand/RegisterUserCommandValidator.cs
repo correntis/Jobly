@@ -2,11 +2,11 @@
 using System.Text;
 using UsersService.Domain.Constants;
 
-namespace UsersService.Application.Users.Commands.AddUserCommand
+namespace UsersService.Application.Auth.Commands.RegisterUserCommand
 {
-    public sealed class AddUserCommandValidator : AbstractValidator<AddUserCommand>
+    public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
     {
-        public AddUserCommandValidator()
+        public RegisterUserCommandValidator()
         {
             RuleFor(c => c.Email)
                 .NotNull()
@@ -36,7 +36,7 @@ namespace UsersService.Application.Users.Commands.AddUserCommand
                 .WithMessage("Type is required");
 
             RuleFor(c => c.Type)
-                .Must(t => BusinessRules.User.Types.Contains(t))
+                .Must(t => BusinessRules.Roles.All.Contains(t))
                 .WithMessage(GetTypeValidationMessage());
 
             RuleFor(c => c.FirstName)
@@ -57,7 +57,7 @@ namespace UsersService.Application.Users.Commands.AddUserCommand
         {
             var message = new StringBuilder("Type must be");
 
-            foreach (var type in BusinessRules.User.Types)
+            foreach (var type in BusinessRules.Roles.All)
             {
                 message.Append($" {type},");
             }

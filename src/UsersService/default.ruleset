@@ -2,6 +2,7 @@
 <RuleSet Name="StyleCop Rules" ToolsVersion="17.0">
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1009" Action="None" />
+    <Rule Id="SA1010" Action="None" />
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1200" Action="None" />
     <Rule Id="SA1300" Action="None" />

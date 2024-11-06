@@ -2,28 +2,33 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
+using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
+using UsersService.Domain.Models;
 
-namespace UsersService.Application.Users.Commands.AddUserCommand
+namespace UsersService.Application.Auth.Commands.RegisterUserCommand
 {
-    public class AddUserCommandHandler : IRequestHandler<AddUserCommand, int>
+    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Token>
     {
-        private readonly ILogger<AddUserCommandHandler> _logger;
+        private readonly ILogger<RegisterUserCommandHandler> _logger;
+        private readonly IAuthorizationService _authService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AddUserCommandHandler(
-            ILogger<AddUserCommandHandler> logger,
+        public RegisterUserCommandHandler(
+            ILogger<RegisterUserCommandHandler> logger,
+            IAuthorizationService authService,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _logger = logger;
+            _authService = authService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<int> Handle(AddUserCommand request, CancellationToken cancellationToken)
+        public async Task<Token> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start handling {command}", request.GetType().Name);
 
@@ -42,9 +47,11 @@ namespace UsersService.Application.Users.Commands.AddUserCommand
 
             await _unitOfWork.SaveChangesAsync();
 
+            var token = await _authService.IssueTokenAsync(userEntity.Id, [userEntity.Type], cancellationToken);
+
             _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
 
-            return userEntity.Id;
+            return token;
         }
     }
 }

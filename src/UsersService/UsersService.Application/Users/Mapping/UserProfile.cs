@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using UsersService.Application.Users.Commands.AddUserCommand;
+using UsersService.Application.Auth.Commands.RegisterUserCommand;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Models;
 
@@ -10,7 +10,7 @@ namespace UsersService.Application.Users.Mapping
         public UserProfile()
         {
             CreateMap<UserEntity, User>();
-            CreateMap<AddUserCommand, UserEntity>();
+            CreateMap<RegisterUserCommand, UserEntity>();
         }
     }
 }

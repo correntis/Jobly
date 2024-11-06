@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "Jobly.Protobufs.Authorization";
+
+message ValidateTokenRequest {
+    string accessToken = 1;
+    string refreshToken = 2;
+    repeated string requiredRoles = 3;
+}
+
+message ValidateTokenResponse {
+    bool isValidToken = 1;
+    bool isValidRoles = 2;
+    bool isAccessTokenRefreshed = 3;
+    string newAccessToken = 4;
+}
