@@ -7,11 +7,17 @@ services:
     environment:
       SA_PASSWORD: "LZpb8R9Ozsrab6Vaez6L2oNsP1z79o2v"
       ACCEPT_EULA: "Y"
-    ports: 
+    ports:
       - "1433:1433"
 
   users-mongodb:
     container_name: users-mongodb
     image: mongodb/mongodb-community-server:latest
     ports:
-     - "27017:27017"
+      - "27017:27017"
+
+  users-tokens:
+    container_name: users-tokens
+    image: redis:alpine
+    ports:
+      - "6379:6379"

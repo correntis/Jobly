@@ -23,9 +23,15 @@ namespace UsersService.Infrastructure
                options.UseSqlServer(configuration.GetConnectionString("SqlServerConnection"));
             });
 
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration.GetConnectionString("RedisTokens");
+            });
+
             services.AddScoped<ICompaniesRepository, CompaniesRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IResumesRepository, ResumesRepository>();
+            services.AddScoped<ITokensRepository, TokensRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

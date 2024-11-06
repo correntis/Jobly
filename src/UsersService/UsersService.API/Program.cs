@@ -7,7 +7,7 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 services.AddPresentation();
-services.AddApplication();
+services.AddApplication(configuration);
 services.AddInfrascructure(configuration);
 
 services.AddControllers();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.SQL;
+
 namespace UsersService.Infrastructure.SQL.Repositories
 {
     public class CompaniesRepository : ICompaniesRepository

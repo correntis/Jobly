@@ -2,6 +2,14 @@
 {
     public static class BusinessRules
     {
+        public static class Roles
+        {
+            public const string Company = "Company";
+            public const string User = "User";
+
+            public static readonly IEnumerable<string> All = [Company, User];
+        }
+
         public static class User
         {
             public const int MaxFirstNameLength = 50;
@@ -10,7 +18,6 @@
             public const int MaxEmailLength = 30;
             public const int MaxPhoneLength = 20;
             public const int MinPasswordLength = 6;
-            public static string[] Types { get; } = ["company", "user"];
         }
 
         public static class Company
@@ -23,6 +30,15 @@
             public const int MaxPhoneLength = 20;
             public const int MaxWebSiteLength = 50;
             public const int MaxTypeLength = 30;
+        }
+
+        public static class Token
+        {
+            public const double AccessTokenExpiresDays = 1;
+            public const double RefreshTokenExpiresDays = 7;
+
+            public const string AccessTokenName = "AccessToken";
+            public const string RefreshTokenName = "RefreshToken";
         }
     }
 }
