@@ -30,7 +30,7 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
 
         public async Task<Token> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", request.GetType().Name);
+            _logger.LogInformation("Start handling {CommandName} for user with Email {Email}", request.GetType().Name, request.Email);
 
             if (await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email, cancellationToken) is not null)
             {
@@ -49,7 +49,7 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
 
             var token = await _authService.IssueTokenAsync(userEntity.Id, [userEntity.Type], cancellationToken);
 
-            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);
 
             return token;
         }

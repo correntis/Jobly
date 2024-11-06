@@ -29,7 +29,7 @@ namespace UsersService.Application.Auth.Commands.LoginUserCommand
 
         public async Task<(User, Token)> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", request.GetType().Name);
+            _logger.LogInformation("Start handling {CommandName} for user with Email {Email}", request.GetType().Name, request.Email);
 
             var userEntity = await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email, cancellationToken)
                 ?? throw new EntityNotFoundException($"User with email {request.Email} not found");
@@ -43,7 +43,7 @@ namespace UsersService.Application.Auth.Commands.LoginUserCommand
 
             var token = await _authService.IssueTokenAsync(userEntity.Id, [userEntity.Type], cancellationToken);
 
-            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {CommandName} for user ID {UserId}", request.GetType().Name, userEntity.Id);
 
             return (user, token);
         }

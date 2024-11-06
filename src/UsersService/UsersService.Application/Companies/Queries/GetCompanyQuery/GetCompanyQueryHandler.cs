@@ -25,12 +25,12 @@ namespace UsersService.Application.Companies.Queries.GetCompanyQuery
 
         public async Task<Company> Handle(GetCompanyQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {query}", request.GetType().Name);
+            _logger.LogInformation("Start handling {QueryName} for company with ID {CompanyId}", request.GetType().Name, request.Id);
 
             var companyEntity = await _unitOfWork.CompaniesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Company with id {request.Id} not found");
 
-            _logger.LogInformation("Successfully handled {query}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {QueryName} company with ID {CompanyId}", request.GetType().Name, request.Id);
 
             return _mapper.Map<Company>(companyEntity);
         }

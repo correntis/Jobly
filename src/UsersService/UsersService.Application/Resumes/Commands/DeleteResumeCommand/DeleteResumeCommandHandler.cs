@@ -20,14 +20,14 @@ namespace UsersService.Application.Resumes.Commands.DeleteResumeCommand
 
         public async Task<string> Handle(DeleteResumeCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", request.GetType().Name);
+            _logger.LogInformation("Start handling {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
             _ = _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Resume with id {request.Id} not found");
 
             await _unitOfWork.ResumesRepository.DeleteAsync(request.Id, cancellationToken);
 
-            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
             return request.Id;
         }

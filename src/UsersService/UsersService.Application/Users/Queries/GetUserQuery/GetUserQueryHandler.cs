@@ -25,12 +25,12 @@ namespace UsersService.Application.Users.Queries.GetUserQuery
 
         async Task<User> IRequestHandler<GetUserQuery, User>.Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {query}", request.GetType().Name);
+            _logger.LogInformation("Start handling {QueryName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
             var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
 
-            _logger.LogInformation("Successfully handled {query}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {QueryName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);
 
             return _mapper.Map<User>(userEntity);
         }

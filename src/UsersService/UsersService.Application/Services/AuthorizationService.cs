@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Constants;
@@ -10,19 +11,24 @@ namespace UsersService.Application.Services
 {
     public class AuthorizationService : IAuthorizationService
     {
+        private readonly ILogger<AuthorizationService> _logger;
         private readonly ITokensService _tokensService;
         private readonly ITokensRepository _tokensRepository;
 
         public AuthorizationService(
+            ILogger<AuthorizationService> logger,
             ITokensService tokensService,
             ITokensRepository tokensRepository)
         {
+            _logger = logger;
             _tokensService = tokensService;
             _tokensRepository = tokensRepository;
         }
 
         public async Task<Token> IssueTokenAsync(int id, IEnumerable<string> roles, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Start issue token for user with ID {UserId} and roles {@UserRoles}", id, roles);
+
             var refreshToken = _tokensService.CreateRefreshToken();
             var accessToken = _tokensService.CreateAccessToken(
                 id,
@@ -48,11 +54,15 @@ namespace UsersService.Application.Services
                 RefreshToken = refreshToken,
             };
 
+            _logger.LogInformation("Token successfully issued for user with ID {UserId} and roles {@UserRoles}", id, roles);
+
             return token;
         }
 
         public async Task<string> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Start refresh access token");
+
             var tokenEntityString = await _tokensRepository.GetAsync(refreshToken, cancellationToken);
 
             if (tokenEntityString is null)
@@ -66,6 +76,11 @@ namespace UsersService.Application.Services
                 tokenEntity.UserId,
                 tokenEntity.UserRoles,
                 DateTime.Now.AddDays(BusinessRules.Token.AccessTokenExpiresDays));
+
+            _logger.LogInformation(
+                "Successfully refreshed access token for user with ID {UserId} and roles {@UserRoles}",
+                tokenEntity.UserId,
+                tokenEntity.UserRoles);
 
             return accessToken;
         }

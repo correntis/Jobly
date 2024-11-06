@@ -19,7 +19,7 @@ namespace UsersService.Application.Users.Commands.DeleteUserCommand
 
         public async Task<int> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", request.GetType().Name);
+            _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
             var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new NotImplementedException($"User with id {request.Id} not found");
@@ -28,7 +28,7 @@ namespace UsersService.Application.Users.Commands.DeleteUserCommand
 
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
             return request.Id;
         }

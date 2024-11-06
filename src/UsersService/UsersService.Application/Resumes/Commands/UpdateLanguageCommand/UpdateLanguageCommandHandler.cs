@@ -25,7 +25,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateLanguageCommand
 
         public async Task<string> Handle(UpdateLanguageCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", request.GetType().Name);
+            _logger.LogInformation("Start handling {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
             _ = _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Resume with id {request.Id} not found");
@@ -43,7 +43,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateLanguageCommand
                 languagesEntities,
                 cancellationToken);
 
-            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
             return request.Id;
         }

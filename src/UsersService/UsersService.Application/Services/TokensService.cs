@@ -25,8 +25,6 @@ namespace UsersService.Application.Services
 
         public string CreateAccessToken(int id, IEnumerable<string> roles, DateTime expiresTime)
         {
-            _logger.LogInformation("Create access token for user {id}", id);
-
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.Secret));
 
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

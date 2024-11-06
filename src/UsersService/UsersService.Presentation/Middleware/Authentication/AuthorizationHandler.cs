@@ -53,9 +53,9 @@ namespace UsersService.Presentation.Middleware.Authentication
             return result != TokenValidationResults.Failure;
         }
 
-        private bool IsValidRoles(string tokem, IEnumerable<string> roles)
+        private bool IsValidRoles(string token, IEnumerable<string> roles)
         {
-            return _authService.ValidateRoles(tokem, roles) != TokenValidationResults.Failure;
+            return _authService.ValidateRoles(token, roles) != TokenValidationResults.Failure;
         }
 
         private async Task<bool> TryRefreshExpiredToken(HttpContext context)

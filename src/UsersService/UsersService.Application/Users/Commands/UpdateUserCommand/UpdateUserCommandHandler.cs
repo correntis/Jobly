@@ -20,7 +20,7 @@ namespace UsersService.Application.Users.Commands.UpdateUserCommand
 
         public async Task<int> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", request.GetType().Name);
+            _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
             var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
@@ -31,7 +31,7 @@ namespace UsersService.Application.Users.Commands.UpdateUserCommand
 
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);
 
             return request.Id;
         }

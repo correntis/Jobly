@@ -22,15 +22,22 @@ namespace UsersService.Presentation.Controllers.Grpc
 
         public override async Task<ValidateTokenResponse> ValidateToken(ValidateTokenRequest request, ServerCallContext context)
         {
-            _logger.LogInformation("Start proccessing gRPC request {name}", request.GetType().Name);
+            _logger.LogInformation("Start proccessing gRPC request {RequestName}", request.GetType().Name);
 
             if (!IsValidToken(request.AccessToken, out TokenValidationResults tokenValidationResult))
             {
+                _logger.LogInformation("{RequestName} failed. Invalid access token", request.GetType().Name);
+
                 return new ValidateTokenResponse() { IsValidToken = false };
             }
 
             if (!IsValidRoles(request.AccessToken, request.RequiredRoles))
             {
+                _logger.LogInformation(
+                    "{RequestName} failed. Forbidden, required roles {RequiredRoles}",
+                    request.GetType().Name,
+                    request.RequiredRoles);
+
                 return new ValidateTokenResponse() { IsValidRoles = false };
             }
 
@@ -39,7 +46,7 @@ namespace UsersService.Presentation.Controllers.Grpc
                 return await HandleExpiredTokenAsync(request.RefreshToken, context.CancellationToken);
             }
 
-            _logger.LogInformation("Successfully proccessed gRPC request {name}", request.GetType().Name);
+            _logger.LogInformation("Successfully proccessed gRPC request {RequestName}", request.GetType().Name);
 
             return new ValidateTokenResponse()
             {
@@ -50,12 +57,18 @@ namespace UsersService.Presentation.Controllers.Grpc
 
         private async Task<ValidateTokenResponse> HandleExpiredTokenAsync(string refreshToken, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Access token is expired. Trying to refresh");
+
             var newAccessToken = await _authService.RefreshTokenAsync(refreshToken, cancellationToken);
 
             if (newAccessToken is null)
             {
+                _logger.LogInformation("Attempt to refresh token failed");
+
                 return new ValidateTokenResponse() { IsValidToken = false };
             }
+
+            _logger.LogInformation("Access token successfully refreshed");
 
             return new ValidateTokenResponse()
             {

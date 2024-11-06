@@ -25,7 +25,7 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
 
         public async Task<int> Handle(AddCompanyCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", request.GetType().Name);
+            _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 
             var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.UserId, cancellationToken)
                 ?? throw new EntityNotFoundException($"User with id {request.UserId} not found");
@@ -40,7 +40,11 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
 
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+            _logger.LogInformation(
+                "Successfully handled {command} for user with ID {UserId} and company with ID {CompanyId}",
+                request.GetType().Name,
+                request.UserId,
+                companyEntity.Id);
 
             return companyEntity.Id;
         }

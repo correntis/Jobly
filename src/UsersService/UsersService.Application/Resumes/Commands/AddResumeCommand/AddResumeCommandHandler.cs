@@ -25,7 +25,7 @@ namespace UsersService.Application.Resumes.Commands.AddResumeCommand
 
         public async Task<string> Handle(AddResumeCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start handling {command}", request.GetType().Name);
+            _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 
             _ = await _unitOfWork.UsersRepository.GetAsync(request.UserId, cancellationToken)
                 ?? throw new EntityNotFoundException($"User with id {request.UserId} not found");
@@ -42,7 +42,7 @@ namespace UsersService.Application.Resumes.Commands.AddResumeCommand
 
             await _unitOfWork.ResumesRepository.AddAsync(resumeEntity, cancellationToken);
 
-            _logger.LogInformation("Successfully handled {command}", request.GetType().Name);
+            _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 
             return resumeEntity.Id;
         }
