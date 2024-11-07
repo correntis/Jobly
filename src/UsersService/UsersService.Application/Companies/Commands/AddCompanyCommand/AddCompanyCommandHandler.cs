@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
+using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 
@@ -12,15 +13,18 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
         private readonly ILogger<AddCompanyCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IImagesService _imagesService;
 
         public AddCompanyCommandHandler(
             ILogger<AddCompanyCommandHandler> logger,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IImagesService imagesService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _imagesService = imagesService;
         }
 
         public async Task<int> Handle(AddCompanyCommand request, CancellationToken cancellationToken)
@@ -34,8 +38,8 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
 
             companyEntity.User = userEntity;
             companyEntity.CreatedAt = DateTime.Now;
+            companyEntity.LogoPath = await _imagesService.SaveAsync(request.Image, cancellationToken);
 
-            // TODO Save logo path
             await _unitOfWork.CompaniesRepository.AddAsync(companyEntity, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync();

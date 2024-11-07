@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using UsersService.Domain.Constants;
 
 namespace UsersService.Application.Companies.Commands.AddCompanyCommand
@@ -44,6 +45,14 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
             RuleFor(c => c.Email)
                 .MaximumLength(BusinessRules.Company.MaxEmailLength)
                 .WithMessage("Email is too long");
+
+            RuleFor(c => c.Image)
+                .Must(IsCorrectImageExtension);
+        }
+
+        private bool IsCorrectImageExtension(IFormFile image)
+        {
+            return BusinessRules.Image.AllowedExtensions.Contains(Path.GetExtension(image.FileName));
         }
     }
 }

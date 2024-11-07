@@ -399,3 +399,5 @@ FodyWeavers.xsd
 *.iml
 *.Development.json
 *.Development.cs
+
+[Uu]ploads/

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
+using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
@@ -11,15 +12,18 @@ namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
         private readonly ILogger<UpdateCompanyCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IImagesService _imagesService;
 
         public UpdateCompanyCommandHandler(
             ILogger<UpdateCompanyCommandHandler> logger,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IImagesService imagesService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _imagesService = imagesService;
         }
 
         public async Task<int> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
@@ -37,6 +41,13 @@ namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
             companyEntity.Phone = request.Phone;
             companyEntity.WebSite = request.WebSite;
             companyEntity.Type = request.Type;
+
+            if (request.Image is not null)
+            {
+                _imagesService.Delete(companyEntity.LogoPath);
+
+                companyEntity.LogoPath = await _imagesService.SaveAsync(request.Image, cancellationToken);
+            }
 
             await _unitOfWork.SaveChangesAsync();
 

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace UsersService.Application.Companies.Commands.AddCompanyCommand
 {
@@ -8,5 +9,6 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
         string City,
         string Address,
         string Email,
-        string Type) : IRequest<int>;
+        string Type,
+        IFormFile Image) : IRequest<int>;
 }

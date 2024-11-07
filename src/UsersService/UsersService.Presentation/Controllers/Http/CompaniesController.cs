@@ -21,12 +21,12 @@ namespace UsersService.Presentation.Controllers.Http
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddCompanyCommand addCompanyCommand, CancellationToken cancellationToken)
+        public async Task<IActionResult> Add([FromForm] AddCompanyCommand addCompanyCommand, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(addCompanyCommand, cancellationToken));
 
         [HttpPut]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
-        public async Task<IActionResult> Update(UpdateCompanyCommand updateCompanyCommand, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromForm] UpdateCompanyCommand updateCompanyCommand, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(updateCompanyCommand, cancellationToken));
 
         [HttpDelete("{id}")]

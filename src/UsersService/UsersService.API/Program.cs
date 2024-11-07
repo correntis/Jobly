@@ -29,6 +29,7 @@ services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UsePresentation();
+app.UseApplication();
 
 if (app.Environment.IsDevelopment())
 {

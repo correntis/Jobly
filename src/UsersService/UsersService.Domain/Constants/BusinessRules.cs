@@ -40,5 +40,12 @@
             public const string AccessTokenName = "AccessToken";
             public const string RefreshTokenName = "RefreshToken";
         }
+
+        public static class Image
+        {
+            public const string Folder = "Uploads/Images";
+
+            public static readonly IEnumerable<string> AllowedExtensions = [".jpg", ".jpeg", ".png"];
+        }
     }
 }
