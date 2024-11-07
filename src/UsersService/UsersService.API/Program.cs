@@ -1,3 +1,5 @@
+using Elastic.Serilog.Sinks;
+using Serilog;
 using UsersService.Application;
 using UsersService.Infrastructure;
 using UsersService.Presentation;
@@ -5,6 +7,16 @@ using UsersService.Presentation;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
+
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.Enrich.FromLogContext()
+        .Enrich.WithMachineName()
+        .Enrich.WithEnvironmentName()
+        .WriteTo.Console()
+        .WriteTo.Elasticsearch([new Uri(context.Configuration["Elastic:Uri"])])
+        .ReadFrom.Configuration(context.Configuration);
+});
 
 services.AddPresentation();
 services.AddApplication(configuration);

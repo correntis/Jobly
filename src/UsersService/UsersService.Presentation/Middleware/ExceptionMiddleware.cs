@@ -24,31 +24,31 @@ namespace UsersService.Presentation.Middleware
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-                await WriteExceptionToResponseAsync(context, ex, JsonSerializer.Serialize(ex.Errors));
+                await HandleExceptionAsync(context, ex, JsonSerializer.Serialize(ex.Errors));
             }
             catch (EntityNotFoundException ex)
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
 
-                await WriteExceptionToResponseAsync(context, ex);
+                await HandleExceptionAsync(context, ex);
             }
             catch (EntityAlreadyExistsException ex)
             {
                 context.Response.StatusCode = StatusCodes.Status409Conflict;
 
-                await WriteExceptionToResponseAsync(context, ex);
+                await HandleExceptionAsync(context, ex);
             }
             catch (Exception ex)
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-                await WriteExceptionToResponseAsync(context, ex);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        private async Task WriteExceptionToResponseAsync(HttpContext context, Exception ex)
+        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            _logger.LogError("Error: {ex}", ex.ToString());
+            _logger.LogError("An error of type {ExceptionType} occured: {Exception}", ex.GetType(), ex.ToString());
 
             context.Response.ContentType = "application/json";
 
@@ -57,9 +57,9 @@ namespace UsersService.Presentation.Middleware
             await context.Response.WriteAsJsonAsync(apiException);
         }
 
-        private async Task WriteExceptionToResponseAsync(HttpContext context, Exception ex, string details)
+        private async Task HandleExceptionAsync(HttpContext context, Exception ex, string details)
         {
-            _logger.LogError("Error: {ex}", details);
+            _logger.LogError("An error of type {ExceptionType} occured: {Exception}", ex.GetType(), ex.ToString());
 
             context.Response.ContentType = "application/json";
 
