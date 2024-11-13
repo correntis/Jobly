@@ -18,7 +18,7 @@ namespace UsersService.Application.Companies.Commands.DeleteCompanyCommand
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for company with ID {CompanyId}", request.GetType().Name, request.Id);
 

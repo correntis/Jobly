@@ -27,7 +27,7 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
             _imagesService = imagesService;
         }
 
-        public async Task<int> Handle(AddCompanyCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(AddCompanyCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 

@@ -24,11 +24,11 @@ namespace UsersService.Application.Resumes.Commands.UpdateCertificationCommand
             _mapper = mapper;
         }
 
-        public async Task<string> Handle(UpdateCertificationCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(UpdateCertificationCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
-            _ = _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
+            _ = await _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Resume with id {request.Id} not found");
 
             var certificationEntities = _mapper.Map<List<CertificationEntity>>(request.Certifications);

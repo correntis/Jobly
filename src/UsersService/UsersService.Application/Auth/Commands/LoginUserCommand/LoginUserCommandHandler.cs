@@ -27,7 +27,7 @@ namespace UsersService.Application.Auth.Commands.LoginUserCommand
             _mapper = mapper;
         }
 
-        public async Task<(User, Token)> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<(User, Token)> Handle(LoginUserCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with Email {Email}", request.GetType().Name, request.Email);
 

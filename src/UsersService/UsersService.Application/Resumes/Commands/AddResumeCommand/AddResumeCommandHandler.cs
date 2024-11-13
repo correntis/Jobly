@@ -23,7 +23,7 @@ namespace UsersService.Application.Resumes.Commands.AddResumeCommand
             _mapper = mapper;
         }
 
-        public async Task<string> Handle(AddResumeCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddResumeCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 

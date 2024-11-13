@@ -23,7 +23,7 @@ namespace UsersService.Application.Resumes.Queries.GetResumeByUser
             _mapper = mapper;
         }
 
-        public async Task<Resume> Handle(GetResumeByUserQuery request, CancellationToken cancellationToken)
+        public async Task<Resume> Handle(GetResumeByUserQuery request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 

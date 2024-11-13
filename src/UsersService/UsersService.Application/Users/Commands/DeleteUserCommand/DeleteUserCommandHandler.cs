@@ -1,28 +1,29 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
+using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Users.Commands.DeleteUserCommand
 {
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, int>
     {
-        private readonly ILogger<DeleteUserCommand> _logger;
+        private readonly ILogger<DeleteUserCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
         public DeleteUserCommandHandler(
-            ILogger<DeleteUserCommand> logger,
+            ILogger<DeleteUserCommandHandler> logger,
             IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(DeleteUserCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
             var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.Id, cancellationToken)
-                ?? throw new NotImplementedException($"User with id {request.Id} not found");
+                ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
 
             _unitOfWork.UsersRepository.Remove(userEntity);
 

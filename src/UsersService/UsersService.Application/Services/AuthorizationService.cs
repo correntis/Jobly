@@ -25,7 +25,7 @@ namespace UsersService.Application.Services
             _tokensRepository = tokensRepository;
         }
 
-        public async Task<Token> IssueTokenAsync(int id, IEnumerable<string> roles, CancellationToken cancellationToken)
+        public async Task<Token> IssueTokenAsync(int id, IEnumerable<string> roles, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start issue token for user with ID {UserId} and roles {@UserRoles}", id, roles);
 
@@ -59,7 +59,7 @@ namespace UsersService.Application.Services
             return token;
         }
 
-        public async Task<string> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
+        public async Task<string> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Start refresh access token");
 

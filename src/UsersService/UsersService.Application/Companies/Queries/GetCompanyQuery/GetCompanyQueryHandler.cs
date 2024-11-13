@@ -23,7 +23,7 @@ namespace UsersService.Application.Companies.Queries.GetCompanyQuery
             _mapper = mapper;
         }
 
-        public async Task<Company> Handle(GetCompanyQuery request, CancellationToken cancellationToken)
+        public async Task<Company> Handle(GetCompanyQuery request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {QueryName} for company with ID {CompanyId}", request.GetType().Name, request.Id);
 

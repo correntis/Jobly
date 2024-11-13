@@ -14,7 +14,7 @@ namespace UsersService.Application.Services
             _contentRootPath = environment.ContentRootPath;
         }
 
-        public async Task<string> SaveAsync(IFormFile file, CancellationToken cancellationToken)
+        public async Task<string> SaveAsync(IFormFile file, CancellationToken cancellationToken = default)
         {
             if (file is null)
             {

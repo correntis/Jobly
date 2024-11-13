@@ -23,11 +23,11 @@ namespace UsersService.Application.Resumes.Commands.UpdateLanguageCommand
             _mapper = mapper;
         }
 
-        public async Task<string> Handle(UpdateLanguageCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(UpdateLanguageCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
-            _ = _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
+            _ = await _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Resume with id {request.Id} not found");
 
             var languagesEntities = _mapper.Map<List<LanguageEntity>>(request.Languages);

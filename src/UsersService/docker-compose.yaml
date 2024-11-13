@@ -12,7 +12,11 @@ services:
 
   users-mongodb:
     container_name: users-mongodb
-    image: mongodb/mongodb-community-server:latest
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=admin
     ports:
       - 27017:27017
 
@@ -22,30 +26,30 @@ services:
     ports:
       - 6379:6379
 
-  users-elastic:
-    container_name: users-elastic
-    image: elasticsearch:8.14.3
-    environment:
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xms512m
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
-    ports:
-      - "9200:9200"
-    networks:
-      - users-service
+  # users-elastic:
+  #   container_name: users-elastic
+  #   image: elasticsearch:8.14.3
+  #   environment:
+  #     - discovery.type=single-node
+  #     - ES_JAVA_OPTS=-Xms512m -Xms512m
+  #     - xpack.security.enabled=false
+  #     - xpack.security.http.ssl.enabled=false
+  #   ports:
+  #     - "9200:9200"
+  #   networks:
+  #     - users-service
 
-  users-kibana:
-    container_name: users-kibana
-    image: kibana:8.14.3
-    environment:
-      - ELASTICSEARCH_HOSTS=http://users-elastic:9200
-    ports:
-      - "5601:5601"
-    depends_on:
-      - users-elastic
-    networks:
-      - users-service
+  # users-kibana:
+  #   container_name: users-kibana
+  #   image: kibana:8.14.3
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://users-elastic:9200
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - users-elastic
+  #   networks:
+  #     - users-service
 
 networks:
   users-service:

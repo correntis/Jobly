@@ -23,7 +23,7 @@ namespace UsersService.Application.Users.Queries.GetUserQuery
             _mapper = mapper;
         }
 
-        async Task<User> IRequestHandler<GetUserQuery, User>.Handle(GetUserQuery request, CancellationToken cancellationToken)
+        public async Task<User> Handle(GetUserQuery request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {QueryName} for user with ID {UserId}", request.GetType().Name, request.Id);
 

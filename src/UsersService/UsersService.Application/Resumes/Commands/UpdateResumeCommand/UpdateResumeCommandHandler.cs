@@ -9,12 +9,12 @@ namespace UsersService.Application.Resumes.Commands.UpdateResumeCommand
 {
     public class UpdateResumeCommandHandler : IRequestHandler<UpdateResumeCommand, string>
     {
-        private readonly ILogger<UpdateResumeCommand> _logger;
+        private readonly ILogger<UpdateResumeCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public UpdateResumeCommandHandler(
-            ILogger<UpdateResumeCommand> logger,
+            ILogger<UpdateResumeCommandHandler> logger,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
@@ -23,11 +23,11 @@ namespace UsersService.Application.Resumes.Commands.UpdateResumeCommand
             _mapper = mapper;
         }
 
-        public async Task<string> Handle(UpdateResumeCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(UpdateResumeCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
-            _ = _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
+            _ = await _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Resume with id {request.Id} not found");
 
             var resumeEntity = _mapper.Map<ResumeEntity>(request);
@@ -38,7 +38,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateResumeCommand
 
             _logger.LogInformation("Successfully handled {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
-            return request.Id;
+            return resumeEntity.Id;
         }
     }
 }

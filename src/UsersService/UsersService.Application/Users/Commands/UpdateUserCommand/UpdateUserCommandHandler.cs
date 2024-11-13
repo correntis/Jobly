@@ -18,7 +18,7 @@ namespace UsersService.Application.Users.Commands.UpdateUserCommand
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdateUserCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 

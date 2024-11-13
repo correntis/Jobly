@@ -52,6 +52,11 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
 
         private bool IsCorrectImageExtension(IFormFile image)
         {
+            if (image is null)
+            {
+                return true;
+            }
+
             return BusinessRules.Image.AllowedExtensions.Contains(Path.GetExtension(image.FileName));
         }
     }

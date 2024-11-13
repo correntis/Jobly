@@ -14,14 +14,14 @@ namespace UsersService.Infrastructure.NoSQL.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(ResumeEntity resumeEntity, CancellationToken cancellationToken)
+        public async Task AddAsync(ResumeEntity resumeEntity, CancellationToken cancellationToken = default)
         {
             InsertOneOptions options = null;
 
             await _context.Resumes.InsertOneAsync(resumeEntity, options, cancellationToken);
         }
 
-        public async Task UpdateAsync(ResumeEntity resumeEntity, CancellationToken cancellationToken)
+        public async Task UpdateAsync(ResumeEntity resumeEntity, CancellationToken cancellationToken = default)
         {
             var filter = Builders<ResumeEntity>.Filter.Eq(r => r.Id, resumeEntity.Id);
 
@@ -34,7 +34,7 @@ namespace UsersService.Infrastructure.NoSQL.Repositories
             string id,
             Expression<Func<ResumeEntity, object>> field,
             TValue value,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
             where TValue : IEnumerable<object>
         {
             var filter = Builders<ResumeEntity>.Filter.Eq(r => r.Id, id);
@@ -50,14 +50,14 @@ namespace UsersService.Infrastructure.NoSQL.Repositories
             await _context.Resumes.UpdateOneAsync(filter, update, options, cancellationToken);
         }
 
-        public async Task DeleteAsync(string entityId, CancellationToken cancellationToken)
+        public async Task DeleteAsync(string entityId, CancellationToken cancellationToken = default)
         {
             var filter = Builders<ResumeEntity>.Filter.Eq(r => r.Id, entityId);
 
             await _context.Resumes.DeleteOneAsync(filter, cancellationToken);
         }
 
-        public async Task<ResumeEntity> GetAsync(string entityId, CancellationToken cancellationToken)
+        public async Task<ResumeEntity> GetAsync(string entityId, CancellationToken cancellationToken = default)
         {
             var filter = Builders<ResumeEntity>.Filter.Eq(r => r.Id, entityId);
 
@@ -69,7 +69,7 @@ namespace UsersService.Infrastructure.NoSQL.Repositories
         public async Task<ResumeEntity> GetByAsync<TValue>(
             Expression<Func<ResumeEntity, TValue>> field,
             TValue value,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             var filter = Builders<ResumeEntity>.Filter.Eq(field, value);
 
