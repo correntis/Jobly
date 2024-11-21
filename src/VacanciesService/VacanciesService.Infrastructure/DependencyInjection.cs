@@ -36,8 +36,7 @@ namespace VacanciesService.Infrastructure
             services.AddScoped<IVacanciesWriteContext, VacanciesWriteContext>();
             services.AddScoped<IVacanciesDetailsRepository, VacanciesDetailsRepository>();
 
-            services.AddScoped<ICurrencyApiService, CurrencyApiServiceDevelopmentMock>();
-            //services.AddScoped<ICurrencyApiService, CurrencyApiService>();
+            services.AddScoped<ICurrencyApiService, CurrencyApiService>();
         }
     }
 }
