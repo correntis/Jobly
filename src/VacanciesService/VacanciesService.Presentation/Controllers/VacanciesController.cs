@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand;
 using VacanciesService.Application.VacanciesDetails.Commands.DeleteVacancyDetailsCommand;
 using VacanciesService.Application.VacanciesDetails.Queries.GetFilteredVacanciesDetailsQuery;
-using VacanciesService.Domain.Abstractions.Services;
+using VacanciesService.Application.VacanciesDetails.Queries.GetVacancyDetailsQuery;
 using VacanciesService.Domain.Filters.VacancyDetails;
 
 namespace VacanciesService.Presentation.Controllers
@@ -13,14 +13,10 @@ namespace VacanciesService.Presentation.Controllers
     public class VacanciesController : ControllerBase
     {
         private readonly ISender _sender;
-        private readonly ICurrencyApiService _currencyApi;
 
-        public VacanciesController(
-            ISender sender,
-            ICurrencyApiService currencyApi)
+        public VacanciesController(ISender sender)
         {
             _sender = sender;
-            _currencyApi = currencyApi;
         }
 
         [HttpPost]
@@ -32,6 +28,11 @@ namespace VacanciesService.Presentation.Controllers
         [Route("details/{id}")]
         public async Task<IActionResult> DeleteDetails(string id, CancellationToken token)
             => Ok(await _sender.Send(new DeleteVacancyDetailsCommand(id), token));
+
+        [HttpGet]
+        [Route("details")]
+        public async Task<IActionResult> GetDetailsByVacancy(int vacancyId, CancellationToken token)
+            => Ok(await _sender.Send(new GetVacancyDetailsQuery(vacancyId), token));
 
         [HttpPost]
         [Route("details/search")]
