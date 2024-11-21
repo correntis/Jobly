@@ -22,6 +22,7 @@ namespace VacanciesService.Application.VacanciesDetails.Queries.GetVacancyDetail
             _mapper = mapper;
             _detailsRepository = detailsRepository;
         }
+
         public async Task<VacancyDetails> Handle(GetVacancyDetailsQuery request, CancellationToken token)
         {
             _logger.LogInformation("Start handling {QueryName} for vacancy with ID {VacancyId}", request.GetType().Name, request.VacancyId);

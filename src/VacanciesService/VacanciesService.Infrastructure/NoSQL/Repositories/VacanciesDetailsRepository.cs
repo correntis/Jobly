@@ -49,10 +49,12 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
 
             await _context.VacanciesDetails.UpdateOneAsync(filter, update, options, cancellationToken);
         }
-
-        public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
+        public async Task DeleteByAsync<TValue>(
+            Expression<Func<VacancyDetailsEntity, TValue>> field,
+            TValue value,
+            CancellationToken cancellationToken = default)
         {
-            var filter = Builders<VacancyDetailsEntity>.Filter.Eq(vd => vd.Id, id);
+            var filter = Builders<VacancyDetailsEntity>.Filter.Eq(field, value);
 
             await _context.VacanciesDetails.DeleteOneAsync(filter, cancellationToken);
         }
