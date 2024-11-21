@@ -1,5 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using VacanciesService.Application.Vacancies.Commands.AddVacancyCommand;
+using VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand;
+using VacanciesService.Application.Vacancies.Commands.DeleteVacancyCommand;
+using VacanciesService.Application.Vacancies.Queries.GetVacancyByCompanyQuery;
+using VacanciesService.Application.Vacancies.Queries.GetVacancyQuery;
 using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand;
 using VacanciesService.Application.VacanciesDetails.Commands.DeleteVacancyDetailsCommand;
 using VacanciesService.Application.VacanciesDetails.Queries.GetFilteredVacanciesDetailsQuery;
@@ -18,6 +23,30 @@ namespace VacanciesService.Presentation.Controllers
         {
             _sender = sender;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(AddVacancyCommand command, CancellationToken token)
+            => Ok(await _sender.Send(command, token));
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id, CancellationToken token)
+            => Ok(await _sender.Send(new DeleteVacancyCommand(id), token));
+
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<IActionResult> Archive(int id, CancellationToken token)
+            => Ok(await _sender.Send(new ArchiveVacancyCommand(id), token));
+
+        [HttpGet]
+        [Route("{id}&{applications}")]
+        public async Task<IActionResult> Get(int id, bool applications, CancellationToken token)
+            => Ok(await _sender.Send(new GetVacancyQuery(id, applications), token));
+
+        [HttpGet]
+        [Route("companies/{companyId}")]
+        public async Task<IActionResult> GetByCompany(int companyId, CancellationToken token)
+            => Ok(await _sender.Send(new GetVacanciesByCompanyQuery(companyId), token));
 
         [HttpPost]
         [Route("details")]

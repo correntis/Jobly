@@ -27,6 +27,20 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
             builder.Property(v => v.Title)
                 .HasMaxLength(BusinessRules.Vacancy.TitleMaxLength)
                 .IsRequired();
+
+            builder.Property(v => v.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasConversion(
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                .IsRequired();
+
+            builder.Property(v => v.DeadlineAt)
+                .HasColumnType("timestamp")
+                .HasConversion(
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                .IsRequired();
         }
     }
 }

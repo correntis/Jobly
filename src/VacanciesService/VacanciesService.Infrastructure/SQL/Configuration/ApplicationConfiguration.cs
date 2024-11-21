@@ -21,6 +21,13 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
             builder.Property(a => a.Status)
                 .HasMaxLength(BusinessRules.Application.StatusMaxLength)
                 .IsRequired();
+
+            builder.Property(a => a.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasConversion(
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                .IsRequired();
         }
     }
 }

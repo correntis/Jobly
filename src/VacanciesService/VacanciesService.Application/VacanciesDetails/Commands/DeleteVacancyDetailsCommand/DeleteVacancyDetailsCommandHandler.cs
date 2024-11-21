@@ -30,7 +30,7 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.DeleteVacancyDe
                 throw new EntityNotFoundException($"Vacancy_details with ID {request.Id} not found");
             }
 
-            await _detailsRepository.DeleteAsync(request.Id, token);
+            await _detailsRepository.DeleteByAsync(vd => vd.Id, request.Id, token);
 
             _logger.LogInformation(
                 "Successfully handled {CommandName} for vacancy_details with ID {VacancyId}",
