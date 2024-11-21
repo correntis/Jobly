@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  users-sqlserver:
+    container_name: users-sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "LZpb8R9Ozsrab6Vaez6L2oNsP1z79o2v"
+      ACCEPT_EULA: "Y"
+    ports:
+      - 1433:1433
+
+  users-migrations:
+    container_name: users-migrations
+    build:
+      context: ./
+      dockerfile: ./src/UsersService/UsersService.API/Dockerfile.migrations
+    environment:
+      SA_PASSWORD: "LZpb8R9Ozsrab6Vaez6L2oNsP1z79o2v"
+    depends_on:
+      - users-sqlserver
+    command: |
+      sh -c "
+      until /opt/mssql-tools/bin/sqlcmd -S users-sqlserver -U SA -P \"$SA_PASSWORD\" -Q 'SELECT 1' &>/dev/null; do
+      echo 'Waiting for SQL Server to start...';
+      sleep 5;
+      done;
+      echo 'SQL Server is up - running migrations';
+      dotnet ef database update -s ./src/UsersService/UsersService.API/UsersService.API.csproj -p ./src/UsersService/UsersService.Infrastructure/UsersService.Infrastructure.csproj;"
+
+  users-mongodb:
+    container_name: users-mongodb
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=admin
+    ports:
+      - 27017:27017
+
+  users-tokens:
+    container_name: users-tokens
+    image: redis:alpine
+    ports:
+      - 6379:6379
+
+  users-elastic:
+    container_name: users-elastic
+    image: elasticsearch:8.14.3
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xms512m
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - users-service
+
+  users-kibana:
+    container_name: users-kibana
+    image: kibana:8.14.3
+    environment:
+      - ELASTICSEARCH_HOSTS=http://users-elastic:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - users-elastic
+    networks:
+      - users-service
+
+networks:
+  users-service:
+    driver: bridge
