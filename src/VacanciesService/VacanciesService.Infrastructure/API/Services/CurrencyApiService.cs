@@ -29,12 +29,12 @@ namespace VacanciesService.Infrastructure.API.Services
             };
         }
 
-        public async Task<IEnumerable<Currency>> GetCurrencies()
+        public async Task<IEnumerable<Currency>> GetCurrenciesAsync(CancellationToken token = default)
         {
             var client = GetClient($"currencies?type={BusinessRules.Salary.DefaultCurrencyType}");
             var request = GetRequestWithGetMethod();
 
-            var response = await client.ExecuteAsync(request);
+            var response = await client.ExecuteAsync(request, token);
 
             if (!response.IsSuccessful)
             {
@@ -48,12 +48,12 @@ namespace VacanciesService.Infrastructure.API.Services
             return currenciesDictionary.Data.Values.ToList();
         }
 
-        public async Task<ExchangeRate> GetExchangeRate(string currencyCode)
+        public async Task<ExchangeRate> GetExchangeRateAsync(string currencyCode, CancellationToken token = default)
         {
             var client = GetClient($"latest?base_currency={BusinessRules.Salary.DefaultCurrency}&currencies={currencyCode}");
             var request = GetRequestWithGetMethod();
 
-            var response = await client.ExecuteAsync(request);
+            var response = await client.ExecuteAsync(request, token);
 
             if (!response.IsSuccessful)
             {
