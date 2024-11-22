@@ -11,6 +11,7 @@
         public static class Application
         {
             public const int StatusMaxLength = 50;
+            public const string DefaultStatus = "Unread";
         }
 
         public static class Salary

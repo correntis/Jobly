@@ -49,9 +49,14 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
                 throw new EntityNotFoundException($"Vacancy with ID {request.VacancyId} not found");
             }
 
+            if (await _detailsRepository.GetByAsync(vd => vd.VacancyId, request.VacancyId, token) is not null)
+            {
+                throw new EntityAlreadyExistException($"Vacancy_details for vacancy with ID {request.VacancyId} already exist");
+            }
+
             var vacancyDetailsEntity = _mapper.Map<VacancyDetailsEntity>(request);
 
-            vacancyDetailsEntity.Salary = await CalculateCurrency(vacancyDetailsEntity.Salary);
+            vacancyDetailsEntity.Salary = await CalculateCurrencyAsync(vacancyDetailsEntity.Salary);
 
             await _detailsRepository.AddAsync(vacancyDetailsEntity, token);
 
@@ -64,7 +69,7 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
             return vacancyDetailsEntity.Id;
         }
 
-        private async Task<SalaryEntity> CalculateCurrency(SalaryEntity sourceEntity)
+        private async Task<SalaryEntity> CalculateCurrencyAsync(SalaryEntity sourceEntity)
         {
             var exchangeRate = await _currencyApi.GetExchangeRateAsync(sourceEntity.Currency);
 
