@@ -9,7 +9,6 @@
         public int CompanyId { get; set; }
         public bool Archived { get; set; }
         public DateTime DeadlineAt { get; set; }
-        public List<Application> Applications { get; set; }
         public VacancyDetails VacancyDetails { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace VacanciesService.Application.Vacancies.Commands.AddVacancyCommand
         public async Task<int> Handle(AddVacancyCommand request, CancellationToken token)
         {
             _logger.LogInformation(
-                "Start handling {CommandName} for vacancy with Title {request.Title}",
+                "Start handling {CommandName} for vacancy with Title {VacancyTitle}",
                 request.GetType().Name,
                 request.Title);
 

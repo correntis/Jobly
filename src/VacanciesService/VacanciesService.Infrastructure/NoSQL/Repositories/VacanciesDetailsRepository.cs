@@ -49,6 +49,7 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
 
             await _context.VacanciesDetails.UpdateOneAsync(filter, update, options, cancellationToken);
         }
+
         public async Task DeleteByAsync<TValue>(
             Expression<Func<VacancyDetailsEntity, TValue>> field,
             TValue value,
@@ -69,10 +70,20 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
             return await _context.VacanciesDetails.Find(filter).FirstOrDefaultAsync(cancellationToken);
         }
 
+        public async Task<List<VacancyDetailsEntity>> GetManyByAsync<TValue>(
+            Expression<Func<VacancyDetailsEntity, TValue>> field,
+            IEnumerable<TValue> values,
+            CancellationToken cancellationToken = default)
+        {
+            var filter = Builders<VacancyDetailsEntity>.Filter.In(field, values);
+
+            return await _context.VacanciesDetails.Find(filter).ToListAsync(cancellationToken);
+        }
+
         public async Task<List<VacancyDetailsEntity>> GetFilteredPageAsync(
             VacancyDetailsFilter detailsFilter,
-            int pageNumber = 1,
-            int pageSize = 10,
+            int pageNumber,
+            int pageSize,
             CancellationToken cancellationToken = default)
         {
             var filter = GetFilterFromSpecifications(detailsFilter);
