@@ -1,0 +1,13 @@
+{
+   "urls": [
+        {
+            "url": "http://localhost/api/users/swagger/v1/swagger.json",
+            "name": "Users API"
+        },
+        {
+            "url": "http://localhost/api/vacancies/swagger/v1/swagger.json",
+            "name": "Vacancies API"
+        }
+    ]
+}
+  
