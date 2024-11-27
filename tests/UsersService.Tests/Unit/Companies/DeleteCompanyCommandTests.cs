@@ -28,7 +28,7 @@ namespace UsersService.Tests.Unit.Companies
             var companyEntity = new CompanyEntity { Id = id };
 
             unitOfWorkMock.Setup(u => u.CompaniesRepository.GetWithIncludesAsync(id, CancellationToken.None)).ReturnsAsync(companyEntity);
-            unitOfWorkMock.Setup(u => u.SaveChangesAsync()).Returns(Task.CompletedTask);
+            unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
 
             // Act
             var idAct = await handler.Handle(command, CancellationToken.None);
@@ -47,7 +47,7 @@ namespace UsersService.Tests.Unit.Companies
                 "Remove method should be called once");
 
             unitOfWorkMock.Verify(
-                u => u.SaveChangesAsync(),
+                u => u.SaveChangesAsync(CancellationToken.None),
                 Times.Once,
                 "Save changes should be called once in context");
         }

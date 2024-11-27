@@ -18,6 +18,11 @@ namespace UsersService.Infrastructure.SQL.Repositories
             await _context.Companies.AddAsync(companyEntity, cancellationToken);
         }
 
+        public void Update(CompanyEntity companyEntity)
+        {
+            _context.Companies.Update(companyEntity);
+        }
+
         public void Remove(CompanyEntity companyEntity)
         {
             _context.Companies.Remove(companyEntity);

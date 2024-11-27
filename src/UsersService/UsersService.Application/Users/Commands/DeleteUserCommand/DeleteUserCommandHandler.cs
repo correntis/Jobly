@@ -27,7 +27,7 @@ namespace UsersService.Application.Users.Commands.DeleteUserCommand
 
             _unitOfWork.UsersRepository.Remove(userEntity);
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 

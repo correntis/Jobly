@@ -42,7 +42,7 @@ namespace UsersService.Tests.Unit.Auth
 
             unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email, CancellationToken.None)).ReturnsAsync((UserEntity)null);
             unitOfWorkMock.Setup(u => u.UsersRepository.AddAsync(userEntity, CancellationToken.None)).Returns(Task.CompletedTask);
-            unitOfWorkMock.Setup(u => u.SaveChangesAsync()).Returns(Task.CompletedTask);
+            unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
             authServiceMock.Setup(a => a.IssueTokenAsync(userEntity.Id, roles, CancellationToken.None)).ReturnsAsync(token);
             mapperMock.Setup(m => m.Map<UserEntity>(command)).Returns(userEntity);
 
@@ -64,7 +64,7 @@ namespace UsersService.Tests.Unit.Auth
                 "Add method should be called once in repository");
 
             unitOfWorkMock.Verify(
-                u => u.SaveChangesAsync(),
+                u => u.SaveChangesAsync(CancellationToken.None),
                 Times.Once,
                 "Save changes should be called once in context");
 

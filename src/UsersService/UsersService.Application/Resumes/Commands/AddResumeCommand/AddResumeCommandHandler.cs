@@ -37,8 +37,8 @@ namespace UsersService.Application.Resumes.Commands.AddResumeCommand
 
             var resumeEntity = _mapper.Map<ResumeEntity>(request);
 
-            resumeEntity.CreatedAt = DateTime.Now;
-            resumeEntity.UpdatedAt = DateTime.Now;
+            resumeEntity.CreatedAt = DateTime.UtcNow;
+            resumeEntity.UpdatedAt = DateTime.UtcNow;
 
             await _unitOfWork.ResumesRepository.AddAsync(resumeEntity, cancellationToken);
 

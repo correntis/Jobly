@@ -32,7 +32,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateResumeCommand
 
             var resumeEntity = _mapper.Map<ResumeEntity>(request);
 
-            resumeEntity.UpdatedAt = DateTime.Now;
+            resumeEntity.UpdatedAt = DateTime.UtcNow;
 
             await _unitOfWork.ResumesRepository.UpdateAsync(resumeEntity, cancellationToken);
 

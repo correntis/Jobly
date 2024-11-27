@@ -1,4 +1,5 @@
-﻿using Bogus;
+﻿using AutoMapper;
+using Bogus;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -23,16 +24,18 @@ namespace UsersService.Tests.Unit.Users
         {
             // Arrange
             var unitOfWorkMock = new Mock<IUnitOfWork>();
+            var mapperMock = new Mock<IMapper>();
 
             var handler = new UpdateUserCommandHandler(
                 _loggerMock.Object,
+                mapperMock.Object,
                 unitOfWorkMock.Object);
 
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
 
             unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(command.Id, CancellationToken.None)).ReturnsAsync(userEntity);
-            unitOfWorkMock.Setup(u => u.SaveChangesAsync()).Returns(Task.CompletedTask);
+            unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
 
             // Act
             var idAct = await handler.Handle(command, CancellationToken.None);
@@ -46,7 +49,7 @@ namespace UsersService.Tests.Unit.Users
                 "Get method should be called once");
 
             unitOfWorkMock.Verify(
-                u => u.SaveChangesAsync(),
+                u => u.SaveChangesAsync(CancellationToken.None),
                 Times.Once,
                 "Save changes should be called once in context");
         }
@@ -56,9 +59,11 @@ namespace UsersService.Tests.Unit.Users
         {
             // Arrange
             var unitOfWorkMock = new Mock<IUnitOfWork>();
+            var mapperMock = new Mock<IMapper>();
 
             var handler = new UpdateUserCommandHandler(
                 _loggerMock.Object,
+                mapperMock.Object,
                 unitOfWorkMock.Object);
 
             var command = GetCommand();

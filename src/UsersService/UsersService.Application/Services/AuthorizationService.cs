@@ -33,7 +33,7 @@ namespace UsersService.Application.Services
             var accessToken = _tokensService.CreateAccessToken(
                 id,
                 roles,
-                DateTime.Now.AddDays(BusinessRules.Token.AccessTokenExpiresDays));
+                DateTime.UtcNow.AddDays(BusinessRules.Token.AccessTokenExpiresDays));
 
             var tokenEntity = new TokenEntity()
             {
@@ -45,7 +45,7 @@ namespace UsersService.Application.Services
             await _tokensRepository.SetAsync(
                 refreshToken,
                 JsonSerializer.Serialize(tokenEntity),
-                DateTime.Now.AddDays(BusinessRules.Token.RefreshTokenExpiresDays),
+                DateTime.UtcNow.AddDays(BusinessRules.Token.RefreshTokenExpiresDays),
                 cancellationToken);
 
             var token = new Token()
@@ -61,7 +61,7 @@ namespace UsersService.Application.Services
 
         public async Task<string> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation($"Start refresh access token");
+            _logger.LogInformation("Start refresh access token with refresh token");
 
             var tokenEntityString = await _tokensRepository.GetAsync(refreshToken, cancellationToken);
 
@@ -75,7 +75,7 @@ namespace UsersService.Application.Services
             var accessToken = _tokensService.CreateAccessToken(
                 tokenEntity.UserId,
                 tokenEntity.UserRoles,
-                DateTime.Now.AddDays(BusinessRules.Token.AccessTokenExpiresDays));
+                DateTime.UtcNow.AddDays(BusinessRules.Token.AccessTokenExpiresDays));
 
             _logger.LogInformation(
                 "Successfully refreshed access token for user with ID {UserId} and roles {@UserRoles}",

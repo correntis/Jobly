@@ -103,7 +103,7 @@ namespace UsersService.Tests.Intergation.Auth
                 Type = faker.PickRandom(BusinessRules.Roles.All),
                 Email = command.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.Password),
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
             };
         }
 

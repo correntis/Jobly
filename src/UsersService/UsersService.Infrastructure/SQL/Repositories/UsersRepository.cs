@@ -18,6 +18,11 @@ namespace UsersService.Infrastructure.SQL.Repositories
             await _context.Users.AddAsync(userEntity, cancellationToken);
         }
 
+        public void Update(UserEntity userEntity)
+        {
+            _context.Users.Update(userEntity);
+        }
+
         public void Remove(UserEntity userEntity)
         {
             _context.Users.Remove(userEntity);

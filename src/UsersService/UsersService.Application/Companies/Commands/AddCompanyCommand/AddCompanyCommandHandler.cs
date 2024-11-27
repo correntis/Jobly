@@ -37,12 +37,12 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
             var companyEntity = _mapper.Map<CompanyEntity>(request);
 
             companyEntity.User = userEntity;
-            companyEntity.CreatedAt = DateTime.Now;
+            companyEntity.CreatedAt = DateTime.UtcNow;
             companyEntity.LogoPath = await _imagesService.SaveAsync(request.Image, cancellationToken);
 
             await _unitOfWork.CompaniesRepository.AddAsync(companyEntity, cancellationToken);
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation(
                 "Successfully handled {command} for user with ID {UserId} and company with ID {CompanyId}",

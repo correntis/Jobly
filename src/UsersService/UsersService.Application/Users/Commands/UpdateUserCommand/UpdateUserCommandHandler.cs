@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Exceptions;
@@ -8,13 +9,16 @@ namespace UsersService.Application.Users.Commands.UpdateUserCommand
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, int>
     {
         private readonly ILogger<UpdateUserCommandHandler> _logger;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateUserCommandHandler(
             ILogger<UpdateUserCommandHandler> logger,
+            IMapper mapper,
             IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
@@ -25,11 +29,11 @@ namespace UsersService.Application.Users.Commands.UpdateUserCommand
             var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
 
-            userEntity.FirstName = request.FirstName;
-            userEntity.LastName = request.LastName;
-            userEntity.Phone = request.Phone;
+            _mapper.Map(request, userEntity);
 
-            await _unitOfWork.SaveChangesAsync();
+            _unitOfWork.UsersRepository.Update(userEntity);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);
 

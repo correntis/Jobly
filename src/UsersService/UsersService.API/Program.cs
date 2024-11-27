@@ -20,13 +20,21 @@ builder.Host.UseSerilog((context, configuration) =>
 
 services.AddPresentation();
 services.AddApplication(configuration);
-services.AddInfrascructure(configuration);
+services.AddInfrastructure(configuration);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors(options =>
+{
+    options
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
 
 app.UsePresentation();
 app.UseApplication();

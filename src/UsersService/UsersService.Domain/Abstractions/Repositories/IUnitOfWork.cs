@@ -6,6 +6,6 @@
         IResumesRepository ResumesRepository { get; }
         IUsersRepository UsersRepository { get; }
 
-        Task SaveChangesAsync();
+        Task SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

@@ -44,12 +44,12 @@ namespace UsersService.Presentation.Controllers.Http
             AppendCookie(
                 BusinessRules.Token.AccessTokenName,
                 token.AccessToken,
-                DateTime.Now.AddDays(BusinessRules.Token.AccessTokenExpiresDays));
+                DateTime.UtcNow.AddDays(BusinessRules.Token.AccessTokenExpiresDays));
 
             AppendCookie(
                 BusinessRules.Token.RefreshTokenName,
                 token.RefreshToken,
-                DateTime.Now.AddDays(BusinessRules.Token.RefreshTokenExpiresDays));
+                DateTime.UtcNow.AddDays(BusinessRules.Token.RefreshTokenExpiresDays));
         }
 
         private void AppendCookie(string key, string value, DateTime expiresTime)

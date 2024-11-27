@@ -85,7 +85,7 @@ namespace UsersService.Presentation.Middleware.Authentication
         {
             var cookieOptions = new CookieOptions()
             {
-                Expires = DateTime.Now.AddDays(BusinessRules.Token.AccessTokenExpiresDays),
+                Expires = DateTime.UtcNow.AddDays(BusinessRules.Token.AccessTokenExpiresDays),
             };
 
             context.Response.Cookies.Append(BusinessRules.Token.AccessTokenName, accessToken, cookieOptions);

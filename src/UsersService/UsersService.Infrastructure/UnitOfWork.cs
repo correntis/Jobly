@@ -25,9 +25,9 @@ namespace UsersService.Infrastructure
             ResumesRepository = new ResumesRepository(resumesContext);
         }
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
-            await _usersContext.SaveChangesAsync();
+            await _usersContext.SaveChangesAsync(cancellationToken);
         }
 
         public void Dispose()

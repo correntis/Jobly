@@ -45,11 +45,4 @@
     <None Remove="..\.dockerignore" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Middleware\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Contracts\" />
-  </ItemGroup>
-
 </Project>

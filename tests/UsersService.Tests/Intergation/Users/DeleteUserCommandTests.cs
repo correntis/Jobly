@@ -72,7 +72,7 @@ namespace UsersService.Tests.Intergation.Users
                 Type = faker.PickRandom(BusinessRules.Roles.All),
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Random.Hash(),
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
             };
         }
     }

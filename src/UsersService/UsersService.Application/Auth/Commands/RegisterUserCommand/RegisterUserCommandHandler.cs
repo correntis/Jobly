@@ -41,11 +41,11 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
             var userEntity = _mapper.Map<UserEntity>(request);
 
             userEntity.PasswordHash = passwordHash;
-            userEntity.CreatedAt = DateTime.Now;
+            userEntity.CreatedAt = DateTime.UtcNow;
 
             await _unitOfWork.UsersRepository.AddAsync(userEntity, cancellationToken);
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var token = await _authService.IssueTokenAsync(userEntity.Id, [userEntity.Type], cancellationToken);
 

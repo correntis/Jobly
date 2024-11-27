@@ -87,11 +87,11 @@ namespace UsersService.Tests.Intergation.Auth
                 Type = faker.PickRandom(BusinessRules.Roles.All),
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Internet.Password(),
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
             };
         }
 
-        public RegisterUserCommand GetCommand()
+        private RegisterUserCommand GetCommand()
         {
             var faker = new Faker();
 

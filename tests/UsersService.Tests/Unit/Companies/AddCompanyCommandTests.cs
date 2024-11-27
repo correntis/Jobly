@@ -37,7 +37,7 @@ namespace UsersService.Tests.Unit.Companies
 
             unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(command.UserId, CancellationToken.None)).ReturnsAsync(userEntity);
             unitOfWorkMock.Setup(u => u.CompaniesRepository.AddAsync(companyEntity, CancellationToken.None)).Returns(Task.CompletedTask);
-            unitOfWorkMock.Setup(u => u.SaveChangesAsync()).Returns(Task.CompletedTask);
+            unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
             mapperMock.Setup(m => m.Map<CompanyEntity>(command)).Returns(companyEntity);
             imagesServiceMock.Setup(i => i.SaveAsync(command.Image, CancellationToken.None)).ReturnsAsync(logoPath);
 
@@ -55,7 +55,7 @@ namespace UsersService.Tests.Unit.Companies
                 "Get method should be called once in users repository");
 
             unitOfWorkMock.Verify(
-                u => u.SaveChangesAsync(),
+                u => u.SaveChangesAsync(CancellationToken.None),
                 Times.Once,
                 "Save changes should be called once in context");
 

@@ -27,7 +27,7 @@ namespace UsersService.Application.Companies.Commands.DeleteCompanyCommand
 
             _unitOfWork.CompaniesRepository.Remove(companyEntity);
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("Successfully handled {CommandName} for company with ID {CompanyId}", request.GetType().Name, request.Id);
 

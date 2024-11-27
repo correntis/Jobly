@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Abstractions.Services;
+using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
@@ -33,27 +35,30 @@ namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
             var companyEntity = await _unitOfWork.CompaniesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Company with id {request.Id} not found");
 
-            companyEntity.Name = request.Name;
-            companyEntity.Description = request.Description;
-            companyEntity.City = request.City;
-            companyEntity.Address = request.Address;
-            companyEntity.Email = request.Email;
-            companyEntity.Phone = request.Phone;
-            companyEntity.WebSite = request.WebSite;
-            companyEntity.Type = request.Type;
+            _mapper.Map(request, companyEntity);
 
             if (request.Image is not null)
             {
-                _imagesService.Delete(companyEntity.LogoPath);
-
-                companyEntity.LogoPath = await _imagesService.SaveAsync(request.Image, cancellationToken);
+                await UpdateCompanyLogoAsync(companyEntity, request.Image, cancellationToken);
             }
 
-            await _unitOfWork.SaveChangesAsync();
+            _unitOfWork.CompaniesRepository.Update(companyEntity);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("Successfully handled {CommandName} for company with ID {CompanyId}", request.GetType().Name, request.Id);
 
             return request.Id;
+        }
+
+        private async Task UpdateCompanyLogoAsync(CompanyEntity companyEntity, IFormFile newImage, CancellationToken cancellationToken)
+        {
+            if (!string.IsNullOrEmpty(companyEntity.LogoPath))
+            {
+                _imagesService.Delete(companyEntity.LogoPath);
+            }
+
+            companyEntity.LogoPath = await _imagesService.SaveAsync(newImage, cancellationToken);
         }
     }
 }
