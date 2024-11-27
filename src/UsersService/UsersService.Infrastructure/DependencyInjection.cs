@@ -19,16 +19,16 @@ namespace UsersService.Infrastructure
 
             services.AddSingleton<MongoDbContext>();
 
-            services.AddDbContext<UsersDbContext>(options =>
+            services.AddDbContext<UsersDbContext>(async options =>
             {
                options.UseSqlServer(configuration.GetConnectionString("UsersDatabaseSqlServer"));
+
+               await InitializeSqlServerDatabaseAsync(configuration);
             });
 
-            services.AddStackExchangeRedisCache(async options =>
+            services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration.GetConnectionString("RedisTokens");
-
-                await InitializeSqlServerDatabaseAsync(configuration);
             });
 
             services.AddScoped<ICompaniesRepository, CompaniesRepository>();
