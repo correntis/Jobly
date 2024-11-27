@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\shared\Jobly.Protobufs\Jobly.Protobufs.csproj" />
     <ProjectReference Include="..\VacanciesService.Domain\VacanciesService.Domain.csproj" />
   </ItemGroup>
 
