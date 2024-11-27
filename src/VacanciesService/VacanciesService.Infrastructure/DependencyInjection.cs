@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Jobly.Protobufs.Authorization.Client;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VacanciesService.Application.Abstractions;
 using VacanciesService.Domain.Abstractions.Contexts;
 using VacanciesService.Domain.Abstractions.Repositories;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Configuration;
 using VacanciesService.Infrastructure.API.Services;
+using VacanciesService.Infrastructure.Grpc;
 using VacanciesService.Infrastructure.NoSQL;
 using VacanciesService.Infrastructure.NoSQL.Repositories;
 using VacanciesService.Infrastructure.SQL;
@@ -30,13 +33,20 @@ namespace VacanciesService.Infrastructure
                 options.UseNpgsql(configuration.GetConnectionString("WritePostgreDatabase"));
             });
 
+            services.AddGrpcClient<AuthorizationGrpcService.AuthorizationGrpcServiceClient>(options =>
+            {
+                options.Address = new Uri(configuration["Jobly:UsersService"]);
+            });
+
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
             services.AddScoped<IVacanciesReadContext, VacanciesReadContext>();
             services.AddScoped<IVacanciesWriteContext, VacanciesWriteContext>();
             services.AddScoped<IVacanciesDetailsRepository, VacanciesDetailsRepository>();
 
-            services.AddScoped<ICurrencyApiService, CurrencyApiService>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<ICurrencyApiService, CurrencyApiServiceDevelopmentMock>();
+            //services.AddScoped<ICurrencyApiService, CurrencyApiService>();
         }
     }
 }

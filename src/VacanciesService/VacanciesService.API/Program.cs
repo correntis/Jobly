@@ -2,6 +2,7 @@ using Elastic.Serilog.Sinks;
 using Serilog;
 using VacanciesService.Application;
 using VacanciesService.Infrastructure;
+using VacanciesService.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -19,12 +20,23 @@ builder.Host.UseSerilog((context, configuration) =>
 
 services.AddApplication();
 services.AddInfrastructure(configuration);
+services.AddPresentation();
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors(options =>
+{
+    options
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
+
+app.UsePresentation();
 
 app.UseSwagger();
 app.UseSwaggerUI();
