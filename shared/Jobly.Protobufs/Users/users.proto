@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Jobly.Protobufs.Users";
+
+message UserExistenceRequest {
+	int32 userId = 1;
+}
+
+message UserExistenceResponse {
+	bool exists = 1;
+}
+
+message CompanyExistenceRequest {
+	int32 vacancyId = 1;
+}
+
+message CompanyExistenceResponse {
+	bool exists = 1;
+}
