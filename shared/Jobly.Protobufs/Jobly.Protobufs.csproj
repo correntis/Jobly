@@ -23,6 +23,10 @@
 	<Protobuf Include="Authorization\auth_service_client.proto" GrpcServices="Client" />
 	<Protobuf Include="Authorization\auth_service_server.proto" GrpcServices="Server" />
 	<Protobuf Include="Authorization\auth.proto" GrpcServices="None" />
+
+    <Protobuf Include="Users\users_service_client.proto" GrpcServices="Client" />
+	<Protobuf Include="Users\users_service_server.proto" GrpcServices="Server" />
+	<Protobuf Include="Users\users.proto" GrpcServices="None" />
   </ItemGroup>
 
 </Project>
