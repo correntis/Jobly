@@ -17,6 +17,10 @@ namespace UsersService.Infrastructure.SQL.Configuration
 
             builder.HasIndex(c => c.Type);
 
+            builder.Property(c => c.Id)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NEWID()");
+
             builder.Property(c => c.Name)
                 .HasMaxLength(BusinessRules.Company.MaxNameLength)
                 .IsRequired();

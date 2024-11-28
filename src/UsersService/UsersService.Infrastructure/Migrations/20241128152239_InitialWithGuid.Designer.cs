@@ -12,8 +12,8 @@ using UsersService.Infrastructure.SQL;
 namespace UsersService.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20241102172210_Initial")]
-    partial class Initial
+    [Migration("20241128152239_InitialWithGuid")]
+    partial class InitialWithGuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,10 @@ namespace UsersService.Infrastructure.Migrations
 
             modelBuilder.Entity("UsersService.Domain.Entities.SQL.CompanyEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Address")
                         .HasMaxLength(100)
@@ -69,8 +68,8 @@ namespace UsersService.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("WebSite")
                         .HasMaxLength(50)
@@ -90,11 +89,10 @@ namespace UsersService.Infrastructure.Migrations
 
             modelBuilder.Entity("UsersService.Domain.Entities.SQL.UserEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

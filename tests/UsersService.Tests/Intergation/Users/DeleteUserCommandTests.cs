@@ -37,7 +37,7 @@ namespace UsersService.Tests.Intergation.Users
         public async Task ShouldThrowEntityNotFoundException_WhemUserNotExist()
         {
             // Arrange
-            var command = new DeleteUserCommand(int.MaxValue);
+            var command = new DeleteUserCommand(Guid.Empty);
 
             // Act
             var act = async () => await Sender.Send(command);
@@ -46,7 +46,7 @@ namespace UsersService.Tests.Intergation.Users
             await act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
-        private async Task<int> FillDatabaseAsync()
+        private async Task<Guid> FillDatabaseAsync()
         {
             var userEntity = GetUserEntity();
 

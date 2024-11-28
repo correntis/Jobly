@@ -117,7 +117,7 @@ namespace UsersService.Tests.Unit.Resumes
             var tags = Enumerable.Repeat(faker.Random.String(20), faker.Random.Number(20)).ToList();
 
             return new AddResumeCommand(
-                faker.Random.Int(0),
+                faker.Random.Guid(),
                 faker.Random.String(20),
                 faker.Random.String(20),
                 skills,

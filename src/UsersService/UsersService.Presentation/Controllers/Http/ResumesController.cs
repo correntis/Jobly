@@ -71,7 +71,7 @@ namespace UsersService.Presentation.Controllers.Http
             => Ok(await _mediator.Send(new GetResumeQuery(id), cancellationToken));
 
         [HttpGet("users/{userId}")]
-        public async Task<IActionResult> GetByUser(int userId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByUser(Guid userId, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new GetResumeByUserQuery(userId), cancellationToken));
     }
 }

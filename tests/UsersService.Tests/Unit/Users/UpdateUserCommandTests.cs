@@ -91,7 +91,7 @@ namespace UsersService.Tests.Unit.Users
             var faker = new Faker();
 
             return new UpdateUserCommand(
-                faker.Random.Int(0),
+                faker.Random.Guid(),
                 faker.Name.FirstName(),
                 faker.Name.LastName(),
                 faker.Phone.PhoneNumber());

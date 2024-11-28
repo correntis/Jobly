@@ -26,11 +26,11 @@ namespace UsersService.Presentation.Controllers.Http
 
         [HttpDelete("{id}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new DeleteUserCommand(id), cancellationToken));
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new GetUserQuery(id), cancellationToken));
     }
 }

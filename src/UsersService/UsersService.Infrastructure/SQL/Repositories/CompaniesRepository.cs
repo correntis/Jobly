@@ -28,12 +28,12 @@ namespace UsersService.Infrastructure.SQL.Repositories
             _context.Companies.Remove(companyEntity);
         }
 
-        public async Task<CompanyEntity> GetAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CompanyEntity> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Companies.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
-        public async Task<CompanyEntity> GetWithIncludesAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CompanyEntity> GetWithIncludesAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Companies
                 .Include(c => c.User)

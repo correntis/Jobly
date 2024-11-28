@@ -30,7 +30,9 @@ namespace UsersService.Application.Resumes.Commands.AddResumeCommand
             _ = await _unitOfWork.UsersRepository.GetAsync(request.UserId, cancellationToken)
                 ?? throw new EntityNotFoundException($"User with id {request.UserId} not found");
 
-            if (await _unitOfWork.ResumesRepository.GetByAsync(r => r.UserId, request.UserId, cancellationToken) is not null)
+            var existingResumeEntity = await _unitOfWork.ResumesRepository.GetByAsync(r => r.UserId, request.UserId, cancellationToken);
+
+            if (existingResumeEntity is not null)
             {
                 throw new EntityAlreadyExistsException($"Resume for user with id {request.UserId} already exists");
             }

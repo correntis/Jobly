@@ -5,8 +5,8 @@ namespace UsersService.Domain.Abstractions.Repositories
     public interface ICompaniesRepository
     {
         Task AddAsync(CompanyEntity companyEntity, CancellationToken cancellationToken = default);
-        Task<CompanyEntity> GetAsync(int id, CancellationToken cancellationToken = default);
-        Task<CompanyEntity> GetWithIncludesAsync(int id, CancellationToken cancellationToken = default);
+        Task<CompanyEntity> GetAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<CompanyEntity> GetWithIncludesAsync(Guid id, CancellationToken cancellationToken = default);
         void Update(CompanyEntity companyEntity);
         void Remove(CompanyEntity companyEntity);
     }

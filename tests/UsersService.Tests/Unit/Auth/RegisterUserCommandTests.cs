@@ -113,7 +113,7 @@ namespace UsersService.Tests.Unit.Auth
         {
             var userEntity = new UserEntity()
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 FirstName = command.FirstName,
                 LastName = command.LastName,
                 Email = command.Email,

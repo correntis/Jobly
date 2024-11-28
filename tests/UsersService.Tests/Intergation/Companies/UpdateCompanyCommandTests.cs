@@ -37,7 +37,7 @@ namespace UsersService.Tests.Intergation.Companies
         public async Task ShouldThrowEntityNotFoundException_WhemCompanyNotExist()
         {
             // Arrange
-            var command = GetCommand(int.MaxValue);
+            var command = GetCommand(Guid.NewGuid());
 
             // Act
             var act = async () => await Sender.Send(command);
@@ -46,7 +46,7 @@ namespace UsersService.Tests.Intergation.Companies
             await act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
-        private UpdateCompanyCommand GetCommand(int companyId)
+        private UpdateCompanyCommand GetCommand(Guid companyId)
         {
             var faker = new Faker();
 
@@ -63,7 +63,7 @@ namespace UsersService.Tests.Intergation.Companies
                 null);
         }
 
-        private async Task<int> FillDatabaseAsync()
+        private async Task<Guid> FillDatabaseAsync()
         {
             var userEntity = GetUserEntity();
             var companyEntity = GetCompanyEntity(userEntity);

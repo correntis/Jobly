@@ -53,7 +53,7 @@ namespace UsersService.Tests.Intergation.Resumes
         private async Task ShouldThrowEntityNotFoundException_WhenUserForResumeNotExist()
         {
             // Arrange
-            var command = GetCommand(int.MaxValue);
+            var command = GetCommand(Guid.Empty);
 
             // Act
             var act = async () => await Sender.Send(command);
@@ -62,7 +62,7 @@ namespace UsersService.Tests.Intergation.Resumes
             await act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
-        private AddResumeCommand GetCommand(int userId)
+        private AddResumeCommand GetCommand(Guid userId)
         {
             var faker = new Faker();
 
@@ -77,7 +77,7 @@ namespace UsersService.Tests.Intergation.Resumes
                 tags);
         }
 
-        private async Task<int> FillDatabaseAsync()
+        private async Task<Guid> FillDatabaseAsync()
         {
             var userEntity = GetUserEntity();
 

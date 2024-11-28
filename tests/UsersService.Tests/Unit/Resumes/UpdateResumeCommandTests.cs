@@ -91,7 +91,7 @@ namespace UsersService.Tests.Unit.Resumes
 
             return new UpdateResumeCommand(
                 Guid.NewGuid().ToString(),
-                faker.Random.Int(0),
+                faker.Random.Guid(),
                 faker.Random.String(20),
                 faker.Random.String(20),
                 skills,

@@ -15,6 +15,10 @@ namespace UsersService.Infrastructure.SQL.Configuration
 
             builder.HasIndex(u => u.Email);
 
+            builder.Property(u => u.Id)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NEWID()");
+
             builder.Property(u => u.FirstName)
                 .HasMaxLength(BusinessRules.User.MaxFirstNameLength)
                 .IsRequired();

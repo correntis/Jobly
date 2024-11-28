@@ -98,7 +98,7 @@ namespace UsersService.Tests.Unit.Companies
             var faker = new Faker();
 
             return new UpdateCompanyCommand(
-                faker.Random.Int(0),
+                faker.Random.Guid(),
                 faker.Name.FullName(),
                 faker.Company.CatchPhrase(),
                 faker.Address.City(),

@@ -5,7 +5,7 @@ using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Companies.Commands.DeleteCompanyCommand
 {
-    public class DeleteCompanyCommandHandler : IRequestHandler<DeleteCompanyCommand, int>
+    public class DeleteCompanyCommandHandler : IRequestHandler<DeleteCompanyCommand, Guid>
     {
         private readonly ILogger<DeleteCompanyCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +18,7 @@ namespace UsersService.Application.Companies.Commands.DeleteCompanyCommand
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken = default)
+        public async Task<Guid> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for company with ID {CompanyId}", request.GetType().Name, request.Id);
 

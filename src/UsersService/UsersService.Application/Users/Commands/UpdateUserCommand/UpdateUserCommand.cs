@@ -3,8 +3,8 @@
 namespace UsersService.Application.Users.Commands.UpdateUserCommand
 {
     public sealed record UpdateUserCommand(
-        int Id,
+        Guid Id,
         string FirstName,
         string LastName,
-        string Phone) : IRequest<int>;
+        string Phone) : IRequest<Guid>;
 }

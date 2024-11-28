@@ -127,7 +127,7 @@ namespace UsersService.Tests.Unit.Auth
         {
             var userEntity = new UserEntity()
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Email = command.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.Password),
             };

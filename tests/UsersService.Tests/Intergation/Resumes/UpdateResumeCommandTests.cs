@@ -40,7 +40,7 @@ namespace UsersService.Tests.Intergation.Resumes
         public async Task ShouldThrowEntityNotFoundException_WhenResumeNotExist()
         {
             // Arrange
-            var command = GetCommand(ObjectId.GenerateNewId().ToString(), int.MaxValue);
+            var command = GetCommand(ObjectId.GenerateNewId().ToString(), Guid.Empty);
 
             // Act
             var act = async () => await Sender.Send(command);
@@ -49,7 +49,7 @@ namespace UsersService.Tests.Intergation.Resumes
             await act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
-        private UpdateResumeCommand GetCommand(string resumeId, int userId)
+        private UpdateResumeCommand GetCommand(string resumeId, Guid userId)
         {
             var faker = new Faker();
 
@@ -65,7 +65,7 @@ namespace UsersService.Tests.Intergation.Resumes
                 tags);
         }
 
-        private async Task<(string, int)> FillDatabaseAsync()
+        private async Task<(string, Guid)> FillDatabaseAsync()
         {
             var userEntity = GetUserEntity();
             var resumeEntity = new ResumeEntity();
@@ -85,11 +85,10 @@ namespace UsersService.Tests.Intergation.Resumes
                 await resumesRepository.AddAsync(resumeEntity);
             }
 
-
             return (resumeEntity.Id, userEntity.Id);
         }
 
-        private ResumeEntity GetResumeEntity(int userId)
+        private ResumeEntity GetResumeEntity(Guid userId)
         {
             var faker = new Faker();
 

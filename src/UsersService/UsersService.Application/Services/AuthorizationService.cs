@@ -25,7 +25,7 @@ namespace UsersService.Application.Services
             _tokensRepository = tokensRepository;
         }
 
-        public async Task<Token> IssueTokenAsync(int id, IEnumerable<string> roles, CancellationToken cancellationToken = default)
+        public async Task<Token> IssueTokenAsync(Guid id, IEnumerable<string> roles, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start issue token for user with ID {UserId} and roles {@UserRoles}", id, roles);
 

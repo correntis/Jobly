@@ -9,7 +9,7 @@ using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
 {
-    public class UpdateCompanyCommandHandler : IRequestHandler<UpdateCompanyCommand, int>
+    public class UpdateCompanyCommandHandler : IRequestHandler<UpdateCompanyCommand, Guid>
     {
         private readonly ILogger<UpdateCompanyCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +28,7 @@ namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
             _imagesService = imagesService;
         }
 
-        public async Task<int> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken = default)
+        public async Task<Guid> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for company with ID {CompanyId}", request.GetType().Name, request.Id);
 

@@ -28,7 +28,7 @@ namespace UsersService.Infrastructure.SQL.Repositories
             _context.Users.Remove(userEntity);
         }
 
-        public async Task<UserEntity> GetAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<UserEntity> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         }

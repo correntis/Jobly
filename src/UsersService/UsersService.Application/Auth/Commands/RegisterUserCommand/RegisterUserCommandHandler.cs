@@ -32,7 +32,9 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
         {
             _logger.LogInformation("Start handling {CommandName} for user with Email {Email}", request.GetType().Name, request.Email);
 
-            if (await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email, cancellationToken) is not null)
+            var existingUserEntity = await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email, cancellationToken);
+
+            if (existingUserEntity is not null)
             {
                 throw new EntityAlreadyExistsException($"User with email {request.Email} already exists");
             }

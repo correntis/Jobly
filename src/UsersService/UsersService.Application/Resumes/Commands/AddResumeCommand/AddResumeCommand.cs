@@ -3,7 +3,7 @@
 namespace UsersService.Application.Resumes.Commands.AddResumeCommand
 {
     public sealed record AddResumeCommand(
-        int UserId,
+        Guid UserId,
         string Title,
         string Summary,
         List<string> Skills,

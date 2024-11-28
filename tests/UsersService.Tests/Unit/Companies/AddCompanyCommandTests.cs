@@ -91,7 +91,7 @@ namespace UsersService.Tests.Unit.Companies
         {
             return new CompanyEntity()
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 UserId = command.UserId,
                 Name = command.Name,
                 Address = command.Address,
@@ -106,7 +106,7 @@ namespace UsersService.Tests.Unit.Companies
             var faker = new Faker();
 
             return new AddCompanyCommand(
-                faker.Random.Int(0),
+                faker.Random.Guid(),
                 faker.Company.CompanyName(),
                 faker.Address.City(),
                 faker.Address.SecondaryAddress(),

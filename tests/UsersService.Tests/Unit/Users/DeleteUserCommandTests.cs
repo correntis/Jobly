@@ -23,7 +23,7 @@ namespace UsersService.Tests.Unit.Users
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var handler = new DeleteUserCommandHandler(_logger.Object, unitOfWorkMock.Object);
 
-            var id = 1;
+            var id = Guid.NewGuid();
             var command = new DeleteUserCommand(id);
             var userEntity = new UserEntity { Id = id };
 
@@ -59,7 +59,7 @@ namespace UsersService.Tests.Unit.Users
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var handler = new DeleteUserCommandHandler(_logger.Object, unitOfWorkMock.Object);
 
-            var id = 1;
+            var id = Guid.NewGuid();
             var command = new DeleteUserCommand(id);
 
             unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(id, CancellationToken.None)).ReturnsAsync((UserEntity)null);

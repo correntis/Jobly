@@ -72,7 +72,7 @@ namespace UsersService.Tests.Intergation.Resumes
             return resumeEntity.Id;
         }
 
-        private ResumeEntity GetResumeEntity(int userId)
+        private ResumeEntity GetResumeEntity(Guid userId)
         {
             var faker = new Faker();
 

@@ -2,9 +2,9 @@
 {
     public class Company
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string LogoPath { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
