@@ -12,36 +12,35 @@ namespace UsersService.Application.Auth.Commands.LoginUserCommand
     {
         private readonly ILogger<LoginUserCommandHandler> _logger;
         private readonly IAuthorizationService _authService;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         public LoginUserCommandHandler(
             ILogger<LoginUserCommandHandler> logger,
             IAuthorizationService authService,
-            IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _authService = authService;
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<(User, Token)> Handle(LoginUserCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with Email {Email}", request.GetType().Name, request.Email);
 
-            var userEntity = await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email, cancellationToken)
+            var userEntity = await _unitOfWork.UsersRepository.FindByEmailAsync(request.Email)
                 ?? throw new EntityNotFoundException($"User with email {request.Email} not found");
 
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, userEntity.PasswordHash))
-            {
-                throw new InvalidPasswordException("Invalid password");
-            }
+            await _unitOfWork.UsersRepository.CheckPasswordAsync(userEntity, request.Password);
 
             var user = _mapper.Map<User>(userEntity);
 
-            var token = await _authService.IssueTokenAsync(userEntity.Id, [userEntity.Type], cancellationToken);
+            var userRoles = await _unitOfWork.UsersRepository.GetRolesAsync(userEntity);
+
+            var token = await _authService.IssueTokenAsync(userEntity.Id, userRoles, cancellationToken);
 
             _logger.LogInformation("Successfully handled {CommandName} for user ID {UserId}", request.GetType().Name, userEntity.Id);
 

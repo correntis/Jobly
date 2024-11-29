@@ -27,7 +27,7 @@ namespace UsersService.Application.Resumes.Commands.AddResumeCommand
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 
-            _ = await _unitOfWork.UsersRepository.GetAsync(request.UserId, cancellationToken)
+            _ = await _unitOfWork.UsersRepository.FindByIdAsync(request.UserId.ToString())
                 ?? throw new EntityNotFoundException($"User with id {request.UserId} not found");
 
             var existingResumeEntity = await _unitOfWork.ResumesRepository.GetByAsync(r => r.UserId, request.UserId, cancellationToken);

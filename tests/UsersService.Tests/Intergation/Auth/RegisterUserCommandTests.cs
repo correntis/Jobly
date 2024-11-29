@@ -26,7 +26,7 @@ namespace UsersService.Tests.Intergation.Auth
             var command = GetCommand();
 
             // Act
-            var token = await Sender.Send(command);
+            var (userId, token) = await Sender.Send(command);
 
             // Assert
             token.Should().NotBeNull();
@@ -83,8 +83,7 @@ namespace UsersService.Tests.Intergation.Auth
             {
                 FirstName = faker.Name.FirstName(),
                 LastName = faker.Name.LastName(),
-                Phone = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
-                Type = faker.PickRandom(BusinessRules.Roles.All),
+                PhoneNumber = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Internet.Password(),
                 CreatedAt = DateTime.UtcNow,
@@ -100,7 +99,7 @@ namespace UsersService.Tests.Intergation.Auth
                 faker.Name.LastName(),
                 faker.Internet.Email(),
                 faker.Internet.Password(),
-                faker.PickRandom(BusinessRules.Roles.All));
+                BusinessRules.Roles.All.ToList());
         }
     }
 }

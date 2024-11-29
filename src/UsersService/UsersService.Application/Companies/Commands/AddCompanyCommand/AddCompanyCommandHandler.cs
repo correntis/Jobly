@@ -31,7 +31,7 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 
-            var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.UserId, cancellationToken)
+            var userEntity = await _unitOfWork.UsersRepository.FindByIdAsync(request.UserId.ToString())
                 ?? throw new EntityNotFoundException($"User with id {request.UserId} not found");
 
             var companyEntity = _mapper.Map<CompanyEntity>(request);

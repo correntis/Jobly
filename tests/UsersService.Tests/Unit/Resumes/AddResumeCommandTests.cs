@@ -32,7 +32,7 @@ namespace UsersService.Tests.Unit.Resumes
             var resumeEntity = GetResumeFromCommand(command);
             var userEntity = new UserEntity() { Id = command.UserId };
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(command.UserId, CancellationToken.None)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(command.UserId.ToString())).ReturnsAsync(userEntity);
             unitOfWorkMock.Setup(u => u.ResumesRepository.GetByAsync(r => r.UserId, command.UserId, CancellationToken.None))
                 .ReturnsAsync((ResumeEntity)null);
             unitOfWorkMock.Setup(u => u.ResumesRepository.AddAsync(resumeEntity, CancellationToken.None)).Returns(Task.CompletedTask);
@@ -45,7 +45,7 @@ namespace UsersService.Tests.Unit.Resumes
             idAct.Should().Be(resumeEntity.Id);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.GetAsync(command.UserId, CancellationToken.None),
+                u => u.UsersRepository.FindByIdAsync(command.UserId.ToString()),
                 Times.Once,
                 "Get method should be called once in users repository");
 
@@ -65,7 +65,7 @@ namespace UsersService.Tests.Unit.Resumes
             var command = GetCommand();
 
             unitOfWorkMock.Setup(
-                u => u.UsersRepository.GetAsync(command.UserId, CancellationToken.None)).ReturnsAsync((UserEntity)null);
+                u => u.UsersRepository.FindByIdAsync(command.UserId.ToString())).ReturnsAsync((UserEntity)null);
 
             // Act
             var act = async () => await handler.Handle(command);
@@ -85,7 +85,7 @@ namespace UsersService.Tests.Unit.Resumes
             var resumeEntity = new ResumeEntity();
             var userEntity = new UserEntity() { Id = command.UserId };
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(command.UserId, CancellationToken.None)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(command.UserId.ToString())).ReturnsAsync(userEntity);
             unitOfWorkMock.Setup(u => u.ResumesRepository.GetByAsync(r => r.UserId, command.UserId, CancellationToken.None))
                 .ReturnsAsync(resumeEntity);
 

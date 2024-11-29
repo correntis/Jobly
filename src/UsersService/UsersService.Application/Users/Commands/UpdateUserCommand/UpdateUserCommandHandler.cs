@@ -26,14 +26,12 @@ namespace UsersService.Application.Users.Commands.UpdateUserCommand
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
-            var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.Id, cancellationToken)
+            var userEntity = await _unitOfWork.UsersRepository.FindByIdAsync(request.Id.ToString())
                 ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
 
             _mapper.Map(request, userEntity);
 
-            _unitOfWork.UsersRepository.Update(userEntity);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.UsersRepository.UpdateAsync(userEntity);
 
             _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);
 

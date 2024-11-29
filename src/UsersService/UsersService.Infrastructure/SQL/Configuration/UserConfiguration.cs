@@ -26,15 +26,11 @@ namespace UsersService.Infrastructure.SQL.Configuration
             builder.Property(u => u.LastName)
                 .HasMaxLength(BusinessRules.User.MaxLastNameLength);
 
-            builder.Property(u => u.Type)
-                .HasMaxLength(BusinessRules.User.MaxTypeLength)
-                .IsRequired();
-
             builder.Property(u => u.Email)
                 .HasMaxLength(BusinessRules.User.MaxEmailLength)
                 .IsRequired();
 
-            builder.Property(u => u.Phone)
+            builder.Property(u => u.PhoneNumber)
                 .HasMaxLength(BusinessRules.User.MaxPhoneLength);
 
             builder.Property(u => u.PasswordHash)

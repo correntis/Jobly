@@ -34,7 +34,7 @@ namespace UsersService.Tests.Unit.Users
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(command.Id, CancellationToken.None)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(command.Id.ToString())).ReturnsAsync(userEntity);
             unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
 
             // Act
@@ -44,7 +44,7 @@ namespace UsersService.Tests.Unit.Users
             idAct.Should().Be(command.Id);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.GetAsync(command.Id, CancellationToken.None),
+                u => u.UsersRepository.FindByIdAsync(command.Id.ToString()),
                 Times.Once,
                 "Get method should be called once");
 
@@ -69,7 +69,7 @@ namespace UsersService.Tests.Unit.Users
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(command.Id, CancellationToken.None)).ReturnsAsync((UserEntity)null);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(command.Id.ToString())).ReturnsAsync((UserEntity)null);
 
             // Act
             var act = async () => await handler.Handle(command, CancellationToken.None);

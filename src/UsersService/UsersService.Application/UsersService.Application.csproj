@@ -24,9 +24,4 @@
     <ProjectReference Include="..\UsersService.Domain\UsersService.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="UseCases\" />
-  </ItemGroup>
-
 </Project>

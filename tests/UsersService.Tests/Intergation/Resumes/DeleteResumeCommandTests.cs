@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using UsersService.Application.Resumes.Commands.DeleteResumeCommand;
 using UsersService.Domain.Abstractions.Repositories;
-using UsersService.Domain.Constants;
 using UsersService.Domain.Entities.NoSQL;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
@@ -98,8 +97,7 @@ namespace UsersService.Tests.Intergation.Resumes
             {
                 FirstName = faker.Name.FirstName(),
                 LastName = faker.Name.LastName(),
-                Phone = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
-                Type = faker.PickRandom(BusinessRules.Roles.All),
+                PhoneNumber = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Random.Hash(),
                 CreatedAt = DateTime.UtcNow,

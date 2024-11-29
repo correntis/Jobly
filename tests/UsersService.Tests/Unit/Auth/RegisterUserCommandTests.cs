@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bogus;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
 using UsersService.Application.Auth.Commands.RegisterUserCommand;
@@ -32,34 +33,35 @@ namespace UsersService.Tests.Unit.Auth
             var handler = new RegisterUserCommandHandler(
                 _logger.Object,
                 authServiceMock.Object,
-                unitOfWorkMock.Object,
-                mapperMock.Object);
+                mapperMock.Object,
+                unitOfWorkMock.Object);
 
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
-            var roles = new List<string> { userEntity.Type };
+            var roles = BusinessRules.Roles.All;
             var token = GetToken();
+            var result = IdentityResult.Success;
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email, CancellationToken.None)).ReturnsAsync((UserEntity)null);
-            unitOfWorkMock.Setup(u => u.UsersRepository.AddAsync(userEntity, CancellationToken.None)).Returns(Task.CompletedTask);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email)).ReturnsAsync((UserEntity)null);
+            unitOfWorkMock.Setup(u => u.UsersRepository.CreateAsync(userEntity)).ReturnsAsync(result);
             unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
             authServiceMock.Setup(a => a.IssueTokenAsync(userEntity.Id, roles, CancellationToken.None)).ReturnsAsync(token);
             mapperMock.Setup(m => m.Map<UserEntity>(command)).Returns(userEntity);
 
             // Act
-            var tokenAct = await handler.Handle(command, CancellationToken.None);
+            var (idAct, tokenAct) = await handler.Handle(command, CancellationToken.None);
 
             // Assert
             tokenAct.Should().NotBeNull();
             tokenAct.AccessToken.Should().Be(token.AccessToken);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.GetByEmailAsync(command.Email, CancellationToken.None),
+                u => u.UsersRepository.FindByEmailAsync(command.Email),
                 Times.Once,
                 "Get by email method should be called once");
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.AddAsync(userEntity, CancellationToken.None),
+                u => u.UsersRepository.CreateAsync(userEntity),
                 Times.Once,
                 "Add method should be called once in repository");
 
@@ -79,19 +81,20 @@ namespace UsersService.Tests.Unit.Auth
         {
             // Arrange
             var unitOfWorkMock = new Mock<IUnitOfWork>();
+            var userManagerMock = new Mock<UserManager<UserEntity>>();
 
             var handler = new RegisterUserCommandHandler(
                 _logger.Object,
                 null,
-                unitOfWorkMock.Object,
-                null);
+                null,
+                unitOfWorkMock.Object);
 
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
-            var roles = new List<string> { userEntity.Type };
+            var roles = BusinessRules.Roles.All;
             var token = GetToken();
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email, CancellationToken.None)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email)).ReturnsAsync(userEntity);
 
             // Act
             var act = async () => await handler.Handle(command, CancellationToken.None);
@@ -117,7 +120,6 @@ namespace UsersService.Tests.Unit.Auth
                 FirstName = command.FirstName,
                 LastName = command.LastName,
                 Email = command.Email,
-                Type = command.Type,
             };
 
             return userEntity;
@@ -132,7 +134,7 @@ namespace UsersService.Tests.Unit.Auth
                 faker.Name.LastName(),
                 faker.Internet.Email(),
                 faker.Internet.Password(),
-                faker.PickRandom(BusinessRules.Roles.All));
+                BusinessRules.Roles.All.ToList());
         }
     }
 }

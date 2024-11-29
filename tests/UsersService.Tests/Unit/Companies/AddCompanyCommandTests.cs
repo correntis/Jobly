@@ -35,7 +35,7 @@ namespace UsersService.Tests.Unit.Companies
             var userEntity = new UserEntity();
             var logoPath = "//path";
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(command.UserId, CancellationToken.None)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(command.UserId.ToString())).ReturnsAsync(userEntity);
             unitOfWorkMock.Setup(u => u.CompaniesRepository.AddAsync(companyEntity, CancellationToken.None)).Returns(Task.CompletedTask);
             unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
             mapperMock.Setup(m => m.Map<CompanyEntity>(command)).Returns(companyEntity);
@@ -50,7 +50,7 @@ namespace UsersService.Tests.Unit.Companies
             companyEntity.User.Should().Be(userEntity);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.GetAsync(command.UserId, CancellationToken.None),
+                u => u.UsersRepository.FindByIdAsync(command.UserId.ToString()),
                 Times.Once,
                 "Get method should be called once in users repository");
 
@@ -78,7 +78,7 @@ namespace UsersService.Tests.Unit.Companies
             var handler = new AddCompanyCommandHandler(_loggerMock.Object, unitOfWorkMock.Object, null, null);
             var command = GetCommand();
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetAsync(command.UserId, CancellationToken.None)).ReturnsAsync((UserEntity)null);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(command.UserId.ToString())).ReturnsAsync((UserEntity)null);
 
             // Act
             var act = async () => await handler.Handle(command, CancellationToken.None);
