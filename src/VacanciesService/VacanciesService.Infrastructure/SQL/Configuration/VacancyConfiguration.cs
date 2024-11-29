@@ -19,7 +19,9 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
                 .WithOne(a => a.Vacancy);
 
             builder.Property(v => v.Id)
-                .ValueGeneratedOnAdd();
+                .HasColumnType("uuid")
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("gen_random_uuid()");
 
             builder.Property(v => v.EmploymentType)
                 .HasMaxLength(BusinessRules.Vacancy.EmployementTypeMaxLenght);

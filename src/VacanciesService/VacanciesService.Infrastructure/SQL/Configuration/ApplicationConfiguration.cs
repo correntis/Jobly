@@ -16,7 +16,9 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
             builder.HasIndex(a => a.UserId);
 
             builder.Property(a => a.Id)
-                .ValueGeneratedOnAdd();
+                .HasColumnType("uuid")
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("gen_random_uuid()");
 
             builder.Property(a => a.Status)
                 .HasMaxLength(BusinessRules.Application.StatusMaxLength)

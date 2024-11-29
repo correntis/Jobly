@@ -6,7 +6,7 @@ using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Application.Applications.Commands.UpdateApplicationCommand
 {
-    public class UpdateApplicationCommandHandler : IRequestHandler<UpdateApplicationCommand, int>
+    public class UpdateApplicationCommandHandler : IRequestHandler<UpdateApplicationCommand, Guid>
     {
         private readonly ILogger<UpdateApplicationCommandHandler> _logger;
         private readonly IVacanciesWriteContext _vacanciesContext;
@@ -19,7 +19,7 @@ namespace VacanciesService.Application.Applications.Commands.UpdateApplicationCo
             _vacanciesContext = vacanciesContext;
         }
 
-        public async Task<int> Handle(UpdateApplicationCommand request, CancellationToken token)
+        public async Task<Guid> Handle(UpdateApplicationCommand request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling {CommandName} for application with ID {ApplicationId}",

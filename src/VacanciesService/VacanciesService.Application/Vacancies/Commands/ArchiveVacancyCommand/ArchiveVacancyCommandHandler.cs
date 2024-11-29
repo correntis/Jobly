@@ -6,7 +6,7 @@ using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand
 {
-    public class ArchiveVacancyCommandHandler : IRequestHandler<ArchiveVacancyCommand, int>
+    public class ArchiveVacancyCommandHandler : IRequestHandler<ArchiveVacancyCommand, Guid>
     {
         private readonly ILogger<ArchiveVacancyCommandHandler> _logger;
         private readonly IVacanciesWriteContext _vacanciesContext;
@@ -19,7 +19,7 @@ namespace VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand
             _vacanciesContext = vacanciesContext;
         }
 
-        public async Task<int> Handle(ArchiveVacancyCommand request, CancellationToken token)
+        public async Task<Guid> Handle(ArchiveVacancyCommand request, CancellationToken token)
         {
             _logger.LogInformation(
                  "Start handling {CommandName} for vacancy with ID {VacancyId}",

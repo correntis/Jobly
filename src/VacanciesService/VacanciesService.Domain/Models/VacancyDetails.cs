@@ -3,7 +3,7 @@
     public class VacancyDetails
     {
         public string Id { get; set; }
-        public int VacancyId { get; set; }
+        public Guid VacancyId { get; set; }
         public List<string> Requirements { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Tags { get; set; }

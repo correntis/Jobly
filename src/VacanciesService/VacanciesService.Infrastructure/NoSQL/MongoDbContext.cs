@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
+using UsersService.Infrastructure.NoSQL.Providers;
 using VacanciesService.Domain.Abstractions.Contexts;
 using VacanciesService.Domain.Configuration;
 using VacanciesService.Domain.Entities.NoSQL;
@@ -13,6 +15,8 @@ namespace VacanciesService.Infrastructure.NoSQL
 
         static MongoDbContext()
         {
+            BsonSerializer.RegisterSerializationProvider(new GuidSerializationProvider());
+
             var convention = new ConventionPack
             {
                 new CamelCaseElementNameConvention(),
