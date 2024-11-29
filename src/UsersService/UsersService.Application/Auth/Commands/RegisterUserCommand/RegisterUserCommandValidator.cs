@@ -30,15 +30,6 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
                 .MinimumLength(BusinessRules.User.MinPasswordLength)
                 .WithMessage("Password is too short");
 
-            RuleFor(c => c.Type)
-                .NotNull()
-                .NotEmpty()
-                .WithMessage("Type is required");
-
-            RuleFor(c => c.Type)
-                .Must(t => BusinessRules.Roles.All.Contains(t))
-                .WithMessage(GetTypeValidationMessage());
-
             RuleFor(c => c.FirstName)
                 .NotNull()
                 .NotEmpty()

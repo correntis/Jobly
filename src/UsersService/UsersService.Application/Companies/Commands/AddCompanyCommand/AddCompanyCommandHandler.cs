@@ -8,7 +8,7 @@ using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Companies.Commands.AddCompanyCommand
 {
-    public class AddCompanyCommandHandler : IRequestHandler<AddCompanyCommand, int>
+    public class AddCompanyCommandHandler : IRequestHandler<AddCompanyCommand, Guid>
     {
         private readonly ILogger<AddCompanyCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -27,11 +27,11 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
             _imagesService = imagesService;
         }
 
-        public async Task<int> Handle(AddCompanyCommand request, CancellationToken cancellationToken = default)
+        public async Task<Guid> Handle(AddCompanyCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 
-            var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.UserId, cancellationToken)
+            var userEntity = await _unitOfWork.UsersRepository.FindByIdAsync(request.UserId.ToString())
                 ?? throw new EntityNotFoundException($"User with id {request.UserId} not found");
 
             var companyEntity = _mapper.Map<CompanyEntity>(request);

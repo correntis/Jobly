@@ -2,7 +2,7 @@
 {
     public class CompanyEntity : BaseEntity
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string LogoPath { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

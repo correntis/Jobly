@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using UsersService.Application.Resumes.Commands.UpdateResumeCommand;
 using UsersService.Domain.Abstractions.Repositories;
-using UsersService.Domain.Constants;
 using UsersService.Domain.Entities.NoSQL;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
@@ -40,7 +39,7 @@ namespace UsersService.Tests.Intergation.Resumes
         public async Task ShouldThrowEntityNotFoundException_WhenResumeNotExist()
         {
             // Arrange
-            var command = GetCommand(ObjectId.GenerateNewId().ToString(), int.MaxValue);
+            var command = GetCommand(ObjectId.GenerateNewId().ToString(), Guid.Empty);
 
             // Act
             var act = async () => await Sender.Send(command);
@@ -49,7 +48,7 @@ namespace UsersService.Tests.Intergation.Resumes
             await act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
-        private UpdateResumeCommand GetCommand(string resumeId, int userId)
+        private UpdateResumeCommand GetCommand(string resumeId, Guid userId)
         {
             var faker = new Faker();
 
@@ -65,7 +64,7 @@ namespace UsersService.Tests.Intergation.Resumes
                 tags);
         }
 
-        private async Task<(string, int)> FillDatabaseAsync()
+        private async Task<(string, Guid)> FillDatabaseAsync()
         {
             var userEntity = GetUserEntity();
             var resumeEntity = new ResumeEntity();
@@ -85,11 +84,10 @@ namespace UsersService.Tests.Intergation.Resumes
                 await resumesRepository.AddAsync(resumeEntity);
             }
 
-
             return (resumeEntity.Id, userEntity.Id);
         }
 
-        private ResumeEntity GetResumeEntity(int userId)
+        private ResumeEntity GetResumeEntity(Guid userId)
         {
             var faker = new Faker();
 
@@ -115,8 +113,7 @@ namespace UsersService.Tests.Intergation.Resumes
             {
                 FirstName = faker.Name.FirstName(),
                 LastName = faker.Name.LastName(),
-                Phone = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
-                Type = faker.PickRandom(BusinessRules.Roles.All),
+                PhoneNumber = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Random.Hash(),
                 CreatedAt = DateTime.UtcNow,

@@ -6,6 +6,7 @@ using Moq;
 using UsersService.Application.Auth.Commands.LoginUserCommand;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Abstractions.Services;
+using UsersService.Domain.Constants;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 using UsersService.Domain.Models;
@@ -32,15 +33,15 @@ namespace UsersService.Tests.Unit.Auth
             var handler = new LoginUserCommandHandler(
                 _loggerMock.Object,
                 authServiceMock.Object,
-                unitOfWorkMock.Object,
-                mapperMock.Object);
+                mapperMock.Object,
+                unitOfWorkMock.Object);
 
             var command = GetCommand();
             var token = GetToken();
             var (user, userEntity) = GetUsersFromCommand(command);
-            var roles = new List<string> { userEntity.Type };
+            var roles = BusinessRules.Roles.All;
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email, CancellationToken.None)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email.ToString())).ReturnsAsync(userEntity);
             authServiceMock.Setup(a => a.IssueTokenAsync(userEntity.Id, roles, CancellationToken.None)).ReturnsAsync(token);
             mapperMock.Setup(m => m.Map<User>(userEntity)).Returns(user);
 
@@ -54,7 +55,7 @@ namespace UsersService.Tests.Unit.Auth
             tokenAct.AccessToken.Should().Be(token.AccessToken);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.GetByEmailAsync(command.Email, CancellationToken.None),
+                u => u.UsersRepository.FindByIdAsync(command.Email.ToString()),
                 Times.Once,
                 "Get by email method should be called");
 
@@ -73,12 +74,12 @@ namespace UsersService.Tests.Unit.Auth
             var handler = new LoginUserCommandHandler(
                 _loggerMock.Object,
                 null,
-                unitOfWorkMock.Object,
-                null);
+                null,
+                unitOfWorkMock.Object);
 
             var command = new LoginUserCommand(null, null);
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email, CancellationToken.None)).ReturnsAsync((UserEntity)null);
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email)).ReturnsAsync((UserEntity)null);
 
             // Act
             var act = async () => await handler.Handle(command, CancellationToken.None);
@@ -96,15 +97,15 @@ namespace UsersService.Tests.Unit.Auth
             var handler = new LoginUserCommandHandler(
                 _loggerMock.Object,
                 null,
-                unitOfWorkMock.Object,
-                null);
+                null,
+                unitOfWorkMock.Object);
 
             var command = GetCommand();
             var (user, userEntity) = GetUsersFromCommand(command);
 
             command = command with { Password = string.Empty };
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email, CancellationToken.None))
+            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email))
                 .ReturnsAsync(userEntity);
 
             // Act
@@ -127,7 +128,7 @@ namespace UsersService.Tests.Unit.Auth
         {
             var userEntity = new UserEntity()
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Email = command.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.Password),
             };

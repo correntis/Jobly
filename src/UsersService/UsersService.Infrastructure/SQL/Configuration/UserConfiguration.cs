@@ -15,6 +15,10 @@ namespace UsersService.Infrastructure.SQL.Configuration
 
             builder.HasIndex(u => u.Email);
 
+            builder.Property(u => u.Id)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("NEWID()");
+
             builder.Property(u => u.FirstName)
                 .HasMaxLength(BusinessRules.User.MaxFirstNameLength)
                 .IsRequired();
@@ -22,15 +26,11 @@ namespace UsersService.Infrastructure.SQL.Configuration
             builder.Property(u => u.LastName)
                 .HasMaxLength(BusinessRules.User.MaxLastNameLength);
 
-            builder.Property(u => u.Type)
-                .HasMaxLength(BusinessRules.User.MaxTypeLength)
-                .IsRequired();
-
             builder.Property(u => u.Email)
                 .HasMaxLength(BusinessRules.User.MaxEmailLength)
                 .IsRequired();
 
-            builder.Property(u => u.Phone)
+            builder.Property(u => u.PhoneNumber)
                 .HasMaxLength(BusinessRules.User.MaxPhoneLength);
 
             builder.Property(u => u.PasswordHash)

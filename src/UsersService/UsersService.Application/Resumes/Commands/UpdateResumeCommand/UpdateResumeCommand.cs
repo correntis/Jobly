@@ -4,7 +4,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateResumeCommand
 {
     public sealed record UpdateResumeCommand(
         string Id,
-        int UserId,
+        Guid UserId,
         string Title,
         string Summary,
         List<string> Skills,

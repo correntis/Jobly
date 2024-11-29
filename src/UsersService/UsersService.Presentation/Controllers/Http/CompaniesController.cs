@@ -31,12 +31,12 @@ namespace UsersService.Presentation.Controllers.Http
 
         [HttpDelete("{id}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new DeleteCompanyCommand(id), cancellationToken));
 
         [HttpGet("{id}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
-        public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
             => Ok(await _mediator.Send(new GetCompanyQuery(id), cancellationToken));
     }
 }

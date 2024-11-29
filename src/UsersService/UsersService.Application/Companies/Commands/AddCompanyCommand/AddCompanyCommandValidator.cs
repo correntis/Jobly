@@ -9,7 +9,7 @@ namespace UsersService.Application.Companies.Commands.AddCompanyCommand
         public AddCompanyCommandValidator()
         {
             RuleFor(c => c.UserId)
-                .GreaterThan(-1)
+                .NotEqual(Guid.Empty)
                 .WithMessage("Incorrect user");
 
             RuleFor(c => c.Name)

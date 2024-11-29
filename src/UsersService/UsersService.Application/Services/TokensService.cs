@@ -23,7 +23,7 @@ namespace UsersService.Application.Services
             _jwtOptions = jwtOptions;
         }
 
-        public string CreateAccessToken(int id, IEnumerable<string> roles, DateTime expiresTime)
+        public string CreateAccessToken(Guid id, IEnumerable<string> roles, DateTime expiresTime)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.Secret));
 

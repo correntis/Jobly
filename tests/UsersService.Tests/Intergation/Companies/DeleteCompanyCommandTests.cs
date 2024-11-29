@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using UsersService.Application.Companies.Commands.DeleteCompanyCommand;
-using UsersService.Domain.Constants;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 using UsersService.Infrastructure.SQL;
@@ -37,7 +36,7 @@ namespace UsersService.Tests.Intergation.Companies
         public async Task ShouldThrowEntityNotFoundException_WhenCompanyNotExist()
         {
             // Arrange
-            var command = new DeleteCompanyCommand(int.MaxValue);
+            var command = new DeleteCompanyCommand(Guid.Empty);
 
             // Act
             var act = async () => await Sender.Send(command);
@@ -46,7 +45,7 @@ namespace UsersService.Tests.Intergation.Companies
             await act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
-        private async Task<int> FillDatabaseAsync()
+        private async Task<Guid> FillDatabaseAsync()
         {
             var userEntity = GetUserEntity();
             var companyEntity = GetCompanyEntity(userEntity);
@@ -70,8 +69,7 @@ namespace UsersService.Tests.Intergation.Companies
             {
                 FirstName = faker.Name.FirstName(),
                 LastName = faker.Name.LastName(),
-                Phone = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
-                Type = faker.PickRandom(BusinessRules.Roles.All),
+                PhoneNumber = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Random.Hash(),
                 CreatedAt = DateTime.UtcNow,

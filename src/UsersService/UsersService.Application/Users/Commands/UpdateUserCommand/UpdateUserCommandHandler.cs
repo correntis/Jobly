@@ -6,7 +6,7 @@ using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Users.Commands.UpdateUserCommand
 {
-    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, int>
+    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Guid>
     {
         private readonly ILogger<UpdateUserCommandHandler> _logger;
         private readonly IMapper _mapper;
@@ -22,18 +22,16 @@ namespace UsersService.Application.Users.Commands.UpdateUserCommand
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(UpdateUserCommand request, CancellationToken cancellationToken = default)
+        public async Task<Guid> Handle(UpdateUserCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
-            var userEntity = await _unitOfWork.UsersRepository.GetAsync(request.Id, cancellationToken)
+            var userEntity = await _unitOfWork.UsersRepository.FindByIdAsync(request.Id.ToString())
                 ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
 
             _mapper.Map(request, userEntity);
 
-            _unitOfWork.UsersRepository.Update(userEntity);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.UsersRepository.UpdateAsync(userEntity);
 
             _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);
 

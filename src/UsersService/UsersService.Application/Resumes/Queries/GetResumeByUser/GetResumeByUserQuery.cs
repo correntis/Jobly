@@ -3,5 +3,5 @@ using UsersService.Domain.Models;
 
 namespace UsersService.Application.Resumes.Queries.GetResumeByUser
 {
-    public sealed record GetResumeByUserQuery(int UserId) : IRequest<Resume>;
+    public sealed record GetResumeByUserQuery(Guid UserId) : IRequest<Resume>;
 }

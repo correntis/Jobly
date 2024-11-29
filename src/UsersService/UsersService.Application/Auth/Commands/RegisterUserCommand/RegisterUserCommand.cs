@@ -8,5 +8,5 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
         string LastName,
         string Email,
         string Password,
-        string Type) : IRequest<Token>;
+        List<string> RolesNames) : IRequest<(Guid, Token)>;
 }

@@ -2,5 +2,5 @@
 
 namespace UsersService.Application.Companies.Commands.DeleteCompanyCommand
 {
-    public sealed record DeleteCompanyCommand(int Id) : IRequest<int>;
+    public sealed record DeleteCompanyCommand(Guid Id) : IRequest<Guid>;
 }

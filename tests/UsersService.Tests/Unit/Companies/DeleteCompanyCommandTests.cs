@@ -23,7 +23,7 @@ namespace UsersService.Tests.Unit.Companies
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var handler = new DeleteCompanyCommandHandler(_logger.Object, unitOfWorkMock.Object);
 
-            var id = 1;
+            var id = Guid.NewGuid();
             var command = new DeleteCompanyCommand(id);
             var companyEntity = new CompanyEntity { Id = id };
 
@@ -59,7 +59,7 @@ namespace UsersService.Tests.Unit.Companies
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var handler = new DeleteCompanyCommandHandler(_logger.Object, unitOfWorkMock.Object);
 
-            var id = 1;
+            var id = Guid.NewGuid();
             var command = new DeleteCompanyCommand(id);
 
             unitOfWorkMock.Setup(u => u.CompaniesRepository.GetAsync(id, CancellationToken.None)).ReturnsAsync((CompanyEntity)null);

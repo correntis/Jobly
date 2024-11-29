@@ -11,8 +11,13 @@ namespace UsersService.Application.Users.Mapping
         public UserProfile()
         {
             CreateMap<UserEntity, User>();
-            CreateMap<RegisterUserCommand, UserEntity>();
+
+            CreateMap<RegisterUserCommand, UserEntity>()
+                .ForMember(u => u.UserName, dest => dest.MapFrom(r => r.Email));
+
             CreateMap<UpdateUserCommand, UserEntity>();
+
+            CreateMap<RoleEntity, Role>().ReverseMap();
         }
     }
 }

@@ -19,17 +19,14 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
 
         public async Task AddAsync(VacancyDetailsEntity entity, CancellationToken cancellationToken = default)
         {
-            var options = new InsertOneOptions();
-
-            await _context.VacanciesDetails.InsertOneAsync(entity, options, cancellationToken);
+            await _context.VacanciesDetails.InsertOneAsync(entity, null, cancellationToken);
         }
 
         public async Task UpdateAsync(VacancyDetailsEntity entity, CancellationToken cancellationToken = default)
         {
-            var options = new ReplaceOptions();
             var filter = Builders<VacancyDetailsEntity>.Filter.Eq(vd => vd.Id, entity.Id);
 
-            await _context.VacanciesDetails.ReplaceOneAsync(filter, entity, options, cancellationToken);
+            await _context.VacanciesDetails.ReplaceOneAsync(filter, entity, (ReplaceOptions)null, cancellationToken);
         }
 
         public async Task UpdateByAsync<TValue>(
@@ -40,14 +37,13 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
         {
             var filter = Builders<VacancyDetailsEntity>.Filter.Eq(vd => vd.Id, id);
             var update = Builders<VacancyDetailsEntity>.Update.Set(field, value);
-            var options = new UpdateOptions();
 
             if (value is null)
             {
                 update = Builders<VacancyDetailsEntity>.Update.Unset(field);
             }
 
-            await _context.VacanciesDetails.UpdateOneAsync(filter, update, options, cancellationToken);
+            await _context.VacanciesDetails.UpdateOneAsync(filter, update, null, cancellationToken);
         }
 
         public async Task DeleteByAsync<TValue>(

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using UsersService.Domain.Configuration;
 using UsersService.Domain.Entities.NoSQL;
+using UsersService.Infrastructure.NoSQL.Providers;
 
 namespace UsersService.Infrastructure.NoSQL
 {
@@ -13,6 +15,8 @@ namespace UsersService.Infrastructure.NoSQL
 
         static MongoDbContext()
         {
+            BsonSerializer.RegisterSerializationProvider(new GuidSerializationProvider());
+
             var conventions = new ConventionPack
             {
                 new CamelCaseElementNameConvention(),

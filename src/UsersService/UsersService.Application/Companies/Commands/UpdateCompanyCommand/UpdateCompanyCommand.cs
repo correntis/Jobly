@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
 {
     public sealed record UpdateCompanyCommand(
-        int Id,
+        Guid Id,
         string Name,
         string Description,
         string City,
@@ -14,5 +14,5 @@ namespace UsersService.Application.Companies.Commands.UpdateCompanyCommand
         string WebSite,
         string Type,
         IFormFile Image
-        ) : IRequest<int>;
+        ) : IRequest<Guid>;
 }

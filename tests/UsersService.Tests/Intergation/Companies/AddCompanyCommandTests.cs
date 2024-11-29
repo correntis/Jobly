@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using UsersService.Application.Companies.Commands.AddCompanyCommand;
-using UsersService.Domain.Constants;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 using UsersService.Infrastructure.SQL;
@@ -37,7 +36,7 @@ namespace UsersService.Tests.Intergation.Companies
         public async Task ShouldThrowEntityNotFoundException_WhenUserForCompanyNotExist()
         {
             // Arrange
-            var command = GetCommand(int.MaxValue);
+            var command = GetCommand(Guid.Empty);
 
             // Act
             var act = async () => await Sender.Send(command);
@@ -46,7 +45,7 @@ namespace UsersService.Tests.Intergation.Companies
             await act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
-        public AddCompanyCommand GetCommand(int userId)
+        public AddCompanyCommand GetCommand(Guid userId)
         {
             var faker = new Faker();
 
@@ -60,7 +59,7 @@ namespace UsersService.Tests.Intergation.Companies
                 null);
         }
 
-        private async Task<int> SaveUserToDatabaseAsync()
+        private async Task<Guid> SaveUserToDatabaseAsync()
         {
             var userEntity = GetUserEntity();
 
@@ -82,8 +81,7 @@ namespace UsersService.Tests.Intergation.Companies
             {
                 FirstName = faker.Name.FirstName(),
                 LastName = faker.Name.LastName(),
-                Phone = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
-                Type = faker.PickRandom(BusinessRules.Roles.All),
+                PhoneNumber = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Random.Hash(),
                 CreatedAt = DateTime.UtcNow,
