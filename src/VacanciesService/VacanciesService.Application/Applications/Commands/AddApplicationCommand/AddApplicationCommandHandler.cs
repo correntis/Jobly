@@ -9,7 +9,7 @@ using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Application.Applications.Commands.AddApplicationCommand
 {
-    public class AddApplicationCommandHandler : IRequestHandler<AddApplicationCommand, int>
+    public class AddApplicationCommandHandler : IRequestHandler<AddApplicationCommand, Guid>
     {
         private readonly ILogger<AddApplicationCommandHandler> _logger;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace VacanciesService.Application.Applications.Commands.AddApplicationComma
             _vacanciesContext = vacanciesContext;
         }
 
-        public async Task<int> Handle(AddApplicationCommand request, CancellationToken token)
+        public async Task<Guid> Handle(AddApplicationCommand request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling {CommandName} for vacancy with ID {VacancyId} and user with ID {UserId}",

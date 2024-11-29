@@ -4,7 +4,7 @@ using VacanciesService.Domain.Models;
 namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand
 {
     public sealed record AddVacancyDetailsCommand(
-        int VacancyId,
+        Guid VacancyId,
         List<string> Requirements,
         List<string> Skills,
         List<string> Tags,

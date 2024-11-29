@@ -29,22 +29,22 @@ namespace VacanciesService.Presentation.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> Delete(int id, CancellationToken token)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken token)
             => Ok(await _sender.Send(new DeleteVacancyCommand(id), token));
 
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> Archive(int id, CancellationToken token)
+        public async Task<IActionResult> Archive(Guid id, CancellationToken token)
             => Ok(await _sender.Send(new ArchiveVacancyCommand(id), token));
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get(int id, CancellationToken token)
+        public async Task<IActionResult> Get(Guid id, CancellationToken token)
             => Ok(await _sender.Send(new GetVacancyQuery(id), token));
 
         [HttpGet]
         [Route("companies/{companyId}")]
-        public async Task<IActionResult> GetByCompany(int companyId, CancellationToken token)
+        public async Task<IActionResult> GetByCompany(Guid companyId, CancellationToken token)
             => Ok(await _sender.Send(new GetVacanciesByCompanyQuery(companyId), token));
 
         [HttpPost]

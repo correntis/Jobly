@@ -71,6 +71,11 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
 
         private async Task<SalaryEntity> CalculateCurrencyAsync(SalaryEntity sourceEntity)
         {
+            if (sourceEntity is null)
+            {
+                return null;
+            }
+
             var exchangeRate = await _currencyApi.GetExchangeRateAsync(sourceEntity.Currency);
 
             var targetEntity = new SalaryEntity

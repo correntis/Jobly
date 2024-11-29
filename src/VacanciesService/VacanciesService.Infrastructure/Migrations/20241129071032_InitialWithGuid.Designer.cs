@@ -12,8 +12,8 @@ using VacanciesService.Infrastructure.SQL;
 namespace VacanciesService.Infrastructure.Migrations
 {
     [DbContext(typeof(VacanciesWriteContext))]
-    [Migration("20241121143655_ChangePostgreDateTypes")]
-    partial class ChangePostgreDateTypes
+    [Migration("20241129071032_InitialWithGuid")]
+    partial class InitialWithGuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,14 +27,13 @@ namespace VacanciesService.Infrastructure.Migrations
 
             modelBuilder.Entity("VacanciesService.Domain.Entities.SQL.ApplicationEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AppliedAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime?>("AppliedAt")
+                        .HasColumnType("timestamp");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp");
@@ -44,11 +43,11 @@ namespace VacanciesService.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int?>("VacancyId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("VacancyId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -61,17 +60,16 @@ namespace VacanciesService.Infrastructure.Migrations
 
             modelBuilder.Entity("VacanciesService.Domain.Entities.SQL.VacancyEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp");

@@ -7,7 +7,7 @@ using VacanciesService.Domain.Entities.SQL;
 
 namespace VacanciesService.Application.Vacancies.Commands.AddVacancyCommand
 {
-    public class AddVacancyCommandHandler : IRequestHandler<AddVacancyCommand, int>
+    public class AddVacancyCommandHandler : IRequestHandler<AddVacancyCommand, Guid>
     {
         private readonly ILogger<AddVacancyCommandHandler> _logger;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace VacanciesService.Application.Vacancies.Commands.AddVacancyCommand
             _vacanciesContext = vacanciesContext;
         }
 
-        public async Task<int> Handle(AddVacancyCommand request, CancellationToken token)
+        public async Task<Guid> Handle(AddVacancyCommand request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling {CommandName} for vacancy with Title {VacancyTitle}",
