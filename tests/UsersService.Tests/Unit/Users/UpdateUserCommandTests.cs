@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bogus;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
 using UsersService.Application.Users.Commands.UpdateUserCommand;
@@ -34,8 +35,9 @@ namespace UsersService.Tests.Unit.Users
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(command.Id.ToString())).ReturnsAsync(userEntity);
-            unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByIdAsync(command.Id)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.UpdateAsync(userEntity)).ReturnsAsync(IdentityResult.Success);
+            mapperMock.Setup(m => m.Map(command, userEntity)).Returns(userEntity);
 
             // Act
             var idAct = await handler.Handle(command, CancellationToken.None);
@@ -44,14 +46,14 @@ namespace UsersService.Tests.Unit.Users
             idAct.Should().Be(command.Id);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.FindByIdAsync(command.Id.ToString()),
+                u => u.UsersRepository.GetByIdAsync(command.Id),
                 Times.Once,
                 "Get method should be called once");
 
             unitOfWorkMock.Verify(
-                u => u.SaveChangesAsync(CancellationToken.None),
+                u => u.UsersRepository.UpdateAsync(userEntity),
                 Times.Once,
-                "Save changes should be called once in context");
+                "Update method should be called once");
         }
 
         [Fact]
@@ -59,17 +61,16 @@ namespace UsersService.Tests.Unit.Users
         {
             // Arrange
             var unitOfWorkMock = new Mock<IUnitOfWork>();
-            var mapperMock = new Mock<IMapper>();
 
             var handler = new UpdateUserCommandHandler(
                 _loggerMock.Object,
-                mapperMock.Object,
+                null,
                 unitOfWorkMock.Object);
 
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(command.Id.ToString())).ReturnsAsync((UserEntity)null);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByIdAsync(command.Id)).ReturnsAsync((UserEntity)null);
 
             // Act
             var act = async () => await handler.Handle(command, CancellationToken.None);

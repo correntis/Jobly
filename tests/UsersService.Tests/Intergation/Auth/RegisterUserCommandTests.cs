@@ -1,11 +1,12 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 using UsersService.Application.Auth.Commands.RegisterUserCommand;
 using UsersService.Domain.Constants;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
-using UsersService.Infrastructure.SQL;
 
 namespace UsersService.Tests.Intergation.Auth
 {
@@ -17,6 +18,8 @@ namespace UsersService.Tests.Intergation.Auth
             : base(factory)
         {
             _factory = factory;
+
+            CreateRolesAsync();
         }
 
         [Fact]
@@ -67,11 +70,36 @@ namespace UsersService.Tests.Intergation.Auth
 
         private async Task FillDatabaseAsync(UserEntity userEntity)
         {
-            using (var scope = _factory.Services.CreateScope())
+            using var scope = _factory.Services.CreateScope();
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
+            var userResult = await userManager.CreateAsync(userEntity, "strinG123!");
+
+            if (!userResult.Succeeded)
             {
-                var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-                await context.Users.AddAsync(userEntity);
-                await context.SaveChangesAsync();
+                throw new Bogus.ValidationException(JsonSerializer.Serialize(userResult.Errors));
+            }
+        }
+
+        private async Task CreateRolesAsync()
+        {
+            using var scope = _factory.Services.CreateScope();
+
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<RoleEntity>>();
+            var roles = new List<RoleEntity>()
+            {
+                new () { Name = "User" },
+                new () { Name = "Company" },
+            };
+
+            foreach (var role in roles)
+            {
+                var roleResult = await roleManager.CreateAsync(role);
+
+                if (!roleResult.Succeeded)
+                {
+                    throw new Bogus.ValidationException(JsonSerializer.Serialize(roleResult.Errors));
+                }
             }
         }
 
@@ -87,6 +115,7 @@ namespace UsersService.Tests.Intergation.Auth
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Internet.Password(),
                 CreatedAt = DateTime.UtcNow,
+                UserName = faker.Internet.UserName(),
             };
         }
 
@@ -98,7 +127,7 @@ namespace UsersService.Tests.Intergation.Auth
                 faker.Name.FirstName(),
                 faker.Name.LastName(),
                 faker.Internet.Email(),
-                faker.Internet.Password(),
+                "strinG123!",
                 BusinessRules.Roles.All.ToList());
         }
     }

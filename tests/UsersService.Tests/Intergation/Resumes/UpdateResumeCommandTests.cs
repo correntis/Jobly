@@ -1,7 +1,9 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
+using System.Text.Json;
 using UsersService.Application.Resumes.Commands.UpdateResumeCommand;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.NoSQL;
@@ -71,11 +73,15 @@ namespace UsersService.Tests.Intergation.Resumes
 
             using (var scope = _factory.Services.CreateScope())
             {
+                var manager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
+                var result = await manager.CreateAsync(userEntity, "strinG123!");
+
+                if (!result.Succeeded)
+                {
+                    throw new Bogus.ValidationException(JsonSerializer.Serialize(result.Errors));
+                }
+
                 var usersContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-
-                await usersContext.Users.AddAsync(userEntity);
-
-                await usersContext.SaveChangesAsync();
 
                 resumeEntity = GetResumeEntity(userEntity.Id);
 
@@ -117,6 +123,7 @@ namespace UsersService.Tests.Intergation.Resumes
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Random.Hash(),
                 CreatedAt = DateTime.UtcNow,
+                UserName = faker.Internet.UserName(),
             };
         }
     }

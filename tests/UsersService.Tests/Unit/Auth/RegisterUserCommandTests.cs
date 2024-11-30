@@ -38,14 +38,14 @@ namespace UsersService.Tests.Unit.Auth
 
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
-            var roles = BusinessRules.Roles.All;
             var token = GetToken();
-            var result = IdentityResult.Success;
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email)).ReturnsAsync((UserEntity)null);
-            unitOfWorkMock.Setup(u => u.UsersRepository.CreateAsync(userEntity)).ReturnsAsync(result);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email)).ReturnsAsync((UserEntity)null);
+            unitOfWorkMock.Setup(u => u.UsersRepository.AddAsync(userEntity, It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
+            unitOfWorkMock.Setup(u => u.RolesRepository.RoleExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
+            unitOfWorkMock.Setup(u => u.UsersRepository.AddToRolesAsync(userEntity, It.IsAny<IEnumerable<string>>())).ReturnsAsync(IdentityResult.Success);
             unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
-            authServiceMock.Setup(a => a.IssueTokenAsync(userEntity.Id, roles, CancellationToken.None)).ReturnsAsync(token);
+            authServiceMock.Setup(a => a.IssueTokenAsync(userEntity.Id, command.RolesNames, CancellationToken.None)).ReturnsAsync(token);
             mapperMock.Setup(m => m.Map<UserEntity>(command)).Returns(userEntity);
 
             // Act
@@ -56,22 +56,17 @@ namespace UsersService.Tests.Unit.Auth
             tokenAct.AccessToken.Should().Be(token.AccessToken);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.FindByEmailAsync(command.Email),
+                u => u.UsersRepository.GetByEmailAsync(command.Email),
                 Times.Once,
                 "Get by email method should be called once");
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.CreateAsync(userEntity),
+                u => u.UsersRepository.AddAsync(userEntity, It.IsAny<string>()),
                 Times.Once,
                 "Add method should be called once in repository");
 
-            unitOfWorkMock.Verify(
-                u => u.SaveChangesAsync(CancellationToken.None),
-                Times.Once,
-                "Save changes should be called once in context");
-
             authServiceMock.Verify(
-                a => a.IssueTokenAsync(userEntity.Id, roles, CancellationToken.None),
+                a => a.IssueTokenAsync(userEntity.Id, command.RolesNames, CancellationToken.None),
                 Times.Once,
                 "Issue token method should be called once");
         }
@@ -94,7 +89,7 @@ namespace UsersService.Tests.Unit.Auth
             var roles = BusinessRules.Roles.All;
             var token = GetToken();
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email)).ReturnsAsync(userEntity);
 
             // Act
             var act = async () => await handler.Handle(command, CancellationToken.None);

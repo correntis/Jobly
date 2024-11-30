@@ -22,7 +22,7 @@ namespace UsersService.Application.Users.Commands.DeleteUserCommand
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
-            var userEntity = await _unitOfWork.UsersRepository.FindByIdAsync(request.Id.ToString())
+            var userEntity = await _unitOfWork.UsersRepository.GetByIdAsync(request.Id)
                 ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
 
             await _unitOfWork.UsersRepository.DeleteAsync(userEntity);

@@ -41,7 +41,9 @@ namespace UsersService.Tests.Unit.Auth
             var (user, userEntity) = GetUsersFromCommand(command);
             var roles = BusinessRules.Roles.All;
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email.ToString())).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetRolesAsync(userEntity)).ReturnsAsync(roles.ToList());
+            unitOfWorkMock.Setup(u => u.UsersRepository.CheckPasswordAsync(userEntity, It.IsAny<string>())).ReturnsAsync(true);
             authServiceMock.Setup(a => a.IssueTokenAsync(userEntity.Id, roles, CancellationToken.None)).ReturnsAsync(token);
             mapperMock.Setup(m => m.Map<User>(userEntity)).Returns(user);
 
@@ -55,7 +57,7 @@ namespace UsersService.Tests.Unit.Auth
             tokenAct.AccessToken.Should().Be(token.AccessToken);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.FindByIdAsync(command.Email.ToString()),
+                u => u.UsersRepository.GetByEmailAsync(command.Email.ToString()),
                 Times.Once,
                 "Get by email method should be called");
 
@@ -79,7 +81,7 @@ namespace UsersService.Tests.Unit.Auth
 
             var command = new LoginUserCommand(null, null);
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email)).ReturnsAsync((UserEntity)null);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email)).ReturnsAsync((UserEntity)null);
 
             // Act
             var act = async () => await handler.Handle(command, CancellationToken.None);
@@ -105,7 +107,7 @@ namespace UsersService.Tests.Unit.Auth
 
             command = command with { Password = string.Empty };
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByEmailAsync(command.Email))
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByEmailAsync(command.Email))
                 .ReturnsAsync(userEntity);
 
             // Act

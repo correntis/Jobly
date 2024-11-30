@@ -45,7 +45,7 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
 
         private async Task<UserEntity> CreateUserAsync(RegisterUserCommand request)
         {
-            var existingUserEntity = await _unitOfWork.UsersRepository.FindByEmailAsync(request.Email);
+            var existingUserEntity = await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email);
 
             if (existingUserEntity is not null)
             {
@@ -56,7 +56,7 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
 
             userEntity.CreatedAt = DateTime.UtcNow;
 
-            var identityResult = await _unitOfWork.UsersRepository.CreateAsync(userEntity, request.Password);
+            var identityResult = await _unitOfWork.UsersRepository.AddAsync(userEntity, request.Password);
 
             if (!identityResult.Succeeded)
             {

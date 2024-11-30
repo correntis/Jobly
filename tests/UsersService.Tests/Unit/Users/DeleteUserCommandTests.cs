@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
 using UsersService.Application.Users.Commands.DeleteUserCommand;
@@ -27,8 +28,8 @@ namespace UsersService.Tests.Unit.Users
             var command = new DeleteUserCommand(id);
             var userEntity = new UserEntity { Id = id };
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(id.ToString())).ReturnsAsync(userEntity);
-            unitOfWorkMock.Setup(u => u.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByIdAsync(id)).ReturnsAsync(userEntity);
+            unitOfWorkMock.Setup(u => u.UsersRepository.DeleteAsync(userEntity)).ReturnsAsync(IdentityResult.Success);
 
             // Act
             var idAct = await handler.Handle(command, CancellationToken.None);
@@ -37,7 +38,7 @@ namespace UsersService.Tests.Unit.Users
             idAct.Should().Be(id);
 
             unitOfWorkMock.Verify(
-                u => u.UsersRepository.FindByIdAsync(userEntity.Id.ToString()),
+                u => u.UsersRepository.GetByIdAsync(userEntity.Id),
                 Times.Once,
                 "Get method should be called once");
 
@@ -45,11 +46,6 @@ namespace UsersService.Tests.Unit.Users
                 u => u.UsersRepository.DeleteAsync(userEntity),
                 Times.Once,
                 "Remove method should be called once");
-
-            unitOfWorkMock.Verify(
-                u => u.SaveChangesAsync(CancellationToken.None),
-                Times.Once,
-                "Save changes should be called once in context");
         }
 
         [Fact]
@@ -62,7 +58,7 @@ namespace UsersService.Tests.Unit.Users
             var id = Guid.NewGuid();
             var command = new DeleteUserCommand(id);
 
-            unitOfWorkMock.Setup(u => u.UsersRepository.FindByIdAsync(id.ToString())).ReturnsAsync((UserEntity)null);
+            unitOfWorkMock.Setup(u => u.UsersRepository.GetByIdAsync(id)).ReturnsAsync((UserEntity)null);
 
             // Act
             var act = async () => await handler.Handle(command, CancellationToken.None);
