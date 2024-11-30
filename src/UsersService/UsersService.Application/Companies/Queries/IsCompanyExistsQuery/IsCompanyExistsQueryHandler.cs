@@ -24,7 +24,7 @@ namespace UsersService.Application.Companies.Queries.IsCompanyExistsQuery
                 request.GetType().Name,
                 request.Id);
 
-            var isCompanyExists = await _unitOfWork.CompaniesRepository.IsExists(request.Id);
+            var isCompanyExists = await _unitOfWork.CompaniesRepository.IsExists(request.Id, cancellationToken);
 
             _logger.LogInformation(
                 "Successfully handled {CommandName} for company with ID {CompanyId}",
