@@ -4,7 +4,7 @@ option csharp_namespace = "Jobly.Protobufs.Users.Server";
 
 import "Users/users.proto";
 
-service UsersService {
+service UsersGrpcService {
 	rpc IsUserExists (UserExistenceRequest) returns (UserExistenceResponse);
 	rpc IsCompanyExists (CompanyExistenceRequest) returns (CompanyExistenceResponse);
 }
