@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.SQL;
 
@@ -51,6 +52,11 @@ namespace UsersService.Infrastructure.SQL.Repositories
         public async Task<bool> CheckPasswordAsync(UserEntity userEntity, string password)
         {
             return await _userManager.CheckPasswordAsync(userEntity, password);
+        }
+
+        public async Task<bool> Exists(Guid id)
+        {
+            return await _userManager.Users.AnyAsync(u => u.Id == id);
         }
     }
 }

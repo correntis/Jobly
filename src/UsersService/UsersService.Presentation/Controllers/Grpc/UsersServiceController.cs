@@ -4,6 +4,7 @@ using Jobly.Protobufs.Users.Server;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Application.Companies.Queries.IsCompanyExistsQuery;
+using UsersService.Application.Users.Queries.IsUserExistsQuery;
 
 namespace UsersService.Presentation.Controllers.Grpc
 {
@@ -28,7 +29,7 @@ namespace UsersService.Presentation.Controllers.Grpc
             {
                 throw new RpcException(Status.DefaultCancelled, $"Invalid GUID {request.CompanyId}");
             }
-            
+
             var isExists = await _sender.Send(new IsCompanyExistsQuery(companyId));
 
             _logger.LogInformation("[GRPC] Successfully proccessed gRPC request {RequestName}", request.GetType().Name);
@@ -36,9 +37,20 @@ namespace UsersService.Presentation.Controllers.Grpc
             return new CompanyExistenceResponse { Exists = isExists };
         }
 
-        public override Task<UserExistenceResponse> IsUserExists(UserExistenceRequest request, ServerCallContext context)
+        public async override Task<UserExistenceResponse> IsUserExists(UserExistenceRequest request, ServerCallContext context)
         {
-            return base.IsUserExists(request, context);
+            _logger.LogInformation("[GRPC] Start proccessing gRPC request {RequestName}", request.GetType().Name);
+
+            if (Guid.TryParse(request.UserId, out Guid userId))
+            {
+                throw new RpcException(Status.DefaultCancelled, $"Invalid GUID {request.UserId}");
+            }
+
+            var isExists = await _sender.Send(new IsUserExistsQuery(userId));
+
+            _logger.LogInformation("[GRPC] Successfully proccessed gRPC request {RequestName}", request.GetType().Name);
+
+            return new UserExistenceResponse { Exists = isExists };
         }
     }
 }
