@@ -68,7 +68,7 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
 
         private async Task CreateUserRolesAsync(UserEntity userEntity, IEnumerable<string> rolesNames)
         {
-            if (rolesNames is null && rolesNames.Count() == 0)
+            if (rolesNames is null && !rolesNames.Any())
             {
                 return;
             }
@@ -77,7 +77,7 @@ namespace UsersService.Application.Auth.Commands.RegisterUserCommand
             {
                 if (!await _unitOfWork.RolesRepository.RoleExistsAsync(role))
                 {
-                    throw new Exception($"Role {role} does not exist.");
+                    throw new EntityNotFoundException($"Role with name {role} not found");
                 }
             }
 
