@@ -20,7 +20,7 @@ namespace UsersService.Presentation.Controllers.Http
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUserCommand registerUserCommand, CancellationToken cancellationToken)
+        public async Task<ActionResult<Guid>> Register(RegisterUserCommand registerUserCommand, CancellationToken cancellationToken)
         {
             var (userId, token) = await _mediator.Send(registerUserCommand, cancellationToken);
 
@@ -30,7 +30,7 @@ namespace UsersService.Presentation.Controllers.Http
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUserCommand loginUserCommand, CancellationToken cancellationToken)
+        public async Task<ActionResult<User>> Login(LoginUserCommand loginUserCommand, CancellationToken cancellationToken)
         {
             var (user, token) = await _mediator.Send(loginUserCommand, cancellationToken);
 
