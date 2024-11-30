@@ -1,4 +1,5 @@
 ﻿using Jobly.Protobufs.Authorization.Client;
+using Jobly.Protobufs.Users.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,11 @@ namespace VacanciesService.Infrastructure
             });
 
             services.AddGrpcClient<AuthorizationGrpcService.AuthorizationGrpcServiceClient>(options =>
+            {
+                options.Address = new Uri(configuration["Jobly:UsersService"]);
+            });
+
+            services.AddGrpcClient<UsersGrpcService.UsersGrpcServiceClient>(options =>
             {
                 options.Address = new Uri(configuration["Jobly:UsersService"]);
             });
