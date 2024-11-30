@@ -31,10 +31,15 @@ namespace UsersService.Application.Auth.Commands.LoginUserCommand
         {
             _logger.LogInformation("Start handling {CommandName} for user with Email {Email}", request.GetType().Name, request.Email);
 
-            var userEntity = await _unitOfWork.UsersRepository.FindByEmailAsync(request.Email)
+            var userEntity = await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email)
                 ?? throw new EntityNotFoundException($"User with email {request.Email} not found");
 
-            await _unitOfWork.UsersRepository.CheckPasswordAsync(userEntity, request.Password);
+            var isValidPassword = await _unitOfWork.UsersRepository.CheckPasswordAsync(userEntity, request.Password);
+
+            if (!isValidPassword)
+            {
+                throw new InvalidPasswordException($"Invalid password for user with email {request.Email}");
+            }
 
             var user = _mapper.Map<User>(userEntity);
 

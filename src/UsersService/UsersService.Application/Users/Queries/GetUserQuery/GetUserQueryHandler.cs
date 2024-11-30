@@ -27,7 +27,7 @@ namespace UsersService.Application.Users.Queries.GetUserQuery
         {
             _logger.LogInformation("Start handling {QueryName} for user with ID {UserId}", request.GetType().Name, request.Id);
 
-            var userEntity = await _unitOfWork.UsersRepository.FindByIdAsync(request.Id.ToString())
+            var userEntity = await _unitOfWork.UsersRepository.GetByIdAsync(request.Id)
                 ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
 
             _logger.LogInformation("Successfully handled {QueryName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);

@@ -1,10 +1,11 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 using UsersService.Application.Companies.Commands.AddCompanyCommand;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
-using UsersService.Infrastructure.SQL;
 
 namespace UsersService.Tests.Intergation.Companies
 {
@@ -65,9 +66,13 @@ namespace UsersService.Tests.Intergation.Companies
 
             using (var scope = _factory.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-                await context.AddAsync(userEntity);
-                await context.SaveChangesAsync();
+                var manager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
+                var result = await manager.CreateAsync(userEntity, "strinG123!");
+
+                if (!result.Succeeded)
+                {
+                    throw new Bogus.ValidationException(JsonSerializer.Serialize(result.Errors));
+                }
             }
 
             return userEntity.Id;
@@ -85,6 +90,7 @@ namespace UsersService.Tests.Intergation.Companies
                 Email = faker.Internet.Email(),
                 PasswordHash = faker.Random.Hash(),
                 CreatedAt = DateTime.UtcNow,
+                UserName = faker.Internet.UserName(),
             };
         }
     }

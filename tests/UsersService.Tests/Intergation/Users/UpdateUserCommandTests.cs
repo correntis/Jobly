@@ -1,11 +1,11 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 using UsersService.Application.Users.Commands.UpdateUserCommand;
-using UsersService.Domain.Constants;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
-using UsersService.Infrastructure.SQL;
 
 namespace UsersService.Tests.Intergation.Users
 {
@@ -50,14 +50,17 @@ namespace UsersService.Tests.Intergation.Users
         {
             var userEntity = GetUserEntity();
 
-            using (var scope = _factory.Services.CreateScope())
+            using var scope = _factory.Services.CreateScope();
+
+            var manager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
+            var result = await manager.CreateAsync(userEntity, "strinG123!");
+
+            if (result.Succeeded)
             {
-                var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-                await context.Users.AddAsync(userEntity);
-                await context.SaveChangesAsync();
+                return userEntity.Id;
             }
 
-            return userEntity.Id;
+            throw new Bogus.ValidationException(JsonSerializer.Serialize(result.Errors));
         }
 
         private UpdateUserCommand GetCommand(Guid userId)
@@ -79,10 +82,10 @@ namespace UsersService.Tests.Intergation.Users
             {
                 FirstName = faker.Name.FirstName(),
                 LastName = faker.Name.LastName(),
-                PhoneNumber = faker.PickRandom(BusinessRules.Roles.All),
+                PhoneNumber = faker.Phone.PhoneNumber("+### ## #######"),
                 Email = faker.Internet.Email(),
-                PasswordHash = faker.Random.Hash(),
                 CreatedAt = DateTime.UtcNow,
+                UserName = faker.Internet.UserName(),
             };
         }
     }

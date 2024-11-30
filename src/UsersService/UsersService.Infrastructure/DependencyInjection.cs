@@ -36,6 +36,8 @@ namespace UsersService.Infrastructure
                 options.Configuration = configuration.GetConnectionString("RedisTokens");
             });
 
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IRolesRepository, RolesRepository>();
             services.AddScoped<ICompaniesRepository, CompaniesRepository>();
             services.AddScoped<IResumesRepository, ResumesRepository>();
             services.AddScoped<ITokensRepository, TokensRepository>();

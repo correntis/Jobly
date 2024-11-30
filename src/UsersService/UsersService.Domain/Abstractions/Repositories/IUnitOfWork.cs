@@ -7,8 +7,8 @@ namespace UsersService.Domain.Abstractions.Repositories
     {
         ICompaniesRepository CompaniesRepository { get; }
         IResumesRepository ResumesRepository { get; }
-        UserManager<UserEntity> UsersRepository { get; }
-        RoleManager<RoleEntity> RolesRepository { get; }
+        IUsersRepository UsersRepository { get; }
+        IRolesRepository RolesRepository { get; }
 
         Task SaveChangesAsync(CancellationToken cancellationToken);
     }

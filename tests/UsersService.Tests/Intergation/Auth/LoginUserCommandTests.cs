@@ -1,10 +1,11 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 using UsersService.Application.Auth.Commands.LoginUserCommand;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
-using UsersService.Infrastructure.SQL;
 
 namespace UsersService.Tests.Intergation.Auth
 {
@@ -25,12 +26,7 @@ namespace UsersService.Tests.Intergation.Auth
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
 
-            using (var scope = _factory.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-                await context.Users.AddAsync(userEntity);
-                await context.SaveChangesAsync();
-            }
+            await FillDatabaseAsync(userEntity);
 
             // Act
             var (user, token) = await Sender.Send(command);
@@ -82,11 +78,13 @@ namespace UsersService.Tests.Intergation.Auth
 
         private async Task FillDatabaseAsync(UserEntity userEntity)
         {
-            using (var scope = _factory.Services.CreateScope())
+            using var scope = _factory.Services.CreateScope();
+            var manager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
+            var result = await manager.CreateAsync(userEntity, "strinG123!");
+
+            if (!result.Succeeded)
             {
-                var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-                await context.Users.AddAsync(userEntity);
-                await context.SaveChangesAsync();
+                throw new Bogus.ValidationException(JsonSerializer.Serialize(result.Errors));
             }
         }
 
@@ -100,8 +98,8 @@ namespace UsersService.Tests.Intergation.Auth
                 LastName = faker.Name.LastName(),
                 PhoneNumber = faker.Phone.PhoneNumber("+### (##) ###-##-##"),
                 Email = command.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.Password),
                 CreatedAt = DateTime.UtcNow,
+                UserName = faker.Internet.UserName(),
             };
         }
 
@@ -111,7 +109,7 @@ namespace UsersService.Tests.Intergation.Auth
 
             return new LoginUserCommand(
                 faker.Internet.Email(),
-                faker.Internet.Password());
+                "strinG123!");
         }
     }
 }
