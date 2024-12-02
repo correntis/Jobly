@@ -6,14 +6,15 @@ using VacanciesService.Domain.Abstractions.Contexts;
 
 namespace VacanciesService.Application.Applications.Queries.GetApplicationsByVacancyQuery
 {
-    public class GetApplicationsByVacancyQueryHandler : IRequestHandler<GetApplicationsByVacancyQuery, List<Domain.Models.Application>>
+    public class GetApplicationsPageByVacancyQueryHandler
+        : IRequestHandler<GetApplicationsPageByVacancyQuery, List<Domain.Models.Application>>
     {
-        private readonly ILogger<GetApplicationsByVacancyQueryHandler> _logger;
+        private readonly ILogger<GetApplicationsPageByVacancyQueryHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IVacanciesReadContext _vacanciesContext;
 
-        public GetApplicationsByVacancyQueryHandler(
-            ILogger<GetApplicationsByVacancyQueryHandler> logger,
+        public GetApplicationsPageByVacancyQueryHandler(
+            ILogger<GetApplicationsPageByVacancyQueryHandler> logger,
             IMapper mapper,
             IVacanciesReadContext vacanciesContext)
         {
@@ -22,7 +23,7 @@ namespace VacanciesService.Application.Applications.Queries.GetApplicationsByVac
             _vacanciesContext = vacanciesContext;
         }
 
-        public async Task<List<Domain.Models.Application>> Handle(GetApplicationsByVacancyQuery request, CancellationToken token)
+        public async Task<List<Domain.Models.Application>> Handle(GetApplicationsPageByVacancyQuery request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling {QueryName} for vacancy with ID {UserId}",
@@ -32,6 +33,8 @@ namespace VacanciesService.Application.Applications.Queries.GetApplicationsByVac
             var applicationsEntities = await _vacanciesContext.Applications
                 .Where(a => a.Id == request.VacancyId)
                 .OrderBy(a => a.CreatedAt)
+                .Skip((request.PageNumber - 1) * request.PageNumber)
+                .Take(request.PageNumber)
                 .ToListAsync(token);
 
             _logger.LogInformation(

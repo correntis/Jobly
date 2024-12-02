@@ -1,7 +1,7 @@
 ﻿using Jobly.Protobufs.Authorization;
 using Jobly.Protobufs.Authorization.Client;
 using Microsoft.Extensions.Logging;
-using VacanciesService.Application.Abstractions;
+using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Models;
 
 namespace VacanciesService.Infrastructure.Grpc
@@ -19,7 +19,11 @@ namespace VacanciesService.Infrastructure.Grpc
             _client = client;
         }
 
-        public async Task<TokenValidationResult> ValidateTokenAsync(string accessToken, string refreshToken, IEnumerable<string> roles)
+        public async Task<TokenValidationResult> ValidateTokenAsync(
+            string accessToken,
+            string refreshToken,
+            IEnumerable<string> roles,
+            CancellationToken token = default)
         {
             var request = new ValidateTokenRequest()
             {

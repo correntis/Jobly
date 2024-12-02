@@ -27,13 +27,13 @@ namespace VacanciesService.Presentation.Controllers
            => Ok(await _sender.Send(command, token));
 
         [HttpGet]
-        [Route("users/{userId}")]
-        public async Task<IActionResult> GetByUser(Guid userId, CancellationToken token)
-              => Ok(await _sender.Send(new GetApplicationsByUserQuery(userId), token));
+        [Route("users/{userId}&pageNumber={pageNumber}&pageSize={pageSize}")]
+        public async Task<IActionResult> GetByUser(Guid userId, int pageNumber, int pageSize, CancellationToken token)
+              => Ok(await _sender.Send(new GetApplicationsPageByUserQuery(userId, pageNumber, pageSize), token));
 
         [HttpGet]
-        [Route("vacancies/{vacancyId}")]
-        public async Task<IActionResult> GetByVacancy(Guid vacancyId, CancellationToken token)
-            => Ok(await _sender.Send(new GetApplicationsByVacancyQuery(vacancyId), token));
+        [Route("vacancies/{vacancyId}&pageNumber={pageNumber}&pageSize={pageSize}")]
+        public async Task<IActionResult> GetByVacancy(Guid vacancyId, int pageNumber, int pageSize, CancellationToken token)
+            => Ok(await _sender.Send(new GetApplicationsPageByVacancyQuery(vacancyId, pageNumber, pageSize), token));
     }
 }

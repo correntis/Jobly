@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Domain.Abstractions.Contexts;
+using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Domain.Entities.SQL;
 using VacanciesService.Domain.Exceptions;
@@ -14,15 +15,18 @@ namespace VacanciesService.Application.Applications.Commands.AddApplicationComma
         private readonly ILogger<AddApplicationCommandHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IVacanciesWriteContext _vacanciesContext;
+        private readonly IUsersService _usersService;
 
         public AddApplicationCommandHandler(
             ILogger<AddApplicationCommandHandler> logger,
             IMapper mapper,
-            IVacanciesWriteContext vacanciesContext)
+            IVacanciesWriteContext vacanciesContext,
+            IUsersService usersService)
         {
             _logger = logger;
             _mapper = mapper;
             _vacanciesContext = vacanciesContext;
+            _usersService = usersService;
         }
 
         public async Task<Guid> Handle(AddApplicationCommand request, CancellationToken token)
@@ -33,21 +37,9 @@ namespace VacanciesService.Application.Applications.Commands.AddApplicationComma
                 request.VacancyId,
                 request.UserId);
 
-            // TODO Check if user with request.UserId exists with gRPC request
-            // for users service
+            await CheckUserExistence(request.UserId, token);
 
-            var vacancyEntity = await _vacanciesContext.Vacancies
-                .FirstOrDefaultAsync(v => v.Id == request.VacancyId, token);
-
-            if (vacancyEntity is null)
-            {
-                throw new EntityNotFoundException($"Vacancy with ID {request.VacancyId} not found");
-            }
-
-            await _vacanciesContext.Vacancies
-                .Entry(vacancyEntity)
-                .Collection(v => v.Applications)
-                .LoadAsync(token);
+            var vacancyEntity = await GetVacancyEntity(request.VacancyId, token);
 
             var applicationEntity = _mapper.Map<ApplicationEntity>(request);
 
@@ -67,6 +59,33 @@ namespace VacanciesService.Application.Applications.Commands.AddApplicationComma
                 request.UserId);
 
             return applicationEntity.Id;
+        }
+
+        public async Task CheckUserExistence(Guid userId, CancellationToken token)
+        {
+            var isUserExists = await _usersService.IsUserExistsAsync(userId, token);
+
+            if (!isUserExists)
+            {
+                throw new EntityNotFoundException($"User with ID {userId} not found");
+            }
+        }
+
+        public async Task<VacancyEntity> GetVacancyEntity(Guid vacancyId, CancellationToken token)
+        {
+            var vacancyEntity = await _vacanciesContext.Vacancies.FirstOrDefaultAsync(v => v.Id == vacancyId, token);
+
+            if (vacancyEntity is null)
+            {
+                throw new EntityNotFoundException($"Vacancy with ID {vacancyId} not found");
+            }
+
+            await _vacanciesContext.Vacancies
+                .Entry(vacancyEntity)
+                .Collection(v => v.Applications)
+                .LoadAsync(token);
+
+            return vacancyEntity;
         }
     }
 }
