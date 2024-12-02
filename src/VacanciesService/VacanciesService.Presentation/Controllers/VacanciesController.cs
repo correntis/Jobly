@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using VacanciesService.Application.Vacancies.Commands.AddVacancyCommand;
 using VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand;
-using VacanciesService.Application.Vacancies.Commands.DeleteVacancyCommand;
 using VacanciesService.Application.Vacancies.Queries.GetFilteredVacanciesQuery;
 using VacanciesService.Application.Vacancies.Queries.GetVacancyByCompanyQuery;
 using VacanciesService.Application.Vacancies.Queries.GetVacancyQuery;
 using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand;
-using VacanciesService.Application.VacanciesDetails.Commands.DeleteVacancyDetailsCommand;
 using VacanciesService.Domain.Filters.VacancyDetails;
 
 namespace VacanciesService.Presentation.Controllers
@@ -27,13 +25,8 @@ namespace VacanciesService.Presentation.Controllers
         public async Task<IActionResult> Add(AddVacancyCommand command, CancellationToken token)
             => Ok(await _sender.Send(command, token));
 
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken token)
-            => Ok(await _sender.Send(new DeleteVacancyCommand(id), token));
-
-        [HttpPatch]
-        [Route("{id}")]
+        [HttpPost]
+        [Route("archives/{id}")]
         public async Task<IActionResult> Archive(Guid id, CancellationToken token)
             => Ok(await _sender.Send(new ArchiveVacancyCommand(id), token));
 
@@ -56,10 +49,5 @@ namespace VacanciesService.Presentation.Controllers
         [Route("details")]
         public async Task<IActionResult> AddDetails(AddVacancyDetailsCommand command, CancellationToken token)
             => Ok(await _sender.Send(command, token));
-
-        [HttpDelete]
-        [Route("details/{id}")]
-        public async Task<IActionResult> DeleteDetails(string id, CancellationToken token)
-            => Ok(await _sender.Send(new DeleteVacancyDetailsCommand(id), token));
     }
 }

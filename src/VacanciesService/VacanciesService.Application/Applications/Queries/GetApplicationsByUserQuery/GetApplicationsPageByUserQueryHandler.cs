@@ -6,14 +6,15 @@ using VacanciesService.Domain.Abstractions.Contexts;
 
 namespace VacanciesService.Application.Applications.Queries.GetApplicationsByUserQuery
 {
-    public class GetApplicationsByUserQueryHandler : IRequestHandler<GetApplicationsByUserQuery, List<Domain.Models.Application>>
+    public class GetApplicationsPageByUserQueryHandler
+        : IRequestHandler<GetApplicationsPageByUserQuery, List<Domain.Models.Application>>
     {
-        private readonly ILogger<GetApplicationsByUserQueryHandler> _logger;
+        private readonly ILogger<GetApplicationsPageByUserQueryHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IVacanciesReadContext _vacanciesContext;
 
-        public GetApplicationsByUserQueryHandler(
-            ILogger<GetApplicationsByUserQueryHandler> logger,
+        public GetApplicationsPageByUserQueryHandler(
+            ILogger<GetApplicationsPageByUserQueryHandler> logger,
             IMapper mapper,
             IVacanciesReadContext vacanciesContext)
         {
@@ -22,7 +23,7 @@ namespace VacanciesService.Application.Applications.Queries.GetApplicationsByUse
             _vacanciesContext = vacanciesContext;
         }
 
-        public async Task<List<Domain.Models.Application>> Handle(GetApplicationsByUserQuery request, CancellationToken token)
+        public async Task<List<Domain.Models.Application>> Handle(GetApplicationsPageByUserQuery request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling {QueryName} for user with ID {UserId}",
@@ -33,6 +34,8 @@ namespace VacanciesService.Application.Applications.Queries.GetApplicationsByUse
                 .Where(a => a.UserId == request.UserId)
                 .OrderBy(a => a.CreatedAt)
                 .Include(a => a.Vacancy)
+                .Skip((request.PageNumber - 1) * request.PageSize)
+                .Take(request.PageSize)
                 .ToListAsync(token);
 
             _logger.LogInformation(

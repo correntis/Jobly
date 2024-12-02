@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
-using UsersService.Domain.Entities.NoSQL;
 using UsersService.Domain.Exceptions;
 
 namespace UsersService.Application.Resumes.Commands.UpdateResumeCommand
@@ -27,10 +26,10 @@ namespace UsersService.Application.Resumes.Commands.UpdateResumeCommand
         {
             _logger.LogInformation("Start handling {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
-            _ = await _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
+            var resumeEntity = await _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Resume with id {request.Id} not found");
 
-            var resumeEntity = _mapper.Map<ResumeEntity>(request);
+            _mapper.Map(request, resumeEntity);
 
             resumeEntity.UpdatedAt = DateTime.UtcNow;
 

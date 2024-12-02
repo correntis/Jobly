@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Domain.Abstractions.Contexts;
@@ -10,13 +11,16 @@ namespace VacanciesService.Application.Applications.Commands.UpdateApplicationCo
     {
         private readonly ILogger<UpdateApplicationCommandHandler> _logger;
         private readonly IVacanciesWriteContext _vacanciesContext;
+        private readonly IMapper _mapper;
 
         public UpdateApplicationCommandHandler(
             ILogger<UpdateApplicationCommandHandler> logger,
-            IVacanciesWriteContext vacanciesContext)
+            IVacanciesWriteContext vacanciesContext,
+            IMapper mapper)
         {
             _logger = logger;
             _vacanciesContext = vacanciesContext;
+            _mapper = mapper;
         }
 
         public async Task<Guid> Handle(UpdateApplicationCommand request, CancellationToken token)
@@ -33,7 +37,8 @@ namespace VacanciesService.Application.Applications.Commands.UpdateApplicationCo
                 throw new EntityNotFoundException($"Application with ID {request.Id} not found");
             }
 
-            applicationEntity.Status = request.Status;
+            _mapper.Map(request, applicationEntity);
+
             applicationEntity.AppliedAt = DateTime.Now;
 
             await _vacanciesContext.SaveChangesAsync(token);

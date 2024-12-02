@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using VacanciesService.Application.Abstractions;
+using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Presentation.Abstractions;
 
@@ -44,7 +44,8 @@ namespace VacanciesService.Presentation.Middleware.Authorization
 
             context.Request.Cookies.TryGetValue(BusinessRules.Token.AccessTokenName, out string refreshToken);
 
-            var tokenValidationResult = await _authService.ValidateTokenAsync(accessToken, refreshToken, roles);
+            var tokenValidationResult =
+                await _authService.ValidateTokenAsync(accessToken, refreshToken, roles, context.RequestAborted);
 
             if (!tokenValidationResult.IsValidToken)
             {

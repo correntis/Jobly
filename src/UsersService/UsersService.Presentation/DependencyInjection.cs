@@ -24,6 +24,7 @@ namespace UsersService.Presentation
             app.UseMiddleware<AuthorizationMiddleware>();
 
             app.MapGrpcService<Controllers.Grpc.AuthController>();
+            app.MapGrpcService<Controllers.Grpc.UsersServiceController>();
         }
     }
 }

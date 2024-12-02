@@ -25,9 +25,9 @@ namespace UsersService.Presentation.Controllers.Grpc
         {
             _logger.LogInformation("[GRPC] Start proccessing gRPC request {RequestName}", request.GetType().Name);
 
-            if (Guid.TryParse(request.CompanyId, out Guid companyId))
+            if (!Guid.TryParse(request.CompanyId, out Guid companyId))
             {
-                throw new RpcException(Status.DefaultCancelled, $"Invalid GUID {request.CompanyId}");
+                throw new ArgumentException($"Invalid GUID {request.CompanyId}");
             }
 
             var isExists = await _sender.Send(new IsCompanyExistsQuery(companyId));
@@ -41,9 +41,9 @@ namespace UsersService.Presentation.Controllers.Grpc
         {
             _logger.LogInformation("[GRPC] Start proccessing gRPC request {RequestName}", request.GetType().Name);
 
-            if (Guid.TryParse(request.UserId, out Guid userId))
+            if (!Guid.TryParse(request.UserId, out Guid userId))
             {
-                throw new RpcException(Status.DefaultCancelled, $"Invalid GUID {request.UserId}");
+                throw new ArgumentException($"Invalid GUID {request.UserId}");
             }
 
             var isExists = await _sender.Send(new IsUserExistsQuery(userId));

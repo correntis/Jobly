@@ -3,7 +3,6 @@ using Jobly.Protobufs.Users.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VacanciesService.Application.Abstractions;
 using VacanciesService.Domain.Abstractions.Contexts;
 using VacanciesService.Domain.Abstractions.Repositories;
 using VacanciesService.Domain.Abstractions.Services;
@@ -34,25 +33,42 @@ namespace VacanciesService.Infrastructure
                 options.UseNpgsql(configuration.GetConnectionString("WritePostgreDatabase"));
             });
 
-            services.AddGrpcClient<AuthorizationGrpcService.AuthorizationGrpcServiceClient>(options =>
-            {
-                options.Address = new Uri(configuration["Jobly:UsersService"]);
-            });
-
-            services.AddGrpcClient<UsersGrpcService.UsersGrpcServiceClient>(options =>
-            {
-                options.Address = new Uri(configuration["Jobly:UsersService"]);
-            });
-
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
+
+            services.AddGrpcClients(configuration);
 
             services.AddScoped<IVacanciesReadContext, VacanciesReadContext>();
             services.AddScoped<IVacanciesWriteContext, VacanciesWriteContext>();
             services.AddScoped<IVacanciesDetailsRepository, VacanciesDetailsRepository>();
 
-            services.AddScoped<IAuthorizationService, AuthorizationService>();
             services.AddScoped<ICurrencyApiService, CurrencyApiServiceDevelopmentMock>();
             //services.AddScoped<ICurrencyApiService, CurrencyApiService>();
+        }
+
+        internal static void AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IUsersService, Grpc.UsersService>();
+
+            services
+                .AddGrpcClient<AuthorizationGrpcService.AuthorizationGrpcServiceClient>(options =>
+                {
+                    options.Address = new Uri(configuration["Jobly:UsersService"]);
+                })
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                });
+
+            services
+                .AddGrpcClient<UsersGrpcService.UsersGrpcServiceClient>(options =>
+                {
+                    options.Address = new Uri(configuration["Jobly:UsersService"]);
+                })
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                });
         }
     }
 }
