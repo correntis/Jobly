@@ -95,6 +95,17 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<List<VacancyDetailsEntity>> GetFilteredAsync(
+            VacancyDetailsFilter detailsFilter,
+            CancellationToken cancellationToken = default)
+        {
+            var filter = GetFilterFromSpecifications(detailsFilter);
+
+            return await _context.VacanciesDetails
+                .Find(filter)
+                .ToListAsync(cancellationToken);
+        }
+
         private FilterDefinition<VacancyDetailsEntity> GetFilterFromSpecifications(VacancyDetailsFilter filter)
         {
             var specification = new Specification<VacancyDetailsEntity>(null);
