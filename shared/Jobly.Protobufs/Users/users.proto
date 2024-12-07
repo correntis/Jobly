@@ -17,3 +17,24 @@ message CompanyExistenceRequest {
 message CompanyExistenceResponse {
 	bool exists = 1;
 }
+
+message GetResumeRequest {
+	string resumeId = 1;
+}
+
+message GetResumeResponse {
+	ResumeMessage resume = 1;
+}
+
+message ResumeMessage {
+	string id = 1;
+	string userId = 2;
+	repeated string skills = 3;
+	repeated string tags = 4;
+	repeated LanguageMessage languages = 5;
+}
+
+message LanguageMessage {
+	string name = 1;
+	string level = 2;
+}

@@ -7,4 +7,5 @@ import "Users/users.proto";
 service UsersGrpcService {
 	rpc IsUserExists (UserExistenceRequest) returns (UserExistenceResponse);
 	rpc IsCompanyExists (CompanyExistenceRequest) returns (CompanyExistenceResponse);
+	rpc GetResume (GetResumeRequest) returns (GetResumeResponse);
 }
