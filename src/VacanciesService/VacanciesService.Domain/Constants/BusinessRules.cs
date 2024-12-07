@@ -6,6 +6,11 @@
         {
             public const int TitleMaxLength = 150;
             public const int EmployementTypeMaxLenght = 50;
+
+            public const int CacheExpiresHours = 1;
+            public const float MinPredictionScore = 0.6f;
+
+            public static readonly TimeSpan DeletionAfterArchiveTime = TimeSpan.FromDays(30);
         }
 
         public static class Application
@@ -35,6 +40,19 @@
             public const string User = "User";
 
             public static readonly IEnumerable<string> All = [Company, User];
+        }
+
+        public static class Interaction
+        {
+            public const int Dislike = 0;
+            public const int None = 1;
+            public const int Click = 2;
+            public const int Like = 3;
+        }
+
+        public static class Recomendation
+        {
+            public const string TrainedModelFile = "vacancy_recomdations_model.zip";
         }
     }
 }

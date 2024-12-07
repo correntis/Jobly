@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using VacanciesService.Application.Interactions.Commands.AddInteractionCommand;
 using VacanciesService.Application.Vacancies.Commands.AddVacancyCommand;
 using VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand;
+using VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResumeQuery;
 using VacanciesService.Application.Vacancies.Queries.GetFilteredVacanciesQuery;
 using VacanciesService.Application.Vacancies.Queries.GetVacancyByCompanyQuery;
 using VacanciesService.Application.Vacancies.Queries.GetVacancyQuery;
@@ -44,6 +46,11 @@ namespace VacanciesService.Presentation.Controllers
         [Route("search")]
         public async Task<IActionResult> Search(VacancyDetailsFilter filter, CancellationToken token)
             => Ok(await _sender.Send(new GetFilteredVacanciesQuery(filter), token));
+
+        [HttpGet]
+        [Route("recommendations/{resumeId}&pageNumber={pageNumber}&pageSize={pageSize}")]
+        public async Task<IActionResult> GetBestVacanciesPageForResume(string resumeId, int pageNumber, int pageSize, CancellationToken token)
+           => Ok(await _sender.Send(new GetBestVacanciesPageForResumeQuery(resumeId, pageNumber, pageSize), token));
 
         [HttpPost]
         [Route("details")]

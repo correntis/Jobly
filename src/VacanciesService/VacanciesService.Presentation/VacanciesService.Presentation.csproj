@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VacanciesService.Domain\VacanciesService.Domain.csproj" />
+    <ProjectReference Include="..\VacanciesService.Application\VacanciesService.Application.csproj" />
     <ProjectReference Include="..\VacanciesService.Infrastructure\VacanciesService.Infrastructure.csproj" />
   </ItemGroup>
 

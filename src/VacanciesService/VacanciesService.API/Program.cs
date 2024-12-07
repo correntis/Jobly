@@ -19,8 +19,8 @@ builder.Host.UseSerilog((context, configuration) =>
 });
 
 services.AddApplication();
-services.AddInfrastructure(configuration);
 services.AddPresentation();
+services.AddInfrastructure(configuration);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
@@ -37,6 +37,8 @@ app.UseCors(options =>
 });
 
 app.UsePresentation();
+app.UseInfrastructure();
+app.UseApplication();
 
 app.UseSwagger();
 app.UseSwaggerUI();

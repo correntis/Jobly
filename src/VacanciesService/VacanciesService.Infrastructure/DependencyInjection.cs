@@ -1,5 +1,8 @@
-﻿using Jobly.Protobufs.Authorization.Client;
+﻿using Hangfire;
+using Jobly.Protobufs.Authorization.Client;
 using Jobly.Protobufs.Users.Client;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +22,10 @@ namespace VacanciesService.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            var assembly = typeof(DependencyInjection).Assembly;
+
+            services.AddAutoMapper(assembly);
+
             services.Configure<MongoDbOptions>(configuration.GetSection(nameof(MongoDbOptions)));
             services.Configure<CurrencyApiOptions>(configuration.GetSection(nameof(CurrencyApiOptions)));
 
@@ -33,16 +40,29 @@ namespace VacanciesService.Infrastructure
                 options.UseNpgsql(configuration.GetConnectionString("WritePostgreDatabase"));
             });
 
-            services.AddSingleton<IMongoDbContext, MongoDbContext>();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration.GetConnectionString("RedisVacanciesCache");
+            });
+
+            services.AddHangfire(configuration);
 
             services.AddGrpcClients(configuration);
+
+            services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
             services.AddScoped<IVacanciesReadContext, VacanciesReadContext>();
             services.AddScoped<IVacanciesWriteContext, VacanciesWriteContext>();
             services.AddScoped<IVacanciesDetailsRepository, VacanciesDetailsRepository>();
+            services.AddScoped<IRecommendationsCacheRepository, RecommendationsCacheRepository>();
 
             services.AddScoped<ICurrencyApiService, CurrencyApiServiceDevelopmentMock>();
             //services.AddScoped<ICurrencyApiService, CurrencyApiService>();
+        }
+
+        public static void UseInfrastructure(this WebApplication app)
+        {
+            app.UseHangfireDashboard();
         }
 
         internal static void AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
@@ -69,6 +89,33 @@ namespace VacanciesService.Infrastructure
                 {
                     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                 });
+        }
+
+        internal static void AddHangfire(this IServiceCollection services, IConfiguration configuration)
+        {
+            InitializeSqlServerDatabaseAsync(configuration);
+
+            services.AddHangfire(options =>
+            {
+                options
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseSqlServerStorage(configuration.GetConnectionString("HangfireDatabaseSqlServer"));
+            });
+
+            services.AddHangfireServer();
+        }
+
+        private static void InitializeSqlServerDatabaseAsync(IConfiguration configuration)
+        {
+            using var connection = new SqlConnection(configuration.GetConnectionString("MasterDatabaseSqlServer"));
+
+            connection.Open();
+
+            using var command = new SqlCommand(configuration["Scripts:InitializeHangfireDatabaseSqlServer"], connection);
+
+            command.ExecuteNonQuery();
         }
     }
 }

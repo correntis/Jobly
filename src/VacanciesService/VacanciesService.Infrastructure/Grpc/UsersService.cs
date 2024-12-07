@@ -1,16 +1,22 @@
-﻿using Jobly.Protobufs.Users;
+﻿using AutoMapper;
+using Jobly.Protobufs.Users;
 using Jobly.Protobufs.Users.Client;
 using VacanciesService.Domain.Abstractions.Services;
+using VacanciesService.Domain.Models;
 
 namespace VacanciesService.Infrastructure.Grpc
 {
     public class UsersService : IUsersService
     {
         private readonly UsersGrpcService.UsersGrpcServiceClient _usersGrpcService;
+        private readonly IMapper _mapper;
 
-        public UsersService(UsersGrpcService.UsersGrpcServiceClient usersGrpcService)
+        public UsersService(
+            UsersGrpcService.UsersGrpcServiceClient usersGrpcService,
+            IMapper mapper)
         {
             _usersGrpcService = usersGrpcService;
+            _mapper = mapper;
         }
 
         public async Task<bool> IsUserExistsAsync(Guid id, CancellationToken token = default)
@@ -31,6 +37,16 @@ namespace VacanciesService.Infrastructure.Grpc
                 await _usersGrpcService.IsCompanyExistsAsync(companyExistenceRequest);
 
             return companyExistenceResponse.Exists;
+        }
+
+        public async Task<Resume> GetResumeAsync(string resumeId, CancellationToken token = default)
+        {
+            var getResumeRequest = new GetResumeRequest() { ResumeId = resumeId };
+
+            var getResumeResponse =
+                await _usersGrpcService.GetResumeAsync(getResumeRequest);
+
+            return _mapper.Map<Resume>(getResumeResponse.Resume);
         }
     }
 }
