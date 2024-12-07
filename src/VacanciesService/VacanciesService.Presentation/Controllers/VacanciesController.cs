@@ -49,5 +49,10 @@ namespace VacanciesService.Presentation.Controllers
         [Route("details")]
         public async Task<IActionResult> AddDetails(AddVacancyDetailsCommand command, CancellationToken token)
             => Ok(await _sender.Send(command, token));
+
+        [HttpPost]
+        [Route("interactions")]
+        public async Task<IActionResult> AddInteraction(AddInteractionCommand command, CancellationToken token)
+            => Ok(await _sender.Send(command, token));
     }
 }
