@@ -21,6 +21,13 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Read
                 .ToListAsync();
         }
 
+        public async Task<List<VacancyInteractionEntity>> GetAllByUser(Guid userId, CancellationToken token = default)
+        {
+            return await _vacanciesContext.Interactions
+                .Where(i => i.UserId == userId)
+                .ToListAsync();
+        }
+
         public async Task<List<VacancyInteractionEntity>> GetAllByUserAndVacancies(
             Guid userId,
             List<Guid> vacanciesIds,

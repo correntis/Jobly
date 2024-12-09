@@ -1,13 +1,12 @@
 ﻿using Bogus;
 using FluentAssertions;
 using Hangfire;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Linq.Expressions;
 using VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand;
-using VacanciesService.Domain.Abstractions.Contexts;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Entities.SQL;
+using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Tests.Unit.Vacancies
 {
@@ -24,30 +23,21 @@ namespace VacanciesService.Tests.Unit.Vacancies
         public void ShouldAdd_WhenVacancyValid()
         {
             // Arrange
-            var vacanciesContextMock = new Mock<IVacanciesWriteContext>();
+            var readVacanciesReposMock = new Mock<IReadVacanciesRepository>();
+            var writeVacanciesReposMock = new Mock<IWriteVacanciesRepository>();
             var backgroundServiceMock = new Mock<IBackgroundJobClient>();
 
             var id = Guid.NewGuid();
             var vacancyEntity = GetVacancyEntity(id);
 
-            var vacancies = new List<VacancyEntity> { vacancyEntity }.AsQueryable();
-            var dbSetMock = new Mock<DbSet<VacancyEntity>>();
-
-            dbSetMock.As<IQueryable<VacancyEntity>>().Setup(m => m.Provider).Returns(vacancies.Provider);
-            dbSetMock.As<IQueryable<VacancyEntity>>().Setup(m => m.Expression).Returns(vacancies.Expression);
-            dbSetMock.As<IQueryable<VacancyEntity>>().Setup(m => m.ElementType).Returns(vacancies.ElementType);
-            dbSetMock.As<IQueryable<VacancyEntity>>().Setup(m => m.GetEnumerator()).Returns(vacancies.GetEnumerator());
-            dbSetMock.Setup(d => d.FirstOrDefaultAsync(It.IsAny<Expression<Func<VacancyEntity, bool>>>(), It.IsAny<CancellationToken>()))
-                     .ReturnsAsync((Expression<Func<VacancyEntity, bool>> predicate, CancellationToken _) =>
-                         vacancies.FirstOrDefault(predicate.Compile()));
-
-            vacanciesContextMock.Setup(c => c.Vacancies).Returns(dbSetMock.Object);
-
-            vacanciesContextMock.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+            readVacanciesReposMock.Setup(rv => rv.GetAsync(It.IsAny<Guid>(), CancellationToken.None)).ReturnsAsync(vacancyEntity);
+            writeVacanciesReposMock.Setup(wr => wr.Update(vacancyEntity));
+            writeVacanciesReposMock.Setup(wr => wr.SaveChangesAsync(CancellationToken.None)).Returns(Task.CompletedTask);
 
             var handler = new ArchiveVacancyCommandHandler(
                 _loggerMock.Object,
-                vacanciesContextMock.Object,
+                readVacanciesReposMock.Object,
+                writeVacanciesReposMock.Object,
                 backgroundServiceMock.Object);
 
             // Act
@@ -56,11 +46,34 @@ namespace VacanciesService.Tests.Unit.Vacancies
             // Assert
             vacancyEntity.Archived.Should().BeTrue();
 
-            vacanciesContextMock.Verify(
-                v => v.Vacancies.Update(vacancyEntity),
-                Times.Once);
+            readVacanciesReposMock.Verify(v => v.GetAsync(It.IsAny<Guid>(), CancellationToken.None), Times.Once);
+            writeVacanciesReposMock.Verify(wr => wr.Update(vacancyEntity), Times.Once);
+            writeVacanciesReposMock.Verify(v => v.SaveChangesAsync(CancellationToken.None), Times.Once);
+        }
 
-            vacanciesContextMock.Verify(v => v.SaveChangesAsync(CancellationToken.None), Times.Once);
+        [Fact]
+        public void ShouldAdd_WhenCompanyNotExists()
+        {
+            // Arrange
+            var readVacanciesReposMock = new Mock<IReadVacanciesRepository>();
+            var writeVacanciesReposMock = new Mock<IWriteVacanciesRepository>();
+            var backgroundServiceMock = new Mock<IBackgroundJobClient>();
+
+            var id = Guid.NewGuid();
+
+            readVacanciesReposMock.Setup(rv => rv.GetAsync(It.IsAny<Guid>(), CancellationToken.None)).ReturnsAsync((VacancyEntity)null);
+
+            var handler = new ArchiveVacancyCommandHandler(
+                _loggerMock.Object,
+                readVacanciesReposMock.Object,
+                writeVacanciesReposMock.Object,
+                backgroundServiceMock.Object);
+
+            // Act
+            var act = async () => await handler.Handle(new ArchiveVacancyCommand(id), CancellationToken.None);
+
+            // Assert
+            act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
         private VacancyEntity GetVacancyEntity(Guid id)

@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using VacanciesService.Application.Interactions.Commands.AddInteractionCommand;
 using VacanciesService.Application.Vacancies.Commands.AddVacancyCommand;
 using VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand;
 using VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResumeQuery;
@@ -55,11 +54,6 @@ namespace VacanciesService.Presentation.Controllers
         [HttpPost]
         [Route("details")]
         public async Task<IActionResult> AddDetails(AddVacancyDetailsCommand command, CancellationToken token)
-            => Ok(await _sender.Send(command, token));
-
-        [HttpPost]
-        [Route("interactions")]
-        public async Task<IActionResult> AddInteraction(AddInteractionCommand command, CancellationToken token)
             => Ok(await _sender.Send(command, token));
     }
 }

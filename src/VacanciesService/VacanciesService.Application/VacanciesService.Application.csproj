@@ -27,9 +27,4 @@
     </PackageReference>
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Interactions\Queries\" />
-  </ItemGroup>
-
 </Project>
