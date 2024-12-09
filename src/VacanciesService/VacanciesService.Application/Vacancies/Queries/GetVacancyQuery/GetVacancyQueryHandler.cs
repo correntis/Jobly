@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using VacanciesService.Domain.Abstractions.Contexts;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Exceptions;
 using VacanciesService.Domain.Models;
 
@@ -13,26 +11,26 @@ namespace VacanciesService.Application.Vacancies.Queries.GetVacancyQuery
     {
         private readonly ILogger<GetVacancyQueryHandler> _logger;
         private readonly IMapper _mapper;
-        private readonly IVacanciesReadContext _vacanciesContext;
         private readonly IVacanciesDetailsRepository _detailsRepository;
+        private readonly IReadVacanciesRepository _readVacanciesRepository;
 
         public GetVacancyQueryHandler(
             ILogger<GetVacancyQueryHandler> logger,
             IMapper mapper,
-            IVacanciesReadContext vacanciesContext,
-            IVacanciesDetailsRepository detailsRepository)
+            IVacanciesDetailsRepository detailsRepository,
+            IReadVacanciesRepository readVacanciesRepository)
         {
             _logger = logger;
             _mapper = mapper;
-            _vacanciesContext = vacanciesContext;
             _detailsRepository = detailsRepository;
+            _readVacanciesRepository = readVacanciesRepository;
         }
 
         public async Task<Vacancy> Handle(GetVacancyQuery request, CancellationToken token)
         {
             _logger.LogInformation("Start handling {QueryName} for vacancy with ID {VacancyId}", request.GetType().Name, request.Id);
 
-            var vacancyEntity = await _vacanciesContext.Vacancies.FirstOrDefaultAsync(x => x.Id == request.Id, token);
+            var vacancyEntity = await _readVacanciesRepository.GetAsync(request.Id, token);
 
             if (vacancyEntity == null)
             {

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Application.Abstractions;
 using VacanciesService.Application.Vacancies.Recommendations.ML;
-using VacanciesService.Domain.Abstractions.Contexts;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Cache;
+using VacanciesService.Domain.Abstractions.Repositories.Interactions;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Domain.Entities.NoSQL;
@@ -19,7 +19,8 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
         : IRequestHandler<GetBestVacanciesPageForResumeQuery, IEnumerable<Vacancy>>
     {
         private readonly ILogger<GetBestVacanciesPageForResumeQuery> _logger;
-        private readonly IVacanciesReadContext _vacanciesContext;
+        private readonly IReadVacanciesRepository _readVacanciesRepository;
+        private readonly IReadInteractionsRepository _readInteractionsRepository;
         private readonly IVacanciesDetailsRepository _detailsRepository;
         private readonly IRecommendationsCacheRepository _cache;
         private readonly IUsersService _usersService;
@@ -29,7 +30,8 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
 
         public GetBestVacanciesPageForResumeQueryHandler(
             ILogger<GetBestVacanciesPageForResumeQuery> logger,
-            IVacanciesReadContext vacanciesContext,
+            IReadVacanciesRepository readVacanciesRepository,
+            IReadInteractionsRepository readInteractionsRepository,
             IVacanciesDetailsRepository detailsRepository,
             IRecommendationsCacheRepository cache,
             IUsersService usersService,
@@ -38,7 +40,8 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
             VacancyRecommendationsModel recommendationModel)
         {
             _logger = logger;
-            _vacanciesContext = vacanciesContext;
+            _readVacanciesRepository = readVacanciesRepository;
+            _readInteractionsRepository = readInteractionsRepository;
             _detailsRepository = detailsRepository;
             _cache = cache;
             _usersService = usersService;
@@ -155,9 +158,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
         {
             var detailsMap = vacanciesDetailsEntities.ToDictionary(d => d.VacancyId);
 
-            var vacanciesEntities = await _vacanciesContext.Vacancies
-                .Where(v => vacanciesIds.Contains(v.Id))
-                .ToListAsync(token);
+            var vacanciesEntities = await _readVacanciesRepository.GetAllIn(vacanciesIds.ToList(), token);
 
             var vacancies = _mapper.Map<List<Vacancy>>(vacanciesEntities);
 
@@ -186,9 +187,8 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
             Resume resume,
             CancellationToken token)
         {
-            var interactions = await _vacanciesContext.Interactions
-                .Where(i => vacanciesIds.Contains(i.VacancyId) && i.UserId == resume.UserId)
-                .ToListAsync(token);
+            var interactions =
+                await _readInteractionsRepository.GetAllByUserAndVacancies(resume.UserId, vacanciesIds.ToList(), token);
 
             return interactions;
         }

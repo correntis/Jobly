@@ -1,24 +1,39 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using VacanciesService.Domain.Abstractions.Contexts;
-using VacanciesService.Domain.Abstractions.Repositories;
+﻿using Microsoft.Extensions.Logging;
+using VacanciesService.Domain.Abstractions.Repositories.Applications;
+using VacanciesService.Domain.Abstractions.Repositories.Interactions;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 
 namespace VacanciesService.Application.Vacancies.Jobs
 {
     public class DeleteVacancyIfSillArchivedJob
     {
         private readonly ILogger<DeleteVacancyIfSillArchivedJob> _logger;
-        private readonly IVacanciesWriteContext _vacanciesContext;
         private readonly IVacanciesDetailsRepository _detailsRepository;
+        private readonly IReadVacanciesRepository _readVacanciesRepository;
+        private readonly IWriteVacanciesRepository _writeVacanciesRepository;
+        private readonly IReadInteractionsRepository _readInteractionsRepository;
+        private readonly IWriteInteractionsRepository _writeInteractionsRepository;
+        private readonly IReadApplicationsRepository _readApplicationsRepository;
+        private readonly IWriteApplicationsRepository _writeApplicationsRepository;
 
         public DeleteVacancyIfSillArchivedJob(
             ILogger<DeleteVacancyIfSillArchivedJob> logger,
-            IVacanciesWriteContext vacanciesContext,
-            IVacanciesDetailsRepository detailsRepository)
+            IVacanciesDetailsRepository detailsRepository,
+            IReadVacanciesRepository readVacanciesRepository,
+            IWriteVacanciesRepository writeVacanciesRepository,
+            IReadInteractionsRepository readInteractionsRepository,
+            IWriteInteractionsRepository writeInteractionsRepository,
+            IReadApplicationsRepository readApplicationsRepository,
+            IWriteApplicationsRepository writeApplicationsRepository)
         {
             _logger = logger;
-            _vacanciesContext = vacanciesContext;
             _detailsRepository = detailsRepository;
+            _readVacanciesRepository = readVacanciesRepository;
+            _writeVacanciesRepository = writeVacanciesRepository;
+            _readInteractionsRepository = readInteractionsRepository;
+            _writeInteractionsRepository = writeInteractionsRepository;
+            _readApplicationsRepository = readApplicationsRepository;
+            _writeApplicationsRepository = writeApplicationsRepository;
         }
 
         public async Task ExecuteAsync(Guid vacancyId)
@@ -29,16 +44,16 @@ namespace VacanciesService.Application.Vacancies.Jobs
 
             await DeleteVacancyDetailsAsync(vacancyId);
 
-            await _vacanciesContext.SaveChangesAsync();
+            await _writeVacanciesRepository.SaveChangesAsync();
 
             _logger.LogInformation("Vacancy with ID {VacancyId} has been deleted after being archived", vacancyId);
         }
 
         private async Task DeleteVacancyInteractions(Guid vacancyId)
         {
-            var interactionsEntities = await _vacanciesContext.Interactions
-                .Where(i => i.VacancyId == vacancyId)
-                .ToListAsync();
+            var interactionsEntities = await _readInteractionsRepository.GetAllByVacancy(vacancyId, CancellationToken.None);
+
+            _writeInteractionsRepository.RemoveRange(interactionsEntities);
         }
 
         private async Task DeleteVacancyDetailsAsync(Guid vacancyId)
@@ -58,7 +73,7 @@ namespace VacanciesService.Application.Vacancies.Jobs
 
         private async Task DeleteVacancyAsync(Guid vacancyId)
         {
-            var vacancyEntity = await _vacanciesContext.Vacancies.FirstOrDefaultAsync(v => v.Id == vacancyId);
+            var vacancyEntity = await _readVacanciesRepository.GetAsync(vacancyId);
 
             if (vacancyEntity is null)
             {
@@ -72,17 +87,14 @@ namespace VacanciesService.Application.Vacancies.Jobs
                 return;
             }
 
-            _vacanciesContext.Vacancies.Remove(vacancyEntity);
+            _writeVacanciesRepository.Delete(vacancyEntity);
         }
 
         private async Task DeleteVacancyApplicationsAsync(Guid vacancyId)
         {
-            var applicationsEntities = await _vacanciesContext.Applications
-                .Include(a => a.Vacancy)
-                .Where(a => a.Vacancy.Id == vacancyId)
-                .ToListAsync();
+            var applicationsEntities = await _readApplicationsRepository.GetAllByVacancyAsync(vacancyId, CancellationToken.None);
 
-            _vacanciesContext.Applications.RemoveRange(applicationsEntities);
+            _writeApplicationsRepository.RemoveRange(applicationsEntities);
         }
     }
 }

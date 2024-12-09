@@ -7,7 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VacanciesService.Domain.Abstractions.Contexts;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Applications;
+using VacanciesService.Domain.Abstractions.Repositories.Cache;
+using VacanciesService.Domain.Abstractions.Repositories.Interactions;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Configuration;
 using VacanciesService.Infrastructure.API.Services;
@@ -15,6 +18,8 @@ using VacanciesService.Infrastructure.Grpc;
 using VacanciesService.Infrastructure.NoSQL;
 using VacanciesService.Infrastructure.NoSQL.Repositories;
 using VacanciesService.Infrastructure.SQL;
+using VacanciesService.Infrastructure.SQL.Repositories.Read;
+using VacanciesService.Infrastructure.SQL.Repositories.Write;
 
 namespace VacanciesService.Infrastructure
 {
@@ -53,8 +58,15 @@ namespace VacanciesService.Infrastructure
 
             services.AddScoped<IVacanciesReadContext, VacanciesReadContext>();
             services.AddScoped<IVacanciesWriteContext, VacanciesWriteContext>();
+
             services.AddScoped<IVacanciesDetailsRepository, VacanciesDetailsRepository>();
             services.AddScoped<IRecommendationsCacheRepository, RecommendationsCacheRepository>();
+            services.AddScoped<IReadVacanciesRepository, ReadVacanciesRepository>();
+            services.AddScoped<IReadInteractionsRepository, ReadInteractionsRepository>();
+            services.AddScoped<IReadApplicationsRepository, ReadApplicationsRepository>();
+            services.AddScoped<IWriteVacanciesRepository, WriteVacanciesRepository>();
+            services.AddScoped<IWriteInteractionsRepository, WriteInteractionsRepository>();
+            services.AddScoped<IWriteApplicationsRepository, WriteApplicationsRepository>();
 
             services.AddScoped<ICurrencyApiService, CurrencyApiServiceDevelopmentMock>();
             //services.AddScoped<ICurrencyApiService, CurrencyApiService>();

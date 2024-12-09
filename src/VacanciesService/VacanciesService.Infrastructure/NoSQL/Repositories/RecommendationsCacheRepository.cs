@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Cache;
 using VacanciesService.Domain.Models;
 
 namespace VacanciesService.Infrastructure.NoSQL.Repositories

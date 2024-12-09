@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Presentation.Middleware
@@ -18,6 +19,12 @@ namespace VacanciesService.Presentation.Middleware
             try
             {
                 await next(context);
+            }
+            catch (ValidationException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+                await HandleExceptionAsync(context, ex, JsonSerializer.Serialize(ex.Errors));
             }
             catch (EntityNotFoundException ex)
             {

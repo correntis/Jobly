@@ -1,6 +1,6 @@
 ﻿using VacanciesService.Domain.Models;
 
-namespace VacanciesService.Domain.Abstractions.Repositories
+namespace VacanciesService.Domain.Abstractions.Repositories.Cache
 {
     public interface IRecommendationsCacheRepository
     {
