@@ -25,7 +25,7 @@ namespace VacanciesService.Application.Applications.Queries.GetApplicationsByVac
         public async Task<List<Domain.Models.Application>> Handle(GetApplicationsPageByVacancyQuery request, CancellationToken token)
         {
             _logger.LogInformation(
-                "Start handling {QueryName} for vacancy with ID {UserId}",
+                "Start handling {QueryName} for vacancy with ID {VacancyId}",
                 request.GetType().Name,
                 request.VacancyId);
 
@@ -36,7 +36,7 @@ namespace VacanciesService.Application.Applications.Queries.GetApplicationsByVac
                 token);
 
             _logger.LogInformation(
-                "Successfully handled {QueryName} for vacancy with ID {UserId}",
+                "Successfully handled {QueryName} for vacancy with ID {VacancyId}",
                 request.GetType().Name,
                 request.VacancyId);
 

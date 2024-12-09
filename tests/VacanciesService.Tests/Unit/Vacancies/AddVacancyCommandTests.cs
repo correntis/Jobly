@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Bogus;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Moq;
 using VacanciesService.Application.Vacancies.Commands.AddVacancyCommand;
-using VacanciesService.Domain.Abstractions.Contexts;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Entities.SQL;
+using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Tests.Unit.Vacancies
 {
@@ -25,7 +25,7 @@ namespace VacanciesService.Tests.Unit.Vacancies
         {
             // Arrange
             var mapperMock = new Mock<IMapper>();
-            var vacanciesContextMock = new Mock<IVacanciesWriteContext>();
+            var writeVacanciesReposMock = new Mock<IWriteVacanciesRepository>();
             var usersServiceMock = new Mock<IUsersService>();
 
             var command = GetValidCommand();
@@ -34,30 +34,47 @@ namespace VacanciesService.Tests.Unit.Vacancies
             var handler = new AddVacancyCommandHandler(
                 _loggerMock.Object,
                 mapperMock.Object,
-                vacanciesContextMock.Object,
+                writeVacanciesReposMock.Object,
                 usersServiceMock.Object);
 
-            usersServiceMock.Setup(us => us.IsCompanyExistsAsync(It.IsAny<Guid>(), CancellationToken.None))
-                .ReturnsAsync(true);
-            vacanciesContextMock.Setup(v => v.Vacancies.AddAsync(vacancyEntity, CancellationToken.None))
-                .Returns(ValueTask.FromResult((EntityEntry<VacancyEntity>)null));
-            vacanciesContextMock.Setup(v => v.SaveChangesAsync(CancellationToken.None))
-                .Returns(Task.FromResult(0));
+            usersServiceMock.Setup(us => us.IsCompanyExistsAsync(It.IsAny<Guid>(), CancellationToken.None)).ReturnsAsync(true);
+            writeVacanciesReposMock.Setup(v => v.AddAsync(vacancyEntity, CancellationToken.None)).Returns(Task.CompletedTask);
+            writeVacanciesReposMock.Setup(v => v.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
             mapperMock.Setup(m => m.Map<VacancyEntity>(command)).Returns(vacancyEntity);
 
             // Act
-
             var act = handler.Handle(command, CancellationToken.None);
 
             // Assert
-
             vacancyEntity.Archived.Should().BeFalse();
 
-            vacanciesContextMock.Verify(
-                v => v.Vacancies.AddAsync(vacancyEntity, CancellationToken.None),
-                Times.Once);
+            writeVacanciesReposMock.Verify(v => v.AddAsync(vacancyEntity, CancellationToken.None), Times.Once);
+            writeVacanciesReposMock.Verify(v => v.SaveChangesAsync(CancellationToken.None), Times.Once);
+        }
 
-            vacanciesContextMock.Verify(v => v.SaveChangesAsync(CancellationToken.None), Times.Once);
+        [Fact]
+        public void ShouldAdd_WhenCompanyNotExists()
+        {
+            // Arrange
+            var mapperMock = new Mock<IMapper>();
+            var writeVacanciesReposMock = new Mock<IWriteVacanciesRepository>();
+            var usersServiceMock = new Mock<IUsersService>();
+
+            var command = new AddVacancyCommand(null, null, Guid.NewGuid(), DateTime.MinValue);
+
+            var handler = new AddVacancyCommandHandler(
+                _loggerMock.Object,
+                mapperMock.Object,
+                writeVacanciesReposMock.Object,
+                usersServiceMock.Object);
+
+            usersServiceMock.Setup(us => us.IsCompanyExistsAsync(It.IsAny<Guid>(), CancellationToken.None)).ReturnsAsync(false);
+
+            // Act
+            var act = async () => await handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            act.Should().ThrowAsync<EntityNotFoundException>();
         }
 
         private VacancyEntity GetVacancyEntityFromCommand(AddVacancyCommand command)

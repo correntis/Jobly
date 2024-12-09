@@ -36,7 +36,7 @@ namespace VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand
 
             var vacancyEntity = await _readVacanciesRepository.GetAsync(request.Id, token);
 
-            if (vacancyEntity == null)
+            if (vacancyEntity is null)
             {
                 throw new EntityNotFoundException($"Vacancy with ID {request.Id} not found");
             }
