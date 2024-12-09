@@ -1,8 +1,9 @@
-﻿using Hangfire;
+﻿using FluentValidation;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.CompilerServices;
 using VacanciesService.Application.Abstractions;
+using VacanciesService.Application.Behaviors;
 using VacanciesService.Application.Services;
 using VacanciesService.Application.Vacancies.Recommendations.Jobs;
 using VacanciesService.Application.Vacancies.Recommendations.ML;
@@ -18,8 +19,11 @@ namespace VacanciesService.Application
             services.AddMediatR(config =>
             {
                 config.RegisterServicesFromAssembly(assembly);
+
+                config.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
 
+            services.AddValidatorsFromAssembly(assembly);
             services.AddAutoMapper(assembly);
 
             services.AddScoped<ICurrencyConverter, CurrencyConverter>();

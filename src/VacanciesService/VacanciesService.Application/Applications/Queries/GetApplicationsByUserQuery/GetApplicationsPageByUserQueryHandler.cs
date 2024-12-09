@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using VacanciesService.Domain.Abstractions.Contexts;
+using VacanciesService.Domain.Abstractions.Repositories.Applications;
 
 namespace VacanciesService.Application.Applications.Queries.GetApplicationsByUserQuery
 {
@@ -10,17 +9,17 @@ namespace VacanciesService.Application.Applications.Queries.GetApplicationsByUse
         : IRequestHandler<GetApplicationsPageByUserQuery, List<Domain.Models.Application>>
     {
         private readonly ILogger<GetApplicationsPageByUserQueryHandler> _logger;
+        private readonly IReadApplicationsRepository _readApplicationsRepository;
         private readonly IMapper _mapper;
-        private readonly IVacanciesReadContext _vacanciesContext;
 
         public GetApplicationsPageByUserQueryHandler(
             ILogger<GetApplicationsPageByUserQueryHandler> logger,
-            IMapper mapper,
-            IVacanciesReadContext vacanciesContext)
+            IReadApplicationsRepository readApplicationsRepository,
+            IMapper mapper)
         {
             _logger = logger;
+            _readApplicationsRepository = readApplicationsRepository;
             _mapper = mapper;
-            _vacanciesContext = vacanciesContext;
         }
 
         public async Task<List<Domain.Models.Application>> Handle(GetApplicationsPageByUserQuery request, CancellationToken token)
@@ -30,13 +29,11 @@ namespace VacanciesService.Application.Applications.Queries.GetApplicationsByUse
                 request.GetType().Name,
                 request.UserId);
 
-            var applicationsEntities = await _vacanciesContext.Applications
-                .Where(a => a.UserId == request.UserId)
-                .OrderBy(a => a.CreatedAt)
-                .Include(a => a.Vacancy)
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToListAsync(token);
+            var applicationsEntities = await _readApplicationsRepository.GetPageByUserIncludeVacancy(
+                request.UserId,
+                request.PageNumber,
+                request.PageSize,
+                token);
 
             _logger.LogInformation(
                 "Successfully handled {QueryName} for user with ID {UserId}",

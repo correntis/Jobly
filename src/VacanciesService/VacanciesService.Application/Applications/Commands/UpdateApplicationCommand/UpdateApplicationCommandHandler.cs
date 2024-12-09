@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using VacanciesService.Domain.Abstractions.Contexts;
+using VacanciesService.Domain.Abstractions.Repositories.Applications;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Application.Applications.Commands.UpdateApplicationCommand
@@ -10,27 +10,31 @@ namespace VacanciesService.Application.Applications.Commands.UpdateApplicationCo
     public class UpdateApplicationCommandHandler : IRequestHandler<UpdateApplicationCommand, Guid>
     {
         private readonly ILogger<UpdateApplicationCommandHandler> _logger;
-        private readonly IVacanciesWriteContext _vacanciesContext;
+        private readonly IReadApplicationsRepository _readApplicationsRepository;
+        private readonly IWriteApplicationsRepository _writeApplicationsRepository;
         private readonly IMapper _mapper;
 
         public UpdateApplicationCommandHandler(
             ILogger<UpdateApplicationCommandHandler> logger,
-            IVacanciesWriteContext vacanciesContext,
+            IReadVacanciesRepository readVacanciesRepository,
+            IReadApplicationsRepository readApplicationsRepository,
+            IWriteApplicationsRepository writeApplicationsRepository,
             IMapper mapper)
         {
             _logger = logger;
-            _vacanciesContext = vacanciesContext;
+            _readApplicationsRepository = readApplicationsRepository;
+            _writeApplicationsRepository = writeApplicationsRepository;
             _mapper = mapper;
         }
 
-        public async Task<Guid> Handle(UpdateApplicationCommand request, CancellationToken token)
+        public async Task<Guid> Handle(UpdateApplicationCommand request, CancellationToken token = default)
         {
             _logger.LogInformation(
                 "Start handling {CommandName} for application with ID {ApplicationId}",
                 request.GetType().Name,
                 request.Id);
 
-            var applicationEntity = await _vacanciesContext.Applications.FirstOrDefaultAsync(v => v.Id == request.Id);
+            var applicationEntity = await _readApplicationsRepository.GetAsync(request.Id, token);
 
             if (applicationEntity is null)
             {
@@ -41,7 +45,9 @@ namespace VacanciesService.Application.Applications.Commands.UpdateApplicationCo
 
             applicationEntity.AppliedAt = DateTime.Now;
 
-            await _vacanciesContext.SaveChangesAsync(token);
+            _writeApplicationsRepository.Update(applicationEntity);
+
+            await _writeApplicationsRepository.SaveChangesAsync(token);
 
             _logger.LogInformation(
                 "Successfully handled {CommandName} for application with ID {ApplicationId}",

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using VacanciesService.Domain.Abstractions.Contexts;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Models;
 
 namespace VacanciesService.Application.Vacancies.Queries.GetVacancyByCompanyQuery
@@ -12,28 +10,26 @@ namespace VacanciesService.Application.Vacancies.Queries.GetVacancyByCompanyQuer
     {
         private readonly ILogger<GetVacanciesByCompanyQueryHandler> _logger;
         private readonly IMapper _mapper;
-        private readonly IVacanciesReadContext _vacanciesContext;
         private readonly IVacanciesDetailsRepository _detailsRepository;
+        private readonly IReadVacanciesRepository _readVacanciesRepository;
 
         public GetVacanciesByCompanyQueryHandler(
             ILogger<GetVacanciesByCompanyQueryHandler> logger,
             IMapper mapper,
-            IVacanciesReadContext vacanciesContext,
-            IVacanciesDetailsRepository detailsRepository)
+            IVacanciesDetailsRepository detailsRepository,
+            IReadVacanciesRepository readVacanciesRepository)
         {
             _logger = logger;
             _mapper = mapper;
-            _vacanciesContext = vacanciesContext;
             _detailsRepository = detailsRepository;
+            _readVacanciesRepository = readVacanciesRepository;
         }
 
         public async Task<List<Vacancy>> Handle(GetVacanciesByCompanyQuery request, CancellationToken token)
         {
             _logger.LogInformation("Start handling {QueryName} for company with ID {CompanyId}", request.GetType().Name, request.CompanyId);
 
-            var vacanciesEntities = await _vacanciesContext.Vacancies
-                .Where(v => v.CompanyId == request.CompanyId)
-                .ToListAsync(token);
+            var vacanciesEntities = await _readVacanciesRepository.GetAllByCompanyAsync(request.CompanyId);
 
             var detailsEntities = await _detailsRepository.GetManyByAsync(
                 vd => vd.VacancyId,

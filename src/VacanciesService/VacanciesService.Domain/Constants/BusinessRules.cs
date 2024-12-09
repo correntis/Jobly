@@ -5,7 +5,7 @@
         public static class Vacancy
         {
             public const int TitleMaxLength = 150;
-            public const int EmployementTypeMaxLenght = 50;
+            public const int EmploymentTypeMaxLenght = 50;
 
             public const int CacheExpiresHours = 1;
             public const float MinPredictionScore = 0.6f;

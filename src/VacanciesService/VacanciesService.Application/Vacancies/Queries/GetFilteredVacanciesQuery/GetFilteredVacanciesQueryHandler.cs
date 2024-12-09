@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Application.Abstractions;
-using VacanciesService.Domain.Abstractions.Contexts;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Domain.Entities.NoSQL;
@@ -18,7 +16,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacanciesQue
         private readonly ILogger<GetFilteredVacanciesQueryHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IVacanciesDetailsRepository _detailsRepository;
-        private readonly IVacanciesReadContext _vacanciesContext;
+        private readonly IReadVacanciesRepository _readVacanciesRepository;
         private readonly ICurrencyApiService _currencyApi;
         private readonly ICurrencyConverter _currencyConverter;
 
@@ -26,14 +24,14 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacanciesQue
             ILogger<GetFilteredVacanciesQueryHandler> logger,
             IMapper mapper,
             IVacanciesDetailsRepository detailsRepository,
-            IVacanciesReadContext vacanciesContext,
+            IReadVacanciesRepository readVacanciesRepository,
             ICurrencyApiService currencyApi,
             ICurrencyConverter currencyConverter)
         {
             _logger = logger;
             _mapper = mapper;
             _detailsRepository = detailsRepository;
-            _vacanciesContext = vacanciesContext;
+            _readVacanciesRepository = readVacanciesRepository;
             _currencyApi = currencyApi;
             _currencyConverter = currencyConverter;
         }
@@ -56,9 +54,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacanciesQue
             var vacanciesIds = detailsEntities.Select(x => x.VacancyId).ToList();
             var detailsMap = detailsEntities.ToDictionary(d => d.VacancyId);
 
-            var vacanciesEntities = await _vacanciesContext.Vacancies
-                .Where(v => vacanciesIds.Contains(v.Id))
-                .ToListAsync(token);
+            var vacanciesEntities = await _readVacanciesRepository.GetAllIn(vacanciesIds, token);
 
             var vacancies = _mapper.Map<List<Vacancy>>(vacanciesEntities);
 

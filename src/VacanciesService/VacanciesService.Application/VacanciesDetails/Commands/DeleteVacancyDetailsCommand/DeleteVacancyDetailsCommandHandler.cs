@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Application.VacanciesDetails.Commands.DeleteVacancyDetailsCommand
@@ -25,7 +25,8 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.DeleteVacancyDe
                 request.GetType().Name,
                 request.Id);
 
-            if (await _detailsRepository.GetByAsync(vd => vd.Id, request.Id, token) is null)
+            var detailsEntity = await _detailsRepository.GetByAsync(vd => vd.Id, request.Id, token);
+            if (detailsEntity is null)
             {
                 throw new EntityNotFoundException($"Vacancy_details with ID {request.Id} not found");
             }

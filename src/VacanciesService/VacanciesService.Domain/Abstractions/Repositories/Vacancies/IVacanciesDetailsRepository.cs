@@ -2,7 +2,7 @@
 using VacanciesService.Domain.Entities.NoSQL;
 using VacanciesService.Domain.Filters.VacancyDetails;
 
-namespace VacanciesService.Domain.Abstractions.Repositories
+namespace VacanciesService.Domain.Abstractions.Repositories.Vacancies
 {
     public interface IVacanciesDetailsRepository
     {

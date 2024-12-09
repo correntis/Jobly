@@ -1,9 +1,8 @@
 ﻿using Hangfire;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Application.Vacancies.Jobs;
-using VacanciesService.Domain.Abstractions.Contexts;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Domain.Exceptions;
 
@@ -12,27 +11,30 @@ namespace VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand
     public class ArchiveVacancyCommandHandler : IRequestHandler<ArchiveVacancyCommand, Guid>
     {
         private readonly ILogger<ArchiveVacancyCommandHandler> _logger;
-        private readonly IVacanciesWriteContext _vacanciesContext;
+        private readonly IReadVacanciesRepository _readVacanciesRepository;
+        private readonly IWriteVacanciesRepository _writeVacanciesRepository;
         private readonly IBackgroundJobClient _backgroundJobClient;
 
         public ArchiveVacancyCommandHandler(
             ILogger<ArchiveVacancyCommandHandler> logger,
-            IVacanciesWriteContext vacanciesContext,
+            IReadVacanciesRepository readVacanciesRepository,
+            IWriteVacanciesRepository writeVacanciesRepository,
             IBackgroundJobClient backgroundJobClient)
         {
             _logger = logger;
-            _vacanciesContext = vacanciesContext;
+            _readVacanciesRepository = readVacanciesRepository;
+            _writeVacanciesRepository = writeVacanciesRepository;
             _backgroundJobClient = backgroundJobClient;
         }
 
-        public async Task<Guid> Handle(ArchiveVacancyCommand request, CancellationToken token)
+        public async Task<Guid> Handle(ArchiveVacancyCommand request, CancellationToken token = default)
         {
             _logger.LogInformation(
                  "Start handling {CommandName} for vacancy with ID {VacancyId}",
                  request.GetType().Name,
                  request.Id);
 
-            var vacancyEntity = await _vacanciesContext.Vacancies.FirstOrDefaultAsync(v => v.Id == request.Id, token);
+            var vacancyEntity = await _readVacanciesRepository.GetAsync(request.Id, token);
 
             if (vacancyEntity == null)
             {
@@ -41,7 +43,9 @@ namespace VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand
 
             vacancyEntity.Archived = true;
 
-            await _vacanciesContext.SaveChangesAsync(token);
+            _writeVacanciesRepository.Update(vacancyEntity);
+
+            await _writeVacanciesRepository.SaveChangesAsync(token);
 
             CreateDeletionJob(vacancyEntity.Id);
 
