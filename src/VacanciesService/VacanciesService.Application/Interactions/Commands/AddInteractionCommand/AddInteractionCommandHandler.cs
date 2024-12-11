@@ -11,14 +11,14 @@ namespace VacanciesService.Application.Interactions.Commands.AddInteractionComma
 {
     public class AddInteractionCommandHandler : IRequestHandler<AddInteractionCommand, Guid>
     {
-        private readonly ILogger<AddInteractionCommand> _logger;
+        private readonly ILogger<AddInteractionCommandHandler> _logger;
         private readonly IWriteInteractionsRepository _writeInteractionsRepository;
         private readonly IReadVacanciesRepository _readVacanciesRepository;
         private readonly IUsersService _usersService;
         private readonly IMapper _mapper;
 
         public AddInteractionCommandHandler(
-            ILogger<AddInteractionCommand> logger,
+            ILogger<AddInteractionCommandHandler> logger,
             IWriteInteractionsRepository writeInteractionsRepository,
             IReadVacanciesRepository readVacanciesRepository,
             IUsersService usersService,
