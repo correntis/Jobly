@@ -53,7 +53,7 @@ namespace VacanciesService.Tests.Unit.Vacancies
         }
 
         [Fact]
-        public void ShouldAdd_WhenCompanyNotExists()
+        public void ShouldThrowEntityNotFound_WhenCompanyNotExists()
         {
             // Arrange
             var mapperMock = new Mock<IMapper>();

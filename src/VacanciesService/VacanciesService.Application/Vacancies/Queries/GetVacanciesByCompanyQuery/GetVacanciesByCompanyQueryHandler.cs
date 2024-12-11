@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Models;
 
-namespace VacanciesService.Application.Vacancies.Queries.GetVacancyByCompanyQuery
+namespace VacanciesService.Application.Vacancies.Queries.GetVacanciesByCompanyQuery
 {
     public class GetVacanciesByCompanyQueryHandler : IRequestHandler<GetVacanciesByCompanyQuery, List<Vacancy>>
     {
@@ -39,9 +39,9 @@ namespace VacanciesService.Application.Vacancies.Queries.GetVacancyByCompanyQuer
             var detailsMap = detailsEntities.ToDictionary(d => d.VacancyId);
             var vacancies = _mapper.Map<List<Vacancy>>(vacanciesEntities);
 
-            foreach (var vacancy in vacancies)
+            foreach(var vacancy in vacancies)
             {
-                if (detailsMap.TryGetValue(vacancy.Id, out var detailsEntity))
+                if(detailsMap.TryGetValue(vacancy.Id, out var detailsEntity))
                 {
                     vacancy.VacancyDetails = _mapper.Map<VacancyDetails>(detailsEntity);
                 }

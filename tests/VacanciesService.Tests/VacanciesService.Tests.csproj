@@ -31,9 +31,4 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Unit\VacanciesDetails\" />
-    <Folder Include="Unit\Applications\" />
-  </ItemGroup>
-
 </Project>

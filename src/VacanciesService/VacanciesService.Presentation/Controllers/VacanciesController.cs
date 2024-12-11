@@ -4,7 +4,7 @@ using VacanciesService.Application.Vacancies.Commands.AddVacancyCommand;
 using VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand;
 using VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResumeQuery;
 using VacanciesService.Application.Vacancies.Queries.GetFilteredVacanciesQuery;
-using VacanciesService.Application.Vacancies.Queries.GetVacancyByCompanyQuery;
+using VacanciesService.Application.Vacancies.Queries.GetVacanciesByCompanyQuery;
 using VacanciesService.Application.Vacancies.Queries.GetVacancyQuery;
 using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand;
 using VacanciesService.Domain.Filters.VacancyDetails;

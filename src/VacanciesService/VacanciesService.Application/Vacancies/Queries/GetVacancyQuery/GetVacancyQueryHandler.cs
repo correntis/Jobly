@@ -34,7 +34,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetVacancyQuery
 
             if (vacancyEntity == null)
             {
-                throw new EntityNotFoundException($"Vacancy with ID {vacancyEntity.Id} not found");
+                throw new EntityNotFoundException($"Vacancy with ID {request.Id} not found");
             }
 
             var vacancyDetailsEntity = await _detailsRepository.GetByAsync(v => v.VacancyId, vacancyEntity.Id, token);
