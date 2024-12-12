@@ -40,7 +40,7 @@ namespace VacanciesService.Application.Vacancies.Commands.AddVacancyCommand
             var vacancyEntity = _mapper.Map<VacancyEntity>(request);
 
             vacancyEntity.Archived = false;
-            vacancyEntity.CreatedAt = DateTime.Now;
+            vacancyEntity.CreatedAt = DateTime.UtcNow;
 
             await _writeVacanciesRepository.AddAsync(vacancyEntity, token);
 

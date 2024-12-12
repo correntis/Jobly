@@ -53,7 +53,7 @@ namespace VacanciesService.Application.Interactions.Commands.AddInteractionComma
 
             var interactionEntity = _mapper.Map<VacancyInteractionEntity>(request);
 
-            interactionEntity.CreatedAt = DateTime.Now;
+            interactionEntity.CreatedAt = DateTime.UtcNow;
 
             await _writeInteractionsRepository.AddAsync(interactionEntity, token);
 

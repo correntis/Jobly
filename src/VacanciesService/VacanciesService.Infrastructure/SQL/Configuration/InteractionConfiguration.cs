@@ -21,10 +21,10 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
                 .HasDefaultValueSql("gen_random_uuid()");
 
             builder.Property(i => i.CreatedAt)
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamptz")
                 .HasConversion(
-                    i => DateTime.SpecifyKind(i, DateTimeKind.Unspecified),
-                    i => DateTime.SpecifyKind(i, DateTimeKind.Local))
+                    i => DateTime.SpecifyKind(i, DateTimeKind.Utc),
+                    i => DateTime.SpecifyKind(i, DateTimeKind.Utc))
                 .IsRequired();
         }
     }
