@@ -15,7 +15,7 @@ namespace VacanciesService.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> TestCurrencies(CancellationToken token)
+        public async Task<IActionResult> GetCurrencies(CancellationToken token)
             => Ok(await _currencyApi.GetCurrenciesAsync(token));
     }
 }
