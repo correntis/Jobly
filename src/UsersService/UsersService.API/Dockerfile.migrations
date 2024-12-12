@@ -1,0 +1,31 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+RUN apt-get update && \
+    apt-get install -y curl apt-transport-https gnupg && \
+    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && \
+    ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18 && \
+    echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV PATH="${PATH}:/opt/mssql-tools18/bin"
+
+COPY ["src/UsersService/UsersService.API/UsersService.API.csproj", "src/UsersService/UsersService.API/"]
+COPY ["src/UsersService/UsersService.Application/UsersService.Application.csproj", "src/UsersService/UsersService.Application/"]
+COPY ["src/UsersService/UsersService.Domain/UsersService.Domain.csproj", "src/UsersService/UsersService.Domain/"]
+COPY ["src/UsersService/UsersService.Infrastructure/UsersService.Infrastructure.csproj", "src/UsersService/UsersService.Infrastructure/"]
+COPY ["tests/UsersService.Tests/UsersService.Tests.csproj", "tests/UsersService.Tests/"]
+COPY ["shared/Jobly.Protobufs/Jobly.Protobufs.csproj", "shared/Jobly.Protobufs/"]
+
+RUN dotnet restore "./src/UsersService/UsersService.API/UsersService.API.csproj"
+
+RUN dotnet tool install --global dotnet-ef
+
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+COPY . .
+

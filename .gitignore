@@ -395,10 +395,9 @@ FodyWeavers.xsd
 *.msp
 
 # JetBrains Rider
-*.sln.iml
-
-
-
-
-*Development.json
 *.sln
+*.iml
+*.Development.json
+*.Development.cs
+
+[Uu]ploads/

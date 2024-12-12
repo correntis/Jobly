@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option csharp_namespace = "Jobly.Protobufs.Authorization.Server";
+
+import "Authorization/auth.proto";
+
+service AuthorizationGrpcService {
+	rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
+}
