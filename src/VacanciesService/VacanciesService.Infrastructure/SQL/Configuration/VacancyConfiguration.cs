@@ -31,17 +31,17 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
                 .IsRequired();
 
             builder.Property(v => v.CreatedAt)
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamptz")
                 .HasConversion(
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                 .IsRequired();
 
             builder.Property(v => v.DeadlineAt)
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamptz")
                 .HasConversion(
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                 .IsRequired();
         }
     }

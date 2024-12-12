@@ -49,7 +49,7 @@ namespace VacanciesService.Application.Applications.Commands.AddApplicationComma
             var applicationEntity = _mapper.Map<ApplicationEntity>(request);
 
             applicationEntity.Status = BusinessRules.Application.DefaultStatus;
-            applicationEntity.CreatedAt = DateTime.Now;
+            applicationEntity.CreatedAt = DateTime.UtcNow;
             applicationEntity.Vacancy = vacancyEntity;
 
             await _writeApplicationsRepository.AddAsync(applicationEntity, token);

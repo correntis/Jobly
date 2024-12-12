@@ -25,13 +25,13 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
                 .IsRequired();
 
             builder.Property(a => a.AppliedAt)
-                .HasColumnType("timestamp");
+                .HasColumnType("timestamptz");
 
             builder.Property(a => a.CreatedAt)
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamptz")
                 .HasConversion(
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                 .IsRequired();
         }
     }

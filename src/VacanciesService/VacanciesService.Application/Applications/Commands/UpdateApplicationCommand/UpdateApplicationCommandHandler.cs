@@ -43,7 +43,7 @@ namespace VacanciesService.Application.Applications.Commands.UpdateApplicationCo
 
             _mapper.Map(request, applicationEntity);
 
-            applicationEntity.AppliedAt = DateTime.Now;
+            applicationEntity.AppliedAt = DateTime.UtcNow;
 
             _writeApplicationsRepository.Update(applicationEntity);
 
