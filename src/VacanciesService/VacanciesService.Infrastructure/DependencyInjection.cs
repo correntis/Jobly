@@ -105,7 +105,7 @@ namespace VacanciesService.Infrastructure
 
         internal static void AddHangfire(this IServiceCollection services, IConfiguration configuration)
         {
-            InitializeSqlServerDatabaseAsync(configuration);
+            InitializeSqlServerDatabase(configuration);
 
             services.AddHangfire(options =>
             {
@@ -119,7 +119,7 @@ namespace VacanciesService.Infrastructure
             services.AddHangfireServer();
         }
 
-        private static void InitializeSqlServerDatabaseAsync(IConfiguration configuration)
+        private static void InitializeSqlServerDatabase(IConfiguration configuration)
         {
             using var connection = new SqlConnection(configuration.GetConnectionString("MasterDatabaseSqlServer"));
 

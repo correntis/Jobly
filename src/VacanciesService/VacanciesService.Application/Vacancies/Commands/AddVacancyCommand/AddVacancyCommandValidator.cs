@@ -21,7 +21,7 @@ namespace VacanciesService.Application.Vacancies.Commands.AddVacancyCommand
                 .WithMessage($"Employment type must be shorter then {BusinessRules.Vacancy.EmploymentTypeMaxLenght}");
 
             RuleFor(v => v.DeadlineAt)
-                .Must(deadline => DateTime.UtcNow > deadline)
+                .Must(deadline => DateTime.UtcNow < deadline)
                 .WithMessage("Deadline must be more then current date");
 
             RuleFor(v => v.CompanyId)
