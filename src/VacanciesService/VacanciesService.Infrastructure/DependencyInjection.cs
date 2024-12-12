@@ -2,10 +2,12 @@
 using Jobly.Protobufs.Authorization.Client;
 using Jobly.Protobufs.Users.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using VacanciesService.Domain.Abstractions.Contexts;
 using VacanciesService.Domain.Abstractions.Repositories.Applications;
 using VacanciesService.Domain.Abstractions.Repositories.Cache;
@@ -25,7 +27,7 @@ namespace VacanciesService.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
         {
             var assembly = typeof(DependencyInjection).Assembly;
 
@@ -68,8 +70,14 @@ namespace VacanciesService.Infrastructure
             services.AddScoped<IWriteInteractionsRepository, WriteInteractionsRepository>();
             services.AddScoped<IWriteApplicationsRepository, WriteApplicationsRepository>();
 
-            services.AddScoped<ICurrencyApiService, CurrencyApiServiceDevelopmentMock>();
-            //services.AddScoped<ICurrencyApiService, CurrencyApiService>();
+            if (env.IsProduction())
+            {
+                services.AddScoped<ICurrencyApiService, CurrencyApiService>();
+            }
+            else
+            {
+                services.AddScoped<ICurrencyApiService, CurrencyApiServiceDevelopmentMock>();
+            }
         }
 
         public static void UseInfrastructure(this WebApplication app)

@@ -20,7 +20,7 @@ builder.Host.UseSerilog((context, configuration) =>
 
 services.AddApplication();
 services.AddPresentation();
-services.AddInfrastructure(configuration);
+services.AddInfrastructure(configuration, builder.Environment);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
