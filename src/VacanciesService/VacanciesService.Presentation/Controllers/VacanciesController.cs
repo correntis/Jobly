@@ -27,38 +27,52 @@ namespace VacanciesService.Presentation.Controllers
         [HttpPost]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<IActionResult> Add(AddVacancyCommand command, CancellationToken token)
-            => Ok(await _sender.Send(command, token));
+        {
+            return Ok(await _sender.Send(command, token));
+        }
 
         [HttpPost]
         [Route("archives/{id}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<IActionResult> Archive(Guid id, CancellationToken token)
-            => Ok(await _sender.Send(new ArchiveVacancyCommand(id), token));
+        {
+            return Ok(await _sender.Send(new ArchiveVacancyCommand(id), token));
+        }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> Get(Guid id, CancellationToken token)
-            => Ok(await _sender.Send(new GetVacancyQuery(id), token));
+        {
+            return Ok(await _sender.Send(new GetVacancyQuery(id), token));
+        }
 
         [HttpGet]
         [Route("companies/{companyId}")]
         public async Task<IActionResult> GetByCompany(Guid companyId, CancellationToken token)
-            => Ok(await _sender.Send(new GetVacanciesByCompanyQuery(companyId), token));
+        {
+            return Ok(await _sender.Send(new GetVacanciesByCompanyQuery(companyId), token));
+        }
 
         [HttpPost]
         [Route("search")]
         public async Task<IActionResult> Search(VacancyDetailsFilter filter, CancellationToken token)
-            => Ok(await _sender.Send(new GetFilteredVacanciesQuery(filter), token));
+        {
+            return Ok(await _sender.Send(new GetFilteredVacanciesQuery(filter), token));
+        }
 
         [HttpGet]
         [Route("recommendations/{resumeId}&pageNumber={pageNumber}&pageSize={pageSize}")]
         public async Task<IActionResult> GetBestVacanciesPageForResume(string resumeId, int pageNumber, int pageSize, CancellationToken token)
-           => Ok(await _sender.Send(new GetBestVacanciesPageForResumeQuery(resumeId, pageNumber, pageSize), token));
+        {
+            return Ok(await _sender.Send(new GetBestVacanciesPageForResumeQuery(resumeId, pageNumber, pageSize), token));
+        }
 
         [HttpPost]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         [Route("details")]
         public async Task<IActionResult> AddDetails(AddVacancyDetailsCommand command, CancellationToken token)
-            => Ok(await _sender.Send(command, token));
+        {
+            return Ok(await _sender.Send(command, token));
+        }
     }
 }
