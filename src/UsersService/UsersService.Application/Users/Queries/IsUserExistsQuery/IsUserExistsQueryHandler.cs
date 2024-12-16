@@ -17,14 +17,14 @@ namespace UsersService.Application.Users.Queries.IsUserExistsQuery
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> Handle(IsUserExistsQuery request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(IsUserExistsQuery request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling {CommandName} for user with ID {UserId}",
                 request.GetType().Name,
                 request.Id);
 
-            var isUserExists = await _unitOfWork.UsersRepository.Exists(request.Id);
+            var isUserExists = await _unitOfWork.UsersRepository.ExistsAsync(request.Id, token);
 
             _logger.LogInformation(
                 "Successfully handled {CommandName} for user with ID {UserId}",
