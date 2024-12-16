@@ -14,7 +14,6 @@ namespace MessagesService.DataAccess.Entities
         public int Status { get; set; }
         public bool IsPushed { get; set; }
         public DateTime SentAt { get; set; }
-        public DateTime CreatedAt { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
     }
 }

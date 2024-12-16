@@ -17,9 +17,4 @@
     <ProjectReference Include="..\MessagesService.Application\MessagesService.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Middleware\" />
-  </ItemGroup>
-
 </Project>

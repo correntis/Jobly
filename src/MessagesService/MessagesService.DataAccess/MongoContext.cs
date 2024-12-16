@@ -33,6 +33,59 @@ namespace MessagesService.DataAccess
 
             Notifications = database.GetCollection<NotificationEntity>("notifications");
             Messages = database.GetCollection<MessageEntity>("messages");
+
+            CreateNotificationsIndicies();
+            CreateMessagesIndicies();
+        }
+
+        private void CreateNotificationsIndicies()
+        {
+            if(Notifications is null)
+            {
+                throw new NullReferenceException("Collection notifications is null");
+            }
+
+            var recipientSentAtIndex = new CreateIndexModel<NotificationEntity>(
+                Builders<NotificationEntity>.IndexKeys
+                    .Ascending(notification => notification.RecipientId)
+                    .Descending(notification => notification.SentAt));
+
+            var recipientStatusIndex = new CreateIndexModel<NotificationEntity>(
+                Builders<NotificationEntity>.IndexKeys
+                    .Ascending(notification => notification.RecipientId)
+                    .Ascending(notification => notification.Status));
+
+            Notifications.Indexes.CreateMany([
+                recipientSentAtIndex,
+                recipientStatusIndex]);
+        }
+
+        private void CreateMessagesIndicies()
+        {
+            if(Messages is null)
+            {
+                throw new NullReferenceException("Collection messages is null");
+            }
+
+            var userSentAtIndex = new CreateIndexModel<MessageEntity>(
+                Builders<MessageEntity>.IndexKeys
+                    .Ascending(message => message.UserId)
+                    .Descending(message => message.SentAt));
+
+            var applicationSentAtIndex = new CreateIndexModel<MessageEntity>(
+                Builders<MessageEntity>.IndexKeys
+                    .Ascending(message => message.ApplicationId)
+                    .Descending(message => message.SentAt));
+
+            var companySentAtIndex = new CreateIndexModel<MessageEntity>(
+                Builders<MessageEntity>.IndexKeys
+                    .Ascending(message => message.CompanyId)
+                    .Descending(message => message.SentAt));
+
+            Messages.Indexes.CreateMany([
+                userSentAtIndex,
+                applicationSentAtIndex,
+                companySentAtIndex]);
         }
     }
 }
