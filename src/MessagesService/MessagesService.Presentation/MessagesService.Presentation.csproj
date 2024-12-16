@@ -6,11 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MessagesService.DataAccess\MessagesService.DataAccess.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Constants\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
