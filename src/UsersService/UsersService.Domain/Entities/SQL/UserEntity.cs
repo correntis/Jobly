@@ -1,0 +1,11 @@
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace UsersService.Domain.Entities.SQL
+{
+    public class UserEntity : IdentityUser<Guid>
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+}
