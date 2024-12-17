@@ -2,7 +2,7 @@
 
 namespace MessagesService.Core.Models
 {
-    public class NotificationEntity
+    public class Notification
     {
         public string Id { get; set; }
         public Guid RecipientId { get; set; }

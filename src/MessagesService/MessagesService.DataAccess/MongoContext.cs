@@ -69,7 +69,7 @@ namespace MessagesService.DataAccess
 
             var userSentAtIndex = new CreateIndexModel<MessageEntity>(
                 Builders<MessageEntity>.IndexKeys
-                    .Ascending(message => message.UserId)
+                    .Ascending(message => message.RecipientId)
                     .Descending(message => message.SentAt));
 
             var applicationSentAtIndex = new CreateIndexModel<MessageEntity>(
@@ -79,7 +79,7 @@ namespace MessagesService.DataAccess
 
             var companySentAtIndex = new CreateIndexModel<MessageEntity>(
                 Builders<MessageEntity>.IndexKeys
-                    .Ascending(message => message.CompanyId)
+                    .Ascending(message => message.SenderId)
                     .Descending(message => message.SentAt));
 
             Messages.Indexes.CreateMany([

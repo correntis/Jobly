@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MessagesService.Application\MessagesService.Application.csproj" />
+    <ProjectReference Include="..\MessagesService.Presentation\MessagesService.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

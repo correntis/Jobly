@@ -19,6 +19,17 @@ namespace MessagesService.DataAccess.Repositories
             await _context.Notifications.InsertOneAsync(entity, cancellationToken: token);
         }
 
+        public async Task SetByIdAsync<TValue>(
+            string id,
+            Expression<Func<NotificationEntity, TValue>> field,
+            TValue value,
+            CancellationToken token = default)
+        {
+            var update = Builders<NotificationEntity>.Update.Set(field, value);
+
+            await _context.Notifications.UpdateOneAsync(Eq(notif => notif.Id, id), update, cancellationToken: token);
+        }
+
         public async Task DeleteByAsync<TValue>(
             Expression<Func<NotificationEntity, TValue>> field,
             TValue value,
@@ -43,12 +54,19 @@ namespace MessagesService.DataAccess.Repositories
             return await _context.Notifications.Find(Eq(field, value)).FirstOrDefaultAsync(token);
         }
 
-        public async Task<List<NotificationEntity>> GetManyBy<TValue>(
+        public async Task<List<NotificationEntity>> GetPageBy<TValue>(
             Expression<Func<NotificationEntity, TValue>> field,
             TValue value,
+            int pageIndex,
+            int pageSize,
             CancellationToken token = default)
         {
-            return await _context.Notifications.Find(Eq(field, value)).ToListAsync(token);
+            return await _context.Notifications
+                .Find(Eq(field, value))
+                .SortByDescending(notif => notif.SentAt)
+                .Skip((pageIndex - 1) * pageSize)
+                .Limit(pageSize)
+                .ToListAsync(token);
         }
     }
 }

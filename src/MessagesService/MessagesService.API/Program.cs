@@ -1,6 +1,12 @@
+using MessagesService.Application;
+using MessagesService.DataAccess;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
+
+services.AddApplication();
+services.AddDataAccess(configuration);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
