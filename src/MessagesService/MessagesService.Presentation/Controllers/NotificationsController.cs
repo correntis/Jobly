@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MessagesService.Application.Notifications.Commands.ViewNotification;
 using MessagesService.Application.Notifications.Queries.GetRecipientNotifications;
+using MessagesService.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MessagesService.Presentation.Controllers
@@ -26,7 +27,7 @@ namespace MessagesService.Presentation.Controllers
 
         [HttpGet]
         [Route("{recipientId}&pageIndex={pageIndex}&pageSize={pageSize}")]
-        public async Task<ActionResult> GetRecipientNotifications(Guid recipientId, int pageIndex, int pageSize, CancellationToken token)
+        public async Task<ActionResult<List<Notification>>> GetRecipientNotifications(Guid recipientId, int pageIndex, int pageSize, CancellationToken token)
         {
             await _sender.Send(new GetRecipientNotificationsQuery(recipientId, pageIndex, pageSize), token);
 

@@ -4,6 +4,7 @@ using MessagesService.Application.Messages.Commands.ReadMessage;
 using MessagesService.Application.Messages.Commands.SendMessage;
 using MessagesService.Application.Messages.Queries.GetApplicationMessages;
 using MessagesService.Application.Messages.Queries.SearchApplicationMessages;
+using MessagesService.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MessagesService.Presentation.Controllers
@@ -43,14 +44,14 @@ namespace MessagesService.Presentation.Controllers
 
         [HttpGet]
         [Route("{applicationId}&pageIndex={pageIndex}&pageSize={pageSize}")]
-        public async Task<IActionResult> GetApplicationMessage(Guid applicationId, int pageIndex, int pageSize, CancellationToken token = default)
+        public async Task<ActionResult<List<Message>>> GetApplicationMessage(Guid applicationId, int pageIndex, int pageSize, CancellationToken token = default)
         {
             return Ok(await _sender.Send(new GetApplicationMessagesQuery(applicationId, pageIndex, pageSize), token));
         }
 
         [HttpGet]
         [Route("{applicationId}&content={content}")]
-        public async Task<IActionResult> GetApplicationMessage(Guid applicationId, string content, CancellationToken token = default)
+        public async Task<ActionResult<List<Message>>> GetApplicationMessage(Guid applicationId, string content, CancellationToken token = default)
         {
             return Ok(await _sender.Send(new SearchApplicationMessagesQuery(applicationId, content), token));
         }
