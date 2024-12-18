@@ -39,9 +39,9 @@ namespace VacanciesService.Application.Vacancies.Queries.GetVacanciesByCompanyQu
             var detailsMap = detailsEntities.ToDictionary(d => d.VacancyId);
             var vacancies = _mapper.Map<List<Vacancy>>(vacanciesEntities);
 
-            foreach(var vacancy in vacancies)
+            foreach (var vacancy in vacancies)
             {
-                if(detailsMap.TryGetValue(vacancy.Id, out var detailsEntity))
+                if (detailsMap.TryGetValue(vacancy.Id, out var detailsEntity))
                 {
                     vacancy.VacancyDetails = _mapper.Map<VacancyDetails>(detailsEntity);
                 }

@@ -6,7 +6,7 @@ using VacanciesService.Domain.Abstractions.Repositories;
 
 namespace VacanciesService.Application.Vacancies.Commands.DeleteVacancyCommand
 {
-    public class DeleteVacancyCommandHandler : IRequestHandler<DeleteVacancyCommand, int>
+    public class DeleteVacancyCommandHandler : IRequestHandler<DeleteVacancyCommand, Guid>
     {
         private readonly ILogger<DeleteVacancyCommandHandler> _logger;
         private readonly IVacanciesWriteContext _vacanciesContext;
@@ -22,7 +22,7 @@ namespace VacanciesService.Application.Vacancies.Commands.DeleteVacancyCommand
             _detailsRepository = detailsRepository;
         }
 
-        public async Task<int> Handle(DeleteVacancyCommand request, CancellationToken token)
+        public async Task<Guid> Handle(DeleteVacancyCommand request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling {CommandName} for vacancy with ID {VacancyId}",

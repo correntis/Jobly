@@ -42,14 +42,6 @@
             public static readonly IEnumerable<string> All = [Company, User];
         }
 
-        public static class Interaction
-        {
-            public const int Dislike = 0;
-            public const int None = 1;
-            public const int Click = 2;
-            public const int Like = 3;
-        }
-
         public static class Recomendation
         {
             public const string TrainedModelFile = "vacancy_recomdations_model.zip";

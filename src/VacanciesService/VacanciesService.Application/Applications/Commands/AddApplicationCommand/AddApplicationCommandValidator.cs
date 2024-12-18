@@ -2,7 +2,7 @@
 
 namespace VacanciesService.Application.Applications.Commands.AddApplicationCommand
 {
-    class AddApplicationCommandValidator : AbstractValidator<AddApplicationCommand>
+    public class AddApplicationCommandValidator : AbstractValidator<AddApplicationCommand>
     {
         public AddApplicationCommandValidator()
         {

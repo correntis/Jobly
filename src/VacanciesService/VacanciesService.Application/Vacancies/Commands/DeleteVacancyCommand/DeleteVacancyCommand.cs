@@ -2,5 +2,5 @@
 
 namespace VacanciesService.Application.Vacancies.Commands.DeleteVacancyCommand
 {
-    public sealed record DeleteVacancyCommand(int Id) : IRequest<int>;
+    public sealed record DeleteVacancyCommand(Guid Id) : IRequest<Guid>;
 }
