@@ -7,13 +7,14 @@ namespace MessagesService.DataAccess.Entities
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string ChatId { get; set; }
         public Guid SenderId { get; set; }
         public Guid RecipientId { get; set; }
-        public Guid ApplicationId { get; set; }
-        public Guid VacancyId { get; set; }
         public string Content { get; set; }
         public bool IsRead { get; set; }
+        public int Type { get; set; }
         public DateTime SentAt { get; set; }
-        public DateTime EditedAt { get; set; }
+        public DateTime? EditedAt { get; set; }
     }
 }

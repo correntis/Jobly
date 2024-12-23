@@ -4,16 +4,16 @@ using MessagesService.Core.Models;
 using MessagesService.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 
-namespace MessagesService.Application.Messages.Queries.GetApplicationMessages
+namespace MessagesService.Application.Messages.Queries.GetChatMessages
 {
-    public class GetApplicationMessagesQueryHandler : IRequestHandler<GetApplicationMessagesQuery, List<Message>>
+    public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery, List<Message>>
     {
-        private readonly ILogger<GetApplicationMessagesQueryHandler> _logger;
+        private readonly ILogger<GetChatMessagesQueryHandler> _logger;
         private readonly IMessagesRepository _messagesRepository;
         private readonly IMapper _mapper;
 
-        public GetApplicationMessagesQueryHandler(
-            ILogger<GetApplicationMessagesQueryHandler> logger,
+        public GetChatMessagesQueryHandler(
+            ILogger<GetChatMessagesQueryHandler> logger,
             IMessagesRepository messagesRepository,
             IMapper mapper)
         {
@@ -22,24 +22,24 @@ namespace MessagesService.Application.Messages.Queries.GetApplicationMessages
             _mapper = mapper;
         }
 
-        public async Task<List<Message>> Handle(GetApplicationMessagesQuery request, CancellationToken token)
+        public async Task<List<Message>> Handle(GetChatMessagesQuery request, CancellationToken token)
         {
             _logger.LogInformation(
-                "Start handling command {CommandName} for application {ApplicationId}",
+                "Start handling command {CommandName} for chat {ChatId}",
                 request.GetType().Name,
-                request.ApplicationId);
+                request.ChatId);
 
             var messagesEntities = await _messagesRepository.GetPageBy(
-                msg => msg.ApplicationId,
-                request.ApplicationId,
+                msg => msg.ChatId,
+                request.ChatId,
                 request.PageIndex,
                 request.PageSize,
                 token);
-            
+
             _logger.LogInformation(
-                "Succesfully handled command {CommandName} for application {ApplicationId}",
+                "Succesfully handled command {CommandName} for chat {ChatId}",
                 request.GetType().Name,
-                request.ApplicationId);
+                request.ChatId);
 
             return _mapper.Map<List<Message>>(messagesEntities);
         }

@@ -22,7 +22,6 @@ services:
     ports:
       - 1433:1433
 
-
   jobly-postgres_primary:
     container_name: jobly-postgres_primary
     image: postgres:14-alpine
@@ -102,8 +101,7 @@ services:
     image: redis:alpine
     ports:
       - 6380:6379
-
-
+      
   # jobly-elastic:
   #   container_name: jobly-elastic
   #   image: elasticsearch:8.14.3
@@ -114,7 +112,7 @@ services:
   #     - xpack.security.http.ssl.enabled=false
   #   ports:
   #     - "9200:9200"
-
+ 
   # jobly-kibana:
   #   container_name: users-kibana
   #   image: kibana:8.14.3
@@ -124,7 +122,7 @@ services:
   #     - "5601:5601"
   #   depends_on:
   #     - jobly-elastic
-
+  
   # users-migrations:
   #   container_name: users-migrations
   #   build:

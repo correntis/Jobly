@@ -12,6 +12,6 @@ namespace MessagesService.DataAccess.Abstractions
         Task DeleteOneByAsync<TValue>(Expression<Func<MessageEntity, TValue>> field, TValue value, CancellationToken token = default);
         Task<List<MessageEntity>> GetPageBy<TValue>(Expression<Func<MessageEntity, TValue>> field, TValue value, int pageIndex, int pageSize, CancellationToken token = default);
         Task<MessageEntity> GetOneBy<TValue>(Expression<Func<MessageEntity, TValue>> field, TValue value, CancellationToken token = default);
-        Task<List<MessageEntity>> SearchContentForApplication(Guid applicationId, string searchingContent, CancellationToken token = default);
+        Task<List<MessageEntity>> SearchChatContent(string chatId, string searchingContent, CancellationToken token = default);
     }
 }

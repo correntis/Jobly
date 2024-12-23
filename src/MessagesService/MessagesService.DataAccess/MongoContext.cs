@@ -12,6 +12,7 @@ namespace MessagesService.DataAccess
     {
         public IMongoCollection<NotificationEntity> Notifications { get; init; }
         public IMongoCollection<MessageEntity> Messages { get; init; }
+        public IMongoCollection<ChatEntity> Chats { get; init; }
 
         static MongoContext()
         {
@@ -33,6 +34,7 @@ namespace MessagesService.DataAccess
 
             Notifications = database.GetCollection<NotificationEntity>("notifications");
             Messages = database.GetCollection<MessageEntity>("messages");
+            Chats = database.GetCollection<ChatEntity>("chats");
 
             CreateNotificationsIndicies();
             CreateMessagesIndicies();
@@ -40,7 +42,7 @@ namespace MessagesService.DataAccess
 
         private void CreateNotificationsIndicies()
         {
-            if(Notifications is null)
+            if (Notifications is null)
             {
                 throw new NullReferenceException("Collection notifications is null");
             }
@@ -62,7 +64,7 @@ namespace MessagesService.DataAccess
 
         private void CreateMessagesIndicies()
         {
-            if(Messages is null)
+            if (Messages is null)
             {
                 throw new NullReferenceException("Collection messages is null");
             }
@@ -72,9 +74,9 @@ namespace MessagesService.DataAccess
                     .Ascending(message => message.RecipientId)
                     .Descending(message => message.SentAt));
 
-            var applicationSentAtIndex = new CreateIndexModel<MessageEntity>(
+            var chatSentAtIndex = new CreateIndexModel<MessageEntity>(
                 Builders<MessageEntity>.IndexKeys
-                    .Ascending(message => message.ApplicationId)
+                    .Ascending(message => message.ChatId)
                     .Descending(message => message.SentAt));
 
             var companySentAtIndex = new CreateIndexModel<MessageEntity>(
@@ -84,8 +86,30 @@ namespace MessagesService.DataAccess
 
             Messages.Indexes.CreateMany([
                 userSentAtIndex,
-                applicationSentAtIndex,
+                chatSentAtIndex,
                 companySentAtIndex]);
+        }
+
+        private void CreateChatsIndicies()
+        {
+            if (Chats is null)
+            {
+                throw new NullReferenceException("Collection chats is null");
+            }
+
+            var userIdLastMessageAtIndex = new CreateIndexModel<ChatEntity>(
+                Builders<ChatEntity>.IndexKeys
+                    .Ascending(message => message.UserId)
+                    .Descending(message => message.LastMessageAt));
+
+            var companyIdLastMessageAtIndex = new CreateIndexModel<ChatEntity>(
+                Builders<ChatEntity>.IndexKeys
+                    .Ascending(message => message.CompanyId)
+                    .Descending(message => message.LastMessageAt));
+
+            Chats.Indexes.CreateMany([
+                userIdLastMessageAtIndex,
+                companyIdLastMessageAtIndex]);
         }
     }
 }

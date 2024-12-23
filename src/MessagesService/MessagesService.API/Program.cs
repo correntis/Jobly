@@ -1,6 +1,7 @@
 using Elastic.Serilog.Sinks;
 using MessagesService.Application;
 using MessagesService.DataAccess;
+using MessagesService.Presentation;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,20 +18,33 @@ builder.Host.UseSerilog((context, configuration) =>
         .ReadFrom.Configuration(context.Configuration);
 });
 
-services.AddApplication();
 services.AddDataAccess(configuration);
+services.AddApplication();
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
+services.AddPresentation();
+
 var app = builder.Build();
+
+app.UseCors(options =>
+{
+    options
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+});
+
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthorization();
-
 app.MapControllers();
+
+app.MapPresentation();
 
 app.Run();

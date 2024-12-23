@@ -75,12 +75,12 @@ namespace MessagesService.DataAccess.Repositories
                 .ToListAsync(token);
         }
 
-        public async Task<List<MessageEntity>> SearchContentForApplication(
-            Guid applicationId,
+        public async Task<List<MessageEntity>> SearchChatContent(
+            string chatId,
             string searchingContent,
             CancellationToken token = default)
         {
-            var idFilter = Eq(msg => msg.ApplicationId, applicationId);
+            var idFilter = Eq(msg => msg.ChatId, chatId);
             var contentFilter = Builders<MessageEntity>.Filter.Regex(
                 message => message.Content, new BsonRegularExpression(searchingContent, "i"));
 
