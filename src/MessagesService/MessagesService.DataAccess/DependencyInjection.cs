@@ -14,8 +14,10 @@ namespace MessagesService.DataAccess
 
             services.AddSingleton<MongoContext>();
 
-            services.AddScoped<INotificationsRepository, NotificationsRepository>();
-            services.AddScoped<IMessagesRepository, MessagesRepository>();
+            services.AddSingleton<INotificationsRepository, NotificationsRepository>();
+            services.AddSingleton<IMessagesRepository, MessagesRepository>();
+            services.AddSingleton<IChatsRepository, ChatsRepository>();
+            services.AddSingleton<ITemplatesRepository, TemplatesRepository>();
         }
     }
 }

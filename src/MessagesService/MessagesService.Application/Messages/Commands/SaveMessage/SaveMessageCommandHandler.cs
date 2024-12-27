@@ -36,11 +36,6 @@ namespace MessagesService.Application.Messages.Commands.SendMessage
 
             var chatEntity = await _chatsRepository.GetOneBy(chat => chat.Id, request.ChatId, token);
 
-            if (chatEntity == null)
-            {
-                throw new NotImplementedException("Waiting for implementation of Result pattern");
-            }
-
             var messageEntity = _mapper.Map<MessageEntity>(request);
 
             await _messagesRepository.AddAsync(messageEntity, token);

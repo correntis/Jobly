@@ -28,14 +28,13 @@ namespace MessagesService.Application.Notifications.Commands.ViewNotification
             await _notificationsRepository.SetByIdAsync(
                 request.NotificaitonId,
                 notif => notif.Status,
-                (int)NotificationStatus.Seen,
+                (int)NotificationStatus.Viewed,
                 token);
 
             _logger.LogInformation(
                 "Succesfully handled command {CommandName} for notification {NotificationId}",
                 request.GetType().Name,
                 request.NotificaitonId);
-
         }
     }
 }

@@ -8,12 +8,10 @@ namespace MessagesService.DataAccess.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public Guid RecipientId { get; set; }
-        public string Title { get; set; }
         public string Content { get; set; }
         public int Type { get; set; }
         public int Status { get; set; }
-        public bool IsPushed { get; set; }
-        public DateTime SentAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
     }
 }

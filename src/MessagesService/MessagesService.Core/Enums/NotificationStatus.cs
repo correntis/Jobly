@@ -2,8 +2,7 @@
 {
     public enum NotificationStatus
     {
-        ReadyToSent,
         Sent,
-        Seen,
+        Viewed,
     }
 }

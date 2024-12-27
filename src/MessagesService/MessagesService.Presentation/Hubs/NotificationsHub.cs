@@ -1,5 +1,4 @@
-﻿using MessagesService.Core.Models;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace MessagesService.Presentation.Hubs
@@ -13,14 +12,18 @@ namespace MessagesService.Presentation.Hubs
             _logger = logger;
         }
 
-        public async Task SendNotification(Guid recipientId, Notification notification)
+        public override Task OnConnectedAsync()
         {
-            await Clients.User($"{recipientId}").SendAsync("ReceiveNotification", notification, Context.ConnectionAborted);
+            _logger.LogInformation("[SignalR] [Connection] Notifications userId = {userId}", Context.UserIdentifier);
+
+            return base.OnConnectedAsync();
         }
 
-        public async Task SendBroadcastNotification(List<string> recipientsIds, Notification notification)
+        public override Task OnDisconnectedAsync(Exception exception)
         {
-            await Clients.Users(recipientsIds).SendAsync("ReceiveNotification", notification, Context.ConnectionAborted);
+            _logger.LogInformation("[SignalR] [Disconnect] Notifications exception {@Exception}", exception);
+
+            return base.OnDisconnectedAsync(exception);
         }
     }
 }

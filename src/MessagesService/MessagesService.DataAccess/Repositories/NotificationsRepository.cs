@@ -63,7 +63,7 @@ namespace MessagesService.DataAccess.Repositories
         {
             return await _context.Notifications
                 .Find(Eq(field, value))
-                .SortByDescending(notif => notif.SentAt)
+                .SortByDescending(notif => notif.CreatedAt)
                 .Skip((pageIndex - 1) * pageSize)
                 .Limit(pageSize)
                 .ToListAsync(token);

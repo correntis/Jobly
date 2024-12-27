@@ -25,7 +25,7 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
-services.AddPresentation();
+services.AddPresentation(configuration);
 
 var app = builder.Build();
 
@@ -37,7 +37,6 @@ app.UseCors(options =>
         .AllowAnyHeader()
         .AllowCredentials();
 });
-
 
 app.UseSwagger();
 app.UseSwaggerUI();

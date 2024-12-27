@@ -3,7 +3,10 @@
     public enum NotificationType
     {
         Registration,
+        ApplicationResponse,
+        LikedVacancyDeadline,
+        RecomendVacancy,
+        ResumeView,
         System,
-        VacancyResponse,
     }
 }

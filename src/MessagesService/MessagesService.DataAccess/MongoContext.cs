@@ -13,6 +13,7 @@ namespace MessagesService.DataAccess
         public IMongoCollection<NotificationEntity> Notifications { get; init; }
         public IMongoCollection<MessageEntity> Messages { get; init; }
         public IMongoCollection<ChatEntity> Chats { get; init; }
+        public IMongoCollection<TemplateEntity> Templates { get; init; }
 
         static MongoContext()
         {
@@ -35,6 +36,7 @@ namespace MessagesService.DataAccess
             Notifications = database.GetCollection<NotificationEntity>("notifications");
             Messages = database.GetCollection<MessageEntity>("messages");
             Chats = database.GetCollection<ChatEntity>("chats");
+            Templates = database.GetCollection<TemplateEntity>("templates");
 
             CreateNotificationsIndicies();
             CreateMessagesIndicies();
@@ -50,7 +52,7 @@ namespace MessagesService.DataAccess
             var recipientSentAtIndex = new CreateIndexModel<NotificationEntity>(
                 Builders<NotificationEntity>.IndexKeys
                     .Ascending(notification => notification.RecipientId)
-                    .Descending(notification => notification.SentAt));
+                    .Descending(notification => notification.CreatedAt));
 
             var recipientStatusIndex = new CreateIndexModel<NotificationEntity>(
                 Builders<NotificationEntity>.IndexKeys

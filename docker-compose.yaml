@@ -101,6 +101,13 @@ services:
     image: redis:alpine
     ports:
       - 6380:6379
+
+  jobly-rabbitmq:
+    container_name: jobly-rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
       
   # jobly-elastic:
   #   container_name: jobly-elastic

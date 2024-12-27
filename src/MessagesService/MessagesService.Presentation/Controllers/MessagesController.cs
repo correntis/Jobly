@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using MessagesService.Application.Messages.Queries.GetApplicationMessages;
-using MessagesService.Application.Messages.Queries.SearchApplicationMessages;
+using MessagesService.Application.Messages.Queries.GetChatMessages;
+using MessagesService.Application.Messages.Queries.SearchChatMessages;
 using MessagesService.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,17 +18,17 @@ namespace MessagesService.Presentation.Controllers
         }
 
         [HttpGet]
-        [Route("{applicationId}&pageIndex={pageIndex}&pageSize={pageSize}")]
-        public async Task<ActionResult<List<Message>>> GetApplicationMessages(Guid applicationId, int pageIndex, int pageSize, CancellationToken token = default)
+        [Route("{chatId}&pageIndex={pageIndex}&pageSize={pageSize}")]
+        public async Task<ActionResult<List<Message>>> GetApplicationMessages(string chatId, int pageIndex, int pageSize, CancellationToken token = default)
         {
-            return Ok(await _sender.Send(new GetApplicationMessagesQuery(applicationId, pageIndex, pageSize), token));
+            return Ok(await _sender.Send(new GetChatMessagesQuery(chatId, pageIndex, pageSize), token));
         }
 
         [HttpGet]
-        [Route("{applicationId}&content={content}")]
-        public async Task<ActionResult<List<Message>>> SearchApplicationMessages(Guid applicationId, string content, CancellationToken token = default)
+        [Route("{chatId}&content={content}")]
+        public async Task<ActionResult<List<Message>>> SearchApplicationMessages(string chatId, string content, CancellationToken token = default)
         {
-            return Ok(await _sender.Send(new SearchChatMessagesQuery(applicationId, content), token));
+            return Ok(await _sender.Send(new SearchChatMessagesQuery(chatId, content), token));
         }
     }
 }

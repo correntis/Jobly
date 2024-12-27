@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\shared\Jobly.Brokers\Jobly.Brokers.csproj" />
     <ProjectReference Include="..\MessagesService.Application\MessagesService.Application.csproj" />
   </ItemGroup>
 
