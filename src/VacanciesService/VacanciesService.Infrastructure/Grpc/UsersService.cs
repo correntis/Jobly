@@ -24,7 +24,7 @@ namespace VacanciesService.Infrastructure.Grpc
             var userExistenceRequest = new UserExistenceRequest() { UserId = id.ToString() };
 
             var userExistenceResponse =
-                await _usersGrpcService.IsUserExistsAsync(userExistenceRequest);
+                await _usersGrpcService.IsUserExistsAsync(userExistenceRequest, cancellationToken: token);
 
             return userExistenceResponse.Exists;
         }
@@ -34,7 +34,7 @@ namespace VacanciesService.Infrastructure.Grpc
             var companyExistenceRequest = new CompanyExistenceRequest() { CompanyId = id.ToString() };
 
             var companyExistenceResponse =
-                await _usersGrpcService.IsCompanyExistsAsync(companyExistenceRequest);
+                await _usersGrpcService.IsCompanyExistsAsync(companyExistenceRequest, cancellationToken: token);
 
             return companyExistenceResponse.Exists;
         }
@@ -44,7 +44,7 @@ namespace VacanciesService.Infrastructure.Grpc
             var getResumeRequest = new GetResumeRequest() { ResumeId = resumeId };
 
             var getResumeResponse =
-                await _usersGrpcService.GetResumeAsync(getResumeRequest);
+                await _usersGrpcService.GetResumeAsync(getResumeRequest, cancellationToken: token);
 
             return _mapper.Map<Resume>(getResumeResponse.Resume);
         }

@@ -1,4 +1,6 @@
-﻿namespace VacanciesService.Domain.Models
+﻿using VacanciesService.Domain.Enums;
+
+namespace VacanciesService.Domain.Models
 {
     public class VacancyInteraction
     {
@@ -6,6 +8,6 @@
         public DateTime CreatedAt { get; set; }
         public Guid UserId { get; set; }
         public Guid VacancyId { get; set; }
-        public int Type { get; set; }
+        public InteractionType Type { get; set; }
     }
 }

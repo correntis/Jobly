@@ -54,9 +54,9 @@ namespace UsersService.Infrastructure.SQL.Repositories
             return await _userManager.CheckPasswordAsync(userEntity, password);
         }
 
-        public async Task<bool> Exists(Guid id)
+        public async Task<bool> ExistsAsync(Guid id, CancellationToken token = default)
         {
-            return await _userManager.Users.AnyAsync(u => u.Id == id);
+            return await _userManager.Users.AnyAsync(u => u.Id == id, cancellationToken: token);
         }
     }
 }

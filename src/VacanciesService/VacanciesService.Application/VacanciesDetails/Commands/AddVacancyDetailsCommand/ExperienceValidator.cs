@@ -3,7 +3,6 @@ using VacanciesService.Domain.Models;
 
 namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand
 {
-
     public class ExperienceValidator : AbstractValidator<ExperienceLevel>
     {
         public ExperienceValidator()

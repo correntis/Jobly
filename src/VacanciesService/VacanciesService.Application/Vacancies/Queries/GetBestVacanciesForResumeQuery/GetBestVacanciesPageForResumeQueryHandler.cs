@@ -10,6 +10,7 @@ using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Domain.Entities.NoSQL;
 using VacanciesService.Domain.Entities.SQL;
+using VacanciesService.Domain.Enums;
 using VacanciesService.Domain.Filters.VacancyDetails;
 using VacanciesService.Domain.Models;
 
@@ -142,7 +143,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
                     VacancyExperience = _trainingDataConverter.ConvertExperience(details.Experience),
                     VacancySalary = _trainingDataConverter.ConvertSalary(details.Salary),
 
-                    InteractionType = interaction?.Type ?? BusinessRules.Interaction.None,
+                    InteractionType = interaction?.Type ?? (int)InteractionType.None,
                 };
 
                 trainingData.Add(data);

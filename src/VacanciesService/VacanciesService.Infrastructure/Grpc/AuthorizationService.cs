@@ -38,7 +38,7 @@ namespace VacanciesService.Infrastructure.Grpc
                 typeof(ValidateTokenRequest).Name,
                 request);
 
-            var response = await _client.ValidateTokenAsync(request);
+            var response = await _client.ValidateTokenAsync(request, cancellationToken: token);
 
             _logger.LogInformation(
                 "[GRPC] Successfully handled {RequestName} with request {@ResponseBody}",
