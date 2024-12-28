@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand;
+using VacanciesService.Application.Vacancies.Commands.ArchiveVacancy;
 using VacanciesService.Domain.Entities.SQL;
 using VacanciesService.Domain.Exceptions;
 using VacanciesService.Infrastructure.SQL;

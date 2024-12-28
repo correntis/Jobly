@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand;
+using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetails;
 using VacanciesService.Domain.Entities.NoSQL;
 using VacanciesService.Domain.Entities.SQL;
 using VacanciesService.Domain.Exceptions;

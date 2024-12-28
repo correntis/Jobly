@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
-using UsersService.Application.Users.Commands.DeleteUserCommand;
+using UsersService.Application.Users.Commands.DeleteUser;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 

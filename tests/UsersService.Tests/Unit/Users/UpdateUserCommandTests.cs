@@ -4,7 +4,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
-using UsersService.Application.Users.Commands.UpdateUserCommand;
+using UsersService.Application.Users.Commands.UpdateUser;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;

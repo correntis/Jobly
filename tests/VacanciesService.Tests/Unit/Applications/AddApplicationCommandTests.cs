@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VacanciesService.Application.Applications.Commands.AddApplicationCommand;
+using VacanciesService.Application.Applications.Commands.AddApplication;
 using VacanciesService.Domain.Abstractions.Repositories.Applications;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;

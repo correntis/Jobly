@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using VacanciesService.Application.Interactions.Commands.AddInteractionCommand;
-using VacanciesService.Application.Interactions.Queries.GetUserInteractionsQuery;
-using VacanciesService.Application.Interactions.Queries.GetVacancyInteractionsQuery;
+using VacanciesService.Application.Interactions.Commands.AddInteraction;
+using VacanciesService.Application.Interactions.Queries.GetUserInteractions;
+using VacanciesService.Application.Interactions.Queries.GetVacancyInteractions;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Presentation.Middleware.Authorization;
 

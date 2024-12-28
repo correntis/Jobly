@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using UsersService.Application.Companies.Commands.AddCompanyCommand;
-using UsersService.Application.Companies.Commands.UpdateCompanyCommand;
+using UsersService.Application.Companies.Commands.AddCompany;
+using UsersService.Application.Companies.Commands.UpdateCompany;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Models;
 

@@ -3,9 +3,9 @@ using Jobly.Protobufs.Users;
 using Jobly.Protobufs.Users.Server;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using UsersService.Application.Companies.Queries.IsCompanyExistsQuery;
-using UsersService.Application.Resumes.Queries.GetResumeQuery;
-using UsersService.Application.Users.Queries.IsUserExistsQuery;
+using UsersService.Application.Companies.Queries.IsCompanyExists;
+using UsersService.Application.Resumes.Queries.GetResume;
+using UsersService.Application.Users.Queries.IsUserExists;
 using UsersService.Domain.Models;
 
 namespace UsersService.Presentation.Controllers.Grpc

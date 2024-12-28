@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VacanciesService.Application.VacanciesDetails.Commands.DeleteVacancyDetailsCommand;
+using VacanciesService.Application.VacanciesDetails.Commands.DeleteVacancyDetails;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Entities.NoSQL;
 using VacanciesService.Domain.Exceptions;

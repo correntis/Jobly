@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using VacanciesService.Application.Applications.Commands.AddApplicationCommand;
-using VacanciesService.Application.Applications.Commands.UpdateApplicationCommand;
-using VacanciesService.Application.Applications.Queries.GetApplicationsByUserQuery;
-using VacanciesService.Application.Applications.Queries.GetApplicationsByVacancyQuery;
+using VacanciesService.Application.Applications.Commands.AddApplication;
+using VacanciesService.Application.Applications.Commands.UpdateApplication;
+using VacanciesService.Application.Applications.Queries.GetApplicationsByUser;
+using VacanciesService.Application.Applications.Queries.GetApplicationsByVacancy;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Presentation.Middleware.Authorization;
 

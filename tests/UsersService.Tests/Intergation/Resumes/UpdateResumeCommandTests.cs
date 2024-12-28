@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using System.Text.Json;
-using UsersService.Application.Resumes.Commands.UpdateResumeCommand;
+using UsersService.Application.Resumes.Commands.UpdateResume;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.NoSQL;
 using UsersService.Domain.Entities.SQL;

@@ -3,7 +3,7 @@ using Bogus;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VacanciesService.Application.Vacancies.Commands.AddVacancyCommand;
+using VacanciesService.Application.Vacancies.Commands.AddVacancy;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Entities.SQL;

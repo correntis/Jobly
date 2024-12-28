@@ -3,7 +3,7 @@ using FluentAssertions;
 using Hangfire;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VacanciesService.Application.Vacancies.Commands.ArchiveVacancyCommand;
+using VacanciesService.Application.Vacancies.Commands.ArchiveVacancy;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Entities.SQL;
 using VacanciesService.Domain.Exceptions;

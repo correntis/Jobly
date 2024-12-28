@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using VacanciesService.Application.Vacancies.Commands.AddVacancyCommand;
+using VacanciesService.Application.Vacancies.Commands.AddVacancy;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Exceptions;
 using VacanciesService.Infrastructure.SQL;

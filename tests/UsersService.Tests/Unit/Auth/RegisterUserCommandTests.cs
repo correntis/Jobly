@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Bogus;
 using FluentAssertions;
+using Jobly.Brokers.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
-using UsersService.Application.Auth.Commands.RegisterUserCommand;
+using UsersService.Application.Auth.Commands.RegisterUser;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Constants;
@@ -29,12 +30,14 @@ namespace UsersService.Tests.Unit.Auth
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var authServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var brokerProducer = new Mock<IBrokerProcuder>();
 
             var handler = new RegisterUserCommandHandler(
                 _logger.Object,
                 authServiceMock.Object,
                 mapperMock.Object,
-                unitOfWorkMock.Object);
+                unitOfWorkMock.Object,
+                brokerProducer.Object);
 
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);
@@ -82,7 +85,8 @@ namespace UsersService.Tests.Unit.Auth
                 _logger.Object,
                 null,
                 null,
-                unitOfWorkMock.Object);
+                unitOfWorkMock.Object,
+                null);
 
             var command = GetCommand();
             var userEntity = GetUserEntityFromCommand(command);

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using UsersService.Application.Companies.Commands.DeleteCompanyCommand;
+using UsersService.Application.Companies.Commands.DeleteCompany;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;

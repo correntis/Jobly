@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
-using UsersService.Application.Resumes.Commands.AddResumeCommand;
+using UsersService.Application.Resumes.Commands.AddResume;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 

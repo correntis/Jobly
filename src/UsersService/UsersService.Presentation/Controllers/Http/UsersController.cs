@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UsersService.Application.Users.Commands.DeleteUserCommand;
-using UsersService.Application.Users.Commands.UpdateUserCommand;
-using UsersService.Application.Users.Queries.GetUserQuery;
+using UsersService.Application.Users.Commands.DeleteUser;
+using UsersService.Application.Users.Commands.UpdateUser;
+using UsersService.Application.Users.Queries.GetUser;
 using UsersService.Domain.Constants;
 using UsersService.Domain.Models;
 using UsersService.Presentation.Middleware.Authentication;

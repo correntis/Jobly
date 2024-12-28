@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VacanciesService.Application.Interactions.Commands.AddInteractionCommand;
+using VacanciesService.Application.Interactions.Commands.AddInteraction;
 using VacanciesService.Domain.Abstractions.Repositories.Interactions;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;

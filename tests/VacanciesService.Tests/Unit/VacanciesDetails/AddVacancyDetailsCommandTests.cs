@@ -4,7 +4,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using VacanciesService.Application.Abstractions;
-using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand;
+using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetails;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Entities.NoSQL;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using VacanciesService.Application.Applications.Commands.AddApplicationCommand;
-using VacanciesService.Application.Applications.Commands.UpdateApplicationCommand;
+using VacanciesService.Application.Applications.Commands.AddApplication;
+using VacanciesService.Application.Applications.Commands.UpdateApplication;
 using VacanciesService.Domain.Entities.SQL;
 
 namespace VacanciesService.Application.Applications.Mapping

@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VacanciesService.Application.Applications.Commands.UpdateApplicationCommand;
+using VacanciesService.Application.Applications.Commands.UpdateApplication;
 using VacanciesService.Domain.Abstractions.Repositories.Applications;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Entities.SQL;

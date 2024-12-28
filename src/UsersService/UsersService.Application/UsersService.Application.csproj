@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\shared\Jobly.Brokers\Jobly.Brokers.csproj" />
     <ProjectReference Include="..\UsersService.Domain\UsersService.Domain.csproj" />
   </ItemGroup>
 

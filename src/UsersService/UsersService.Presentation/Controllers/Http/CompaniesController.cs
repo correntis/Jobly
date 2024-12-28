@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UsersService.Application.Companies.Commands.AddCompanyCommand;
-using UsersService.Application.Companies.Commands.DeleteCompanyCommand;
-using UsersService.Application.Companies.Commands.UpdateCompanyCommand;
-using UsersService.Application.Companies.Queries.GetCompanyQuery;
+using UsersService.Application.Companies.Commands.AddCompany;
+using UsersService.Application.Companies.Commands.DeleteCompany;
+using UsersService.Application.Companies.Commands.UpdateCompany;
+using UsersService.Application.Companies.Queries.GetCompany;
 using UsersService.Domain.Constants;
 using UsersService.Domain.Models;
 using UsersService.Presentation.Middleware.Authentication;
