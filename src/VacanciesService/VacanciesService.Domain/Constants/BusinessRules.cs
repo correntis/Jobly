@@ -5,7 +5,12 @@
         public static class Vacancy
         {
             public const int TitleMaxLength = 150;
-            public const int EmployementTypeMaxLenght = 50;
+            public const int EmploymentTypeMaxLenght = 50;
+
+            public const int CacheExpiresHours = 1;
+            public const float MinPredictionScore = 0.6f;
+
+            public static readonly TimeSpan DeletionAfterArchiveTime = TimeSpan.FromDays(30);
         }
 
         public static class Application
@@ -35,6 +40,11 @@
             public const string User = "User";
 
             public static readonly IEnumerable<string> All = [Company, User];
+        }
+
+        public static class Recomendation
+        {
+            public const string TrainedModelFile = "vacancy_recomdations_model.zip";
         }
     }
 }

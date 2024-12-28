@@ -19,8 +19,8 @@ builder.Host.UseSerilog((context, configuration) =>
 });
 
 services.AddApplication();
-services.AddInfrastructure(configuration);
 services.AddPresentation();
+services.AddInfrastructure(configuration, builder.Environment);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
@@ -37,6 +37,8 @@ app.UseCors(options =>
 });
 
 app.UsePresentation();
+app.UseInfrastructure();
+app.UseApplication();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -46,3 +48,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program
+{
+}

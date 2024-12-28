@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Application.Abstractions;
-using VacanciesService.Domain.Abstractions.Contexts;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Domain.Entities.NoSQL;
@@ -17,7 +15,7 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
         private readonly ILogger<AddVacancyDetailsCommandHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IVacanciesDetailsRepository _detailsRepository;
-        private readonly IVacanciesReadContext _vacanciesContext;
+        private readonly IReadVacanciesRepository _readVacanciesRepository;
         private readonly ICurrencyApiService _currencyApi;
         private readonly ICurrencyConverter _currencyConverter;
 
@@ -25,14 +23,14 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
             ILogger<AddVacancyDetailsCommandHandler> logger,
             IMapper mapper,
             IVacanciesDetailsRepository detailsRepository,
-            IVacanciesReadContext vacanciesContext,
+            IReadVacanciesRepository readVacanciesRepository,
             ICurrencyApiService currencyApi,
             ICurrencyConverter currencyConverter)
         {
             _logger = logger;
             _mapper = mapper;
             _detailsRepository = detailsRepository;
-            _vacanciesContext = vacanciesContext;
+            _readVacanciesRepository = readVacanciesRepository;
             _currencyApi = currencyApi;
             _currencyConverter = currencyConverter;
         }
@@ -44,12 +42,14 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
                 request.GetType().Name,
                 request.VacancyId);
 
-            if (await _vacanciesContext.Vacancies.FirstOrDefaultAsync(vd => vd.Id == request.VacancyId, token) is null)
+            var vacancyEntity = await _readVacanciesRepository.GetAsync(request.VacancyId, token);
+            if (vacancyEntity is null)
             {
                 throw new EntityNotFoundException($"Vacancy with ID {request.VacancyId} not found");
             }
 
-            if (await _detailsRepository.GetByAsync(vd => vd.VacancyId, request.VacancyId, token) is not null)
+            var existingDetails = await _detailsRepository.GetByAsync(vd => vd.VacancyId, request.VacancyId, token);
+            if (existingDetails is not null)
             {
                 throw new EntityAlreadyExistException($"Vacancy_details for vacancy with ID {request.VacancyId} already exist");
             }
@@ -71,6 +71,11 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
 
         private async Task<SalaryEntity> CalculateCurrencyAsync(SalaryEntity sourceEntity)
         {
+            if (sourceEntity is null)
+            {
+                return null;
+            }
+
             var exchangeRate = await _currencyApi.GetExchangeRateAsync(sourceEntity.Currency);
 
             var targetEntity = new SalaryEntity

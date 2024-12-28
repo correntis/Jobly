@@ -24,28 +24,27 @@ namespace VacanciesService.Infrastructure.Migrations
 
             modelBuilder.Entity("VacanciesService.Domain.Entities.SQL.ApplicationEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<DateTime?>("AppliedAt")
-                        .HasColumnType("timestamp");
+                        .HasColumnType("timestamptz");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int?>("VacancyId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("VacancyId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -58,23 +57,22 @@ namespace VacanciesService.Infrastructure.Migrations
 
             modelBuilder.Entity("VacanciesService.Domain.Entities.SQL.VacancyEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp");
+                        .HasColumnType("timestamptz");
 
                     b.Property<DateTime>("DeadlineAt")
-                        .HasColumnType("timestamp");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("EmploymentType")
                         .HasMaxLength(50)
@@ -90,6 +88,34 @@ namespace VacanciesService.Infrastructure.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("Vacancies", (string)null);
+                });
+
+            modelBuilder.Entity("VacanciesService.Domain.Entities.SQL.VacancyInteractionEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamptz");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("VacancyId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VacancyId");
+
+                    b.ToTable("Interactions", (string)null);
                 });
 
             modelBuilder.Entity("VacanciesService.Domain.Entities.SQL.ApplicationEntity", b =>

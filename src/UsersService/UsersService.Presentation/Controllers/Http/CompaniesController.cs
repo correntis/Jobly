@@ -23,21 +23,29 @@ namespace UsersService.Presentation.Controllers.Http
 
         [HttpPost]
         public async Task<ActionResult<Guid>> Add([FromForm] AddCompanyCommand addCompanyCommand, CancellationToken cancellationToken)
-            => Ok(await _mediator.Send(addCompanyCommand, cancellationToken));
+        {
+            return Ok(await _mediator.Send(addCompanyCommand, cancellationToken));
+        }
 
         [HttpPut]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<ActionResult<Guid>> Update([FromForm] UpdateCompanyCommand updateCompanyCommand, CancellationToken cancellationToken)
-            => Ok(await _mediator.Send(updateCompanyCommand, cancellationToken));
+        {
+            return Ok(await _mediator.Send(updateCompanyCommand, cancellationToken));
+        }
 
         [HttpDelete("{id}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<ActionResult<Guid>> Delete(Guid id, CancellationToken cancellationToken)
-            => Ok(await _mediator.Send(new DeleteCompanyCommand(id), cancellationToken));
+        {
+            return Ok(await _mediator.Send(new DeleteCompanyCommand(id), cancellationToken));
+        }
 
         [HttpGet("{id}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<ActionResult<Company>> Get(Guid id, CancellationToken cancellationToken)
-            => Ok(await _mediator.Send(new GetCompanyQuery(id), cancellationToken));
+        {
+            return Ok(await _mediator.Send(new GetCompanyQuery(id), cancellationToken));
+        }
     }
 }

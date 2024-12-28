@@ -3,6 +3,6 @@
 namespace VacanciesService.Application.Applications.Commands.AddApplicationCommand
 {
     public sealed record AddApplicationCommand(
-        int UserId,
-        int VacancyId) : IRequest<int>;
+        Guid UserId,
+        Guid VacancyId) : IRequest<Guid>;
 }

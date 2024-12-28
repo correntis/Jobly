@@ -19,27 +19,29 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
                 .WithOne(a => a.Vacancy);
 
             builder.Property(v => v.Id)
-                .ValueGeneratedOnAdd();
+                .HasColumnType("uuid")
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("gen_random_uuid()");
 
             builder.Property(v => v.EmploymentType)
-                .HasMaxLength(BusinessRules.Vacancy.EmployementTypeMaxLenght);
+                .HasMaxLength(BusinessRules.Vacancy.EmploymentTypeMaxLenght);
 
             builder.Property(v => v.Title)
                 .HasMaxLength(BusinessRules.Vacancy.TitleMaxLength)
                 .IsRequired();
 
             builder.Property(v => v.CreatedAt)
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamptz")
                 .HasConversion(
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                 .IsRequired();
 
             builder.Property(v => v.DeadlineAt)
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamptz")
                 .HasConversion(
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                 .IsRequired();
         }
     }

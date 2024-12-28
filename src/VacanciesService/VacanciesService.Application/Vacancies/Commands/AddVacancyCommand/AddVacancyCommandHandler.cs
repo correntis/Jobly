@@ -2,45 +2,49 @@
 using DnsClient.Internal;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using VacanciesService.Domain.Abstractions.Contexts;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
+using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Entities.SQL;
+using VacanciesService.Domain.Exceptions;
 
 namespace VacanciesService.Application.Vacancies.Commands.AddVacancyCommand
 {
-    public class AddVacancyCommandHandler : IRequestHandler<AddVacancyCommand, int>
+    public class AddVacancyCommandHandler : IRequestHandler<AddVacancyCommand, Guid>
     {
         private readonly ILogger<AddVacancyCommandHandler> _logger;
         private readonly IMapper _mapper;
-        private readonly IVacanciesWriteContext _vacanciesContext;
+        private readonly IWriteVacanciesRepository _writeVacanciesRepository;
+        private readonly IUsersService _usersService;
 
         public AddVacancyCommandHandler(
             ILogger<AddVacancyCommandHandler> logger,
             IMapper mapper,
-            IVacanciesWriteContext vacanciesContext)
+            IWriteVacanciesRepository writeVacanciesRepository,
+            IUsersService usersService)
         {
             _logger = logger;
             _mapper = mapper;
-            _vacanciesContext = vacanciesContext;
+            _writeVacanciesRepository = writeVacanciesRepository;
+            _usersService = usersService;
         }
 
-        public async Task<int> Handle(AddVacancyCommand request, CancellationToken token)
+        public async Task<Guid> Handle(AddVacancyCommand request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling {CommandName} for vacancy with Title {VacancyTitle}",
                 request.GetType().Name,
                 request.Title);
 
-            // TODO Check if company with request.CompanyId exists with gRPC request
-            // for users service
+            await CheckCompanyExistence(request.CompanyId, token);
 
             var vacancyEntity = _mapper.Map<VacancyEntity>(request);
 
             vacancyEntity.Archived = false;
-            vacancyEntity.CreatedAt = DateTime.Now;
+            vacancyEntity.CreatedAt = DateTime.UtcNow;
 
-            await _vacanciesContext.Vacancies.AddAsync(vacancyEntity, token);
+            await _writeVacanciesRepository.AddAsync(vacancyEntity, token);
 
-            await _vacanciesContext.SaveChangesAsync(token);
+            await _writeVacanciesRepository.SaveChangesAsync(token);
 
             _logger.LogInformation(
                 "Successfully handled {CommandName} for vacancy with Title {VacancyTitle} and ID {VacancyId}",
@@ -49,6 +53,16 @@ namespace VacanciesService.Application.Vacancies.Commands.AddVacancyCommand
                 vacancyEntity.Id);
 
             return vacancyEntity.Id;
+        }
+
+        public async Task CheckCompanyExistence(Guid companyId, CancellationToken token)
+        {
+            var isCompanyExists = await _usersService.IsCompanyExistsAsync(companyId, token);
+
+            if (!isCompanyExists)
+            {
+                throw new EntityNotFoundException($"Company with ID {companyId} not found");
+            }
         }
     }
 }
