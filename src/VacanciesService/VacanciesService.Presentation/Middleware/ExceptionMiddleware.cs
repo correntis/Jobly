@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Grpc.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using VacanciesService.Domain.Exceptions;
@@ -25,6 +26,12 @@ namespace VacanciesService.Presentation.Middleware
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
                 await HandleExceptionAsync(context, ex, JsonSerializer.Serialize(ex.Errors));
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+
+                await HandleExceptionAsync(context, ex);
             }
             catch (EntityNotFoundException ex)
             {

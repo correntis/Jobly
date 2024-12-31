@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bogus;
 using FluentAssertions;
+using Hangfire;
 using Microsoft.Extensions.Logging;
 using Moq;
 using VacanciesService.Application.Vacancies.Commands.AddVacancy;
@@ -27,6 +28,7 @@ namespace VacanciesService.Tests.Unit.Vacancies
             var mapperMock = new Mock<IMapper>();
             var writeVacanciesReposMock = new Mock<IWriteVacanciesRepository>();
             var usersServiceMock = new Mock<IUsersService>();
+            var backgroundJobClientMock = new Mock<IBackgroundJobClient>();
 
             var command = GetValidCommand();
             var vacancyEntity = GetVacancyEntityFromCommand(command);
@@ -35,7 +37,8 @@ namespace VacanciesService.Tests.Unit.Vacancies
                 _loggerMock.Object,
                 mapperMock.Object,
                 writeVacanciesReposMock.Object,
-                usersServiceMock.Object);
+                usersServiceMock.Object,
+                backgroundJobClientMock.Object);
 
             usersServiceMock.Setup(us => us.IsCompanyExistsAsync(It.IsAny<Guid>(), CancellationToken.None)).ReturnsAsync(true);
             writeVacanciesReposMock.Setup(v => v.AddAsync(vacancyEntity, CancellationToken.None)).Returns(Task.CompletedTask);
@@ -59,6 +62,7 @@ namespace VacanciesService.Tests.Unit.Vacancies
             var mapperMock = new Mock<IMapper>();
             var writeVacanciesReposMock = new Mock<IWriteVacanciesRepository>();
             var usersServiceMock = new Mock<IUsersService>();
+            var backgroundJobClientMock = new Mock<IBackgroundJobClient>();
 
             var command = new AddVacancyCommand(null, null, Guid.NewGuid(), DateTime.MinValue);
 
@@ -66,7 +70,8 @@ namespace VacanciesService.Tests.Unit.Vacancies
                 _loggerMock.Object,
                 mapperMock.Object,
                 writeVacanciesReposMock.Object,
-                usersServiceMock.Object);
+                usersServiceMock.Object,
+                backgroundJobClientMock.Object);
 
             usersServiceMock.Setup(us => us.IsCompanyExistsAsync(It.IsAny<Guid>(), CancellationToken.None)).ReturnsAsync(false);
 

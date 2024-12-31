@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using VacanciesService.Application.Vacancies.Jobs;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Entities.SQL;
@@ -14,17 +16,20 @@ namespace VacanciesService.Application.Vacancies.Commands.AddVacancy
         private readonly IMapper _mapper;
         private readonly IWriteVacanciesRepository _writeVacanciesRepository;
         private readonly IUsersService _usersService;
+        private readonly IBackgroundJobClient _backgroundJobClient;
 
         public AddVacancyCommandHandler(
             ILogger<AddVacancyCommandHandler> logger,
             IMapper mapper,
             IWriteVacanciesRepository writeVacanciesRepository,
-            IUsersService usersService)
+            IUsersService usersService,
+            IBackgroundJobClient backgroundJobClient)
         {
             _logger = logger;
             _mapper = mapper;
             _writeVacanciesRepository = writeVacanciesRepository;
             _usersService = usersService;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task<Guid> Handle(AddVacancyCommand request, CancellationToken token)
@@ -45,6 +50,8 @@ namespace VacanciesService.Application.Vacancies.Commands.AddVacancy
 
             await _writeVacanciesRepository.SaveChangesAsync(token);
 
+            CreateArchiveJob(vacancyEntity.Id, vacancyEntity.DeadlineAt);
+
             _logger.LogInformation(
                 "Successfully handled {CommandName} for vacancy with Title {VacancyTitle} and ID {VacancyId}",
                 request.GetType().Name,
@@ -62,6 +69,13 @@ namespace VacanciesService.Application.Vacancies.Commands.AddVacancy
             {
                 throw new EntityNotFoundException($"Company with ID {companyId} not found");
             }
+        }
+
+        private void CreateArchiveJob(Guid vacancyId, DateTime deadline)
+        {
+            _backgroundJobClient.Schedule<ArchiveVacancyAfterDeadlineJob>(
+                j => j.ExecuteAsync(vacancyId),
+                deadline);
         }
     }
 }

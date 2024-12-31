@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Application.Abstractions;
+using VacanciesService.Application.Vacancies.Jobs;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
@@ -18,6 +20,7 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
         private readonly IReadVacanciesRepository _readVacanciesRepository;
         private readonly ICurrencyApiService _currencyApi;
         private readonly ICurrencyConverter _currencyConverter;
+        private readonly IBackgroundJobClient _backgroundJobClient;
 
         public AddVacancyDetailsCommandHandler(
             ILogger<AddVacancyDetailsCommandHandler> logger,
@@ -25,7 +28,8 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
             IVacanciesDetailsRepository detailsRepository,
             IReadVacanciesRepository readVacanciesRepository,
             ICurrencyApiService currencyApi,
-            ICurrencyConverter currencyConverter)
+            ICurrencyConverter currencyConverter,
+            IBackgroundJobClient backgroundJobClient)
         {
             _logger = logger;
             _mapper = mapper;
@@ -33,6 +37,7 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
             _readVacanciesRepository = readVacanciesRepository;
             _currencyApi = currencyApi;
             _currencyConverter = currencyConverter;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task<string> Handle(AddVacancyDetailsCommand request, CancellationToken token)
@@ -43,13 +48,13 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
                 request.VacancyId);
 
             var vacancyEntity = await _readVacanciesRepository.GetAsync(request.VacancyId, token);
-            if(vacancyEntity is null)
+            if (vacancyEntity is null)
             {
                 throw new EntityNotFoundException($"Vacancy with ID {request.VacancyId} not found");
             }
 
             var existingDetails = await _detailsRepository.GetByAsync(vd => vd.VacancyId, request.VacancyId, token);
-            if(existingDetails is not null)
+            if (existingDetails is not null)
             {
                 throw new EntityAlreadyExistException($"Vacancy_details for vacancy with ID {request.VacancyId} already exist");
             }
@@ -59,6 +64,8 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
             vacancyDetailsEntity.Salary = await CalculateCurrencyAsync(vacancyDetailsEntity.Salary);
 
             await _detailsRepository.AddAsync(vacancyDetailsEntity, token);
+
+            CreateNotifyJob(vacancyDetailsEntity.VacancyId);
 
             _logger.LogInformation(
                 "Successfully handled {CommandName} for vacancy with ID {VacancyId} and vacancy_details with ID {VacancyDetailsId}",
@@ -93,6 +100,11 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
             };
 
             return targetEntity;
+        }
+
+        private void CreateNotifyJob(Guid vacancyId)
+        {
+            _backgroundJobClient.Enqueue<NotifyAboutVacancyBestMatchesJob>(j => j.ExecuteAsync(vacancyId));
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,11 +22,11 @@ namespace UsersService.Infrastructure
 
             services.AddSingleton<MongoDbContext>();
 
-            services.AddDbContext<UsersDbContext>(async options =>
+            services.AddDbContext<UsersDbContext>(options =>
             {
                options.UseSqlServer(configuration.GetConnectionString("UsersDatabaseSqlServer"));
 
-               await InitializeSqlServerDatabaseAsync(configuration);
+               InitializeSqlServerDatabaseAsync(configuration);
             });
 
             services.AddIdentityCore<UserEntity>()
@@ -36,6 +38,8 @@ namespace UsersService.Infrastructure
                 options.Configuration = configuration.GetConnectionString("RedisTokens");
             });
 
+            services.AddHangfire(configuration);
+
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IRolesRepository, RolesRepository>();
             services.AddScoped<ICompaniesRepository, CompaniesRepository>();
@@ -45,15 +49,48 @@ namespace UsersService.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
-        private static async Task InitializeSqlServerDatabaseAsync(IConfiguration configuration)
+        public static void UseInfrastructure(this WebApplication app)
+        {
+            app.UseHangfireDashboard();
+        }
+
+        private static void InitializeSqlServerDatabaseAsync(IConfiguration configuration)
         {
             using var connection = new SqlConnection(configuration.GetConnectionString("MasterDatabaseSqlServer"));
 
-            await connection.OpenAsync();
+            connection.Open();
 
             using var command = new SqlCommand(configuration["Scripts:InitializeUsersDatabaseSqlServer"], connection);
 
-            await command.ExecuteNonQueryAsync();
+            command.ExecuteNonQuery();
         }
+
+        private static void InitializeHangfireDatabase(IConfiguration configuration)
+        {
+            using var connection = new SqlConnection(configuration.GetConnectionString("MasterDatabaseSqlServer"));
+
+            connection.Open();
+
+            using var command = new SqlCommand(configuration["Scripts:InitializeHangfireDatabaseSqlServer"], connection);
+
+            command.ExecuteNonQuery();
+        }
+
+        internal static void AddHangfire(this IServiceCollection services, IConfiguration configuration)
+        {
+            InitializeHangfireDatabase(configuration);
+
+            services.AddHangfire(options =>
+            {
+                options
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseSqlServerStorage(configuration.GetConnectionString("HangfireDatabaseSqlServer"));
+            });
+
+            services.AddHangfireServer();
+        }
+
     }
 }

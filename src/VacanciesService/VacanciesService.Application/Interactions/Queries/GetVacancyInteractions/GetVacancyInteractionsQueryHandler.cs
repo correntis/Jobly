@@ -29,7 +29,7 @@ namespace VacanciesService.Application.Interactions.Queries.GetVacancyInteractio
                 request.GetType().Name,
                 request.VacancyId);
 
-            var interactionsEntities = await _readInteractionsRepository.GetAllByVacancy(request.VacancyId, token);
+            var interactionsEntities = await _readInteractionsRepository.GetAllByVacancyAsync(request.VacancyId, token);
 
             _logger.LogInformation(
                 "Successfully handled {QueryName} for vacancy with ID {VacancyId}",

@@ -22,9 +22,19 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Write
             _vacanciesContext.Interactions.RemoveRange(interactionsEntities);
         }
 
+        public void Attach(VacancyInteractionEntity vacancyInteraction)
+        {
+            _vacanciesContext.Interactions.Attach(vacancyInteraction);
+        }
+
         public async Task SaveChangesAsync(CancellationToken token = default)
         {
             await _vacanciesContext.SaveChangesAsync(token);
+        }
+
+        public void Update(VacancyInteractionEntity interactionEntity)
+        {
+            _vacanciesContext.Update(interactionEntity);
         }
     }
 }

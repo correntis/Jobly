@@ -74,7 +74,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
 
             var trainingData = GetTrainingDataForResume(resume, vacanciesDetailsEntities, interactionsEntities);
 
-            ProcessPredictions(trainingData);
+            trainingData = ProcessPredictions(trainingData);
 
             var recommendedVacancies =
                 await LoadFullVacanciesAsync(vacanciesDetailsEntities, trainingData.Select(t => t.VacancyId), token);
@@ -103,16 +103,16 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
             await _cache.SetVacanciesAsync(resumeId, vacancies, expiresTime, token);
         }
 
-        private void ProcessPredictions(List<TrainingVacancyRecommendationData> trainingData)
+        private List<TrainingVacancyRecommendationData> ProcessPredictions(List<TrainingVacancyRecommendationData> trainingData)
         {
             trainingData.AsParallel().ForAll(item =>
             {
                 item.SuitabilityScore = _recommendationModel.PredictInteraction(item);
             });
 
-            trainingData = trainingData
+            return trainingData
                 .AsParallel()
-                .Where(item => item.SuitabilityScore >= BusinessRules.Vacancy.MinPredictionScore)
+                .Where(item => item.SuitabilityScore >= BusinessRules.Vacancy.MinRecommendationPredictionScore)
                 .OrderByDescending(item => item.SuitabilityScore)
                 .ToList();
         }
@@ -189,7 +189,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
             CancellationToken token)
         {
             var interactions =
-                await _readInteractionsRepository.GetAllByUserAndVacancies(resume.UserId, vacanciesIds.ToList(), token);
+                await _readInteractionsRepository.GetAllByUserAndVacanciesAsync(resume.UserId, vacanciesIds.ToList(), token);
 
             return interactions;
         }

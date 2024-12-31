@@ -27,13 +27,15 @@ namespace VacanciesService.Tests.Unit.Interactions
             var command = new AddInteractionCommand(Guid.NewGuid(), Guid.NewGuid(), 0);
 
             var mapperMock = new Mock<IMapper>();
-            var readVacanciesRepositoryMock = new Mock<IReadVacanciesRepository>();
+            var readInteractionsRepositoryMock = new Mock<IReadInteractionsRepository>();
             var writeInteractionsRepositoryMock = new Mock<IWriteInteractionsRepository>();
+            var readVacanciesRepositoryMock = new Mock<IReadVacanciesRepository>();
             var usersServiceMock = new Mock<IUsersService>();
 
             var handler = new AddInteractionCommandHandler(
                 _loggerMock.Object,
                 writeInteractionsRepositoryMock.Object,
+                readInteractionsRepositoryMock.Object,
                 readVacanciesRepositoryMock.Object,
                 usersServiceMock.Object,
                 mapperMock.Object);
@@ -69,6 +71,7 @@ namespace VacanciesService.Tests.Unit.Interactions
             var handler = new AddInteractionCommandHandler(
                 _loggerMock.Object,
                 null,
+                null,
                 readVacanciesRepositoryMock.Object,
                 null,
                 null);
@@ -94,6 +97,7 @@ namespace VacanciesService.Tests.Unit.Interactions
 
             var handler = new AddInteractionCommandHandler(
                 _loggerMock.Object,
+                null,
                 null,
                 readVacanciesRepositoryMock.Object,
                 usersServiceMock.Object,

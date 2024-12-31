@@ -13,5 +13,6 @@ namespace UsersService.Domain.Abstractions.Repositories
         Task UpdateAsync(ResumeEntity resumeEntity, CancellationToken cancellationToken = default);
         Task UpdateByAsync<TValue>(string id, Expression<Func<ResumeEntity, TValue>> field, TValue value, CancellationToken cancellationToken = default)
             where TValue : IEnumerable;
+        Task<List<ResumeEntity>> FilterForVacancy(List<string> skills, List<string> tags, List<LanguageEntity> languages, CancellationToken cancellationToken = default);
     }
 }

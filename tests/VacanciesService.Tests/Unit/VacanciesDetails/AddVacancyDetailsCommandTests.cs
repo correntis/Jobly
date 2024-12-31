@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bogus;
 using FluentAssertions;
+using Hangfire;
 using Microsoft.Extensions.Logging;
 using Moq;
 using VacanciesService.Application.Abstractions;
@@ -32,6 +33,7 @@ namespace VacanciesService.Tests.Unit.VacanciesDetails
             var readVacanciesRepMock = new Mock<IReadVacanciesRepository>();
             var currencyApiMock = new Mock<ICurrencyApiService>();
             var currencyConverterMock = new Mock<ICurrencyConverter>();
+            var backgroundJobClientMock = new Mock<IBackgroundJobClient>();
 
             var command = GetCommand();
             var vacancyEntity = GetVacancyEntity(command.VacancyId);
@@ -44,7 +46,8 @@ namespace VacanciesService.Tests.Unit.VacanciesDetails
                 detailsRepMock.Object,
                 readVacanciesRepMock.Object,
                 currencyApiMock.Object,
-                currencyConverterMock.Object);
+                currencyConverterMock.Object,
+                backgroundJobClientMock.Object);
 
             mapperMock.Setup(m => m.Map<VacancyDetailsEntity>(command)).Returns(vacancyDetailsEntity);
 
@@ -90,6 +93,7 @@ namespace VacanciesService.Tests.Unit.VacanciesDetails
                 detailsRepMock.Object,
                 readVacanciesRepMock.Object,
                 null,
+                null,
                 null);
 
             readVacanciesRepMock.Setup(rv => rv.GetAsync(It.IsAny<Guid>(), CancellationToken.None))
@@ -115,6 +119,7 @@ namespace VacanciesService.Tests.Unit.VacanciesDetails
                 null,
                 null,
                 readVacanciesRepMock.Object,
+                null,
                 null,
                 null);
 

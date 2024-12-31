@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VacanciesService.Application.Abstractions;
 using VacanciesService.Application.Behaviors;
 using VacanciesService.Application.Services;
+using VacanciesService.Application.Vacancies.Jobs;
 using VacanciesService.Application.Vacancies.Recommendations.Jobs;
 using VacanciesService.Application.Vacancies.Recommendations.ML;
 
@@ -40,7 +41,12 @@ namespace VacanciesService.Application
         public static void ConfigureJobs()
         {
             RecurringJob.AddOrUpdate<TrainVacancyRecommendationsJob>(
-                "TrainVacancyRecommendationsJob",
+                nameof(TrainVacancyRecommendationsJob),
+                job => job.ExecuteAsync(),
+                Cron.Daily);
+
+            RecurringJob.AddOrUpdate<NotifyLikedVacanciesDeadlineJob>(
+                nameof(NotifyLikedVacanciesDeadlineJob),
                 job => job.ExecuteAsync(),
                 Cron.Daily);
         }

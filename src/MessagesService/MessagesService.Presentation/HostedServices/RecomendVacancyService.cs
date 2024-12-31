@@ -68,8 +68,7 @@ namespace MessagesService.Presentation.HostedServices
             var content = string.Format(
                 contentTemplate,
                 Math.Round(recomendEvent.MatchScore * 100),
-                recomendEvent.VacancyName,
-                recomendEvent.CompanyName);
+                recomendEvent.VacancyName);
 
             return new SaveNotificationCommand(
                 recomendEvent.UserId,

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Jobly.Brokers.Abstractions;
+using Jobly.Brokers.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Domain.Abstractions.Repositories.Applications;
@@ -17,19 +19,22 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
         private readonly IReadVacanciesRepository _readVacanciesRepository;
         private readonly IWriteApplicationsRepository _writeApplicationsRepository;
         private readonly IUsersService _usersService;
+        private readonly IBrokerProcuder _brokerProcuder;
 
         public AddApplicationCommandHandler(
             ILogger<AddApplicationCommandHandler> logger,
             IMapper mapper,
             IReadVacanciesRepository readVacanciesRepository,
             IWriteApplicationsRepository writeApplicationsRepository,
-            IUsersService usersService)
+            IUsersService usersService,
+            IBrokerProcuder brokerProcuder)
         {
             _logger = logger;
             _mapper = mapper;
             _readVacanciesRepository = readVacanciesRepository;
             _writeApplicationsRepository = writeApplicationsRepository;
             _usersService = usersService;
+            _brokerProcuder = brokerProcuder;
         }
 
         public async Task<Guid> Handle(AddApplicationCommand request, CancellationToken token)
@@ -56,6 +61,8 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
 
             await _writeApplicationsRepository.SaveChangesAsync(token);
 
+            await ProduceApplicationEventAsync(applicationEntity, token);
+
             _logger.LogInformation(
                 "Successfully handled {CommandName} for vacancy with ID {VacancyId} and user with ID {UserId}",
                 request.GetType().Name,
@@ -65,21 +72,21 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
             return applicationEntity.Id;
         }
 
-        public async Task CheckUserExistence(Guid userId, CancellationToken token)
+        private async Task CheckUserExistence(Guid userId, CancellationToken token)
         {
             var isUserExists = await _usersService.IsUserExistsAsync(userId, token);
 
-            if(!isUserExists)
+            if (!isUserExists)
             {
                 throw new EntityNotFoundException($"User with ID {userId} not found");
             }
         }
 
-        public async Task<VacancyEntity> GetVacancyEntity(Guid vacancyId, CancellationToken token)
+        private async Task<VacancyEntity> GetVacancyEntity(Guid vacancyId, CancellationToken token)
         {
             var vacancyEntity = await _readVacanciesRepository.GetAsync(vacancyId, token);
 
-            if(vacancyEntity is null)
+            if (vacancyEntity is null)
             {
                 throw new EntityNotFoundException($"Vacancy with ID {vacancyId} not found");
             }
@@ -87,6 +94,19 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
             await _readVacanciesRepository.LoadApplications(vacancyEntity, token);
 
             return vacancyEntity;
+        }
+
+        private async Task ProduceApplicationEventAsync(ApplicationEntity applicationEntity, CancellationToken token)
+        {
+            var applicationEvent = new VacancyApplicationEvent()
+            {
+                ApplicationId = applicationEntity.Id,
+                VacacnyId = applicationEntity.Vacancy.Id,
+                UserId = applicationEntity.UserId,
+                CompanyId = applicationEntity.Vacancy.CompanyId,
+            };
+
+            await _brokerProcuder.SendAsync(applicationEvent, token);
         }
     }
 }
