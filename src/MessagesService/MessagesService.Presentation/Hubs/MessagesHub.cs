@@ -18,13 +18,6 @@ namespace MessagesService.Presentation.Hubs
             _sender = sender;
         }
 
-        public override Task OnConnectedAsync()
-        {
-            _logger.LogInformation("[SignalR] [Connection] userId = {userId}", Context.UserIdentifier);
-
-            return base.OnConnectedAsync();
-        }
-
         public async Task SendMessage(SaveMessageCommand command)
         {
             var message = await _sender.Send(command, Context.ConnectionAborted);

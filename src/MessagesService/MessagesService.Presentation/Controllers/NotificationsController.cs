@@ -29,9 +29,7 @@ namespace MessagesService.Presentation.Controllers
         [Route("{recipientId}&pageIndex={pageIndex}&pageSize={pageSize}")]
         public async Task<ActionResult<List<Notification>>> GetRecipientNotifications(Guid recipientId, int pageIndex, int pageSize, CancellationToken token)
         {
-            await _sender.Send(new GetRecipientNotificationsQuery(recipientId, pageIndex, pageSize), token);
-
-            return Ok();
+            return Ok(await _sender.Send(new GetRecipientNotificationsQuery(recipientId, pageIndex, pageSize), token));
         }
     }
 }
