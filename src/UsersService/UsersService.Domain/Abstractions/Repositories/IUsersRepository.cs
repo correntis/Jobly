@@ -13,5 +13,6 @@ namespace UsersService.Domain.Abstractions.Repositories
         Task<UserEntity> GetByIdAsync(Guid id);
         Task<IList<string>> GetRolesAsync(UserEntity userEntity);
         Task<bool> CheckPasswordAsync(UserEntity userEntity, string password);
+        Task<bool> ExistsAsync(Guid id, CancellationToken token = default);
     }
 }

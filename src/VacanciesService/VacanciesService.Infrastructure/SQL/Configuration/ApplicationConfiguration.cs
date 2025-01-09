@@ -16,20 +16,22 @@ namespace VacanciesService.Infrastructure.SQL.Configuration
             builder.HasIndex(a => a.UserId);
 
             builder.Property(a => a.Id)
-                .ValueGeneratedOnAdd();
+                .HasColumnType("uuid")
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("gen_random_uuid()");
 
             builder.Property(a => a.Status)
                 .HasMaxLength(BusinessRules.Application.StatusMaxLength)
                 .IsRequired();
 
             builder.Property(a => a.AppliedAt)
-                .HasColumnType("timestamp");
+                .HasColumnType("timestamptz");
 
             builder.Property(a => a.CreatedAt)
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamptz")
                 .HasConversion(
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified),
-                    v => DateTime.SpecifyKind(v, DateTimeKind.Local))
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                 .IsRequired();
         }
     }

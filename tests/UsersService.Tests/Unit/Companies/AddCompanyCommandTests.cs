@@ -3,7 +3,7 @@ using Bogus;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using UsersService.Application.Companies.Commands.AddCompanyCommand;
+using UsersService.Application.Companies.Commands.AddCompany;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Entities.SQL;

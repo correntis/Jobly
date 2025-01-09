@@ -3,7 +3,7 @@ using Bogus;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using UsersService.Application.Resumes.Commands.AddResumeCommand;
+using UsersService.Application.Resumes.Commands.AddResume;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.NoSQL;
 using UsersService.Domain.Entities.SQL;

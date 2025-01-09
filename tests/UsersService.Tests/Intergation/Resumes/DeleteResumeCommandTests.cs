@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using System.Text.Json;
-using UsersService.Application.Resumes.Commands.DeleteResumeCommand;
+using UsersService.Application.Resumes.Commands.DeleteResume;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.NoSQL;
 using UsersService.Domain.Entities.SQL;

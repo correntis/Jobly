@@ -6,8 +6,11 @@ services:
     image: nginx:latest
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs/localhost.key:/etc/nginx/certs/localhost.key
+      - ./nginx/certs/localhost.crt:/etc/nginx/certs/localhost.crt
       - ./nginx/swagger-ui:/usr/share/nginx/html/swagger-ui
 
   jobly-sqlserver:
@@ -18,7 +21,6 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - 1433:1433
-
 
   jobly-postgres_primary:
     container_name: jobly-postgres_primary
@@ -88,13 +90,25 @@ services:
     ports:
       - 27017:27017
 
-  jobly-redis:
-    container_name: jobly-redis
+  jobly-tokens-redis:
+    container_name: jobly-tokens-redis
     image: redis:alpine
     ports:
       - 6379:6379
 
+  jobly-vacancies-redis:
+    container_name: jobly-vacancies-redis
+    image: redis:alpine
+    ports:
+      - 6380:6379
 
+  jobly-rabbitmq:
+    container_name: jobly-rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      
   # jobly-elastic:
   #   container_name: jobly-elastic
   #   image: elasticsearch:8.14.3
@@ -105,7 +119,7 @@ services:
   #     - xpack.security.http.ssl.enabled=false
   #   ports:
   #     - "9200:9200"
-
+ 
   # jobly-kibana:
   #   container_name: users-kibana
   #   image: kibana:8.14.3
@@ -115,7 +129,7 @@ services:
   #     - "5601:5601"
   #   depends_on:
   #     - jobly-elastic
-
+  
   # users-migrations:
   #   container_name: users-migrations
   #   build:

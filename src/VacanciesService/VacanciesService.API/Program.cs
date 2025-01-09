@@ -1,4 +1,5 @@
 using Elastic.Serilog.Sinks;
+using Jobly.Brokers;
 using Serilog;
 using VacanciesService.Application;
 using VacanciesService.Infrastructure;
@@ -19,8 +20,10 @@ builder.Host.UseSerilog((context, configuration) =>
 });
 
 services.AddApplication();
-services.AddInfrastructure(configuration);
 services.AddPresentation();
+services.AddInfrastructure(configuration, builder.Environment);
+
+services.AddGlobalBrokers(configuration);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
@@ -37,6 +40,8 @@ app.UseCors(options =>
 });
 
 app.UsePresentation();
+app.UseInfrastructure();
+app.UseApplication();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -46,3 +51,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program
+{
+}

@@ -8,6 +8,7 @@ namespace VacanciesService.Infrastructure.SQL
     {
         public DbSet<VacancyEntity> Vacancies { get; set; }
         public DbSet<ApplicationEntity> Applications { get; set; }
+        public DbSet<VacancyInteractionEntity> Interactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

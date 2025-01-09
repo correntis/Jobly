@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using UsersService.Application.Resumes.Commands.AddResumeCommand;
-using UsersService.Application.Resumes.Commands.UpdateResumeCommand;
+using UsersService.Application.Resumes.Commands.AddResume;
+using UsersService.Application.Resumes.Commands.UpdateResume;
 using UsersService.Domain.Entities.NoSQL;
 using UsersService.Domain.Models;
 

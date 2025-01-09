@@ -3,7 +3,7 @@ using Bogus;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using UsersService.Application.Auth.Commands.LoginUserCommand;
+using UsersService.Application.Auth.Commands.LoginUser;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Abstractions.Services;
 using UsersService.Domain.Constants;

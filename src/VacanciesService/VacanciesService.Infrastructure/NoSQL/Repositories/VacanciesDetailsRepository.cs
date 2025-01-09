@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using System.Linq.Expressions;
 using VacanciesService.Domain.Abstractions.Contexts;
-using VacanciesService.Domain.Abstractions.Repositories;
+using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Entities.NoSQL;
 using VacanciesService.Domain.Filters.VacancyDetails;
 using VacanciesService.Infrastructure.NoSQL.Specifications;
@@ -19,14 +19,17 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
 
         public async Task AddAsync(VacancyDetailsEntity entity, CancellationToken cancellationToken = default)
         {
-            await _context.VacanciesDetails.InsertOneAsync(entity, null, cancellationToken);
+            var options = new InsertOneOptions();
+
+            await _context.VacanciesDetails.InsertOneAsync(entity, options, cancellationToken);
         }
 
         public async Task UpdateAsync(VacancyDetailsEntity entity, CancellationToken cancellationToken = default)
         {
+            var options = new ReplaceOptions();
             var filter = Builders<VacancyDetailsEntity>.Filter.Eq(vd => vd.Id, entity.Id);
 
-            await _context.VacanciesDetails.ReplaceOneAsync(filter, entity, (ReplaceOptions)null, cancellationToken);
+            await _context.VacanciesDetails.ReplaceOneAsync(filter, entity, options, cancellationToken);
         }
 
         public async Task UpdateByAsync<TValue>(
@@ -37,13 +40,14 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
         {
             var filter = Builders<VacancyDetailsEntity>.Filter.Eq(vd => vd.Id, id);
             var update = Builders<VacancyDetailsEntity>.Update.Set(field, value);
+            var options = new UpdateOptions();
 
             if (value is null)
             {
                 update = Builders<VacancyDetailsEntity>.Update.Unset(field);
             }
 
-            await _context.VacanciesDetails.UpdateOneAsync(filter, update, null, cancellationToken);
+            await _context.VacanciesDetails.UpdateOneAsync(filter, update, options, cancellationToken);
         }
 
         public async Task DeleteByAsync<TValue>(
@@ -88,6 +92,17 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
                 .Find(filter)
                 .Skip((pageNumber - 1) * pageSize)
                 .Limit(pageSize)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<VacancyDetailsEntity>> GetFilteredAsync(
+            VacancyDetailsFilter detailsFilter,
+            CancellationToken cancellationToken = default)
+        {
+            var filter = GetFilterFromSpecifications(detailsFilter);
+
+            return await _context.VacanciesDetails
+                .Find(filter)
                 .ToListAsync(cancellationToken);
         }
 

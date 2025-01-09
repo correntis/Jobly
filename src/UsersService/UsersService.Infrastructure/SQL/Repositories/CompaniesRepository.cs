@@ -39,5 +39,10 @@ namespace UsersService.Infrastructure.SQL.Repositories
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
+
+        public async Task<bool> IsExists(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Companies.AnyAsync(c => c.Id == id, cancellationToken);
+        }
     }
 }
