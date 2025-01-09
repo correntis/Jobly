@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Jobly.Brokers.Abstractions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VacanciesService.Application.Applications.Commands.AddApplicationCommand;
+using VacanciesService.Application.Applications.Commands.AddApplication;
 using VacanciesService.Domain.Abstractions.Repositories.Applications;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
@@ -30,13 +31,15 @@ namespace VacanciesService.Tests.Unit.Applications
             var readVacanciesRepositoryMock = new Mock<IReadVacanciesRepository>();
             var writeApplicationsRepositoryMock = new Mock<IWriteApplicationsRepository>();
             var usersServiceMock = new Mock<IUsersService>();
+            var brokerProducerMock = new Mock<IBrokerProcuder>();
 
             var handler = new AddApplicationCommandHandler(
                 _loggerMock.Object,
                 mapperMock.Object,
                 readVacanciesRepositoryMock.Object,
                 writeApplicationsRepositoryMock.Object,
-                usersServiceMock.Object);
+                usersServiceMock.Object,
+                brokerProducerMock.Object);
 
             usersServiceMock.Setup(us => us.IsUserExistsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(true));
@@ -75,7 +78,8 @@ namespace VacanciesService.Tests.Unit.Applications
                 null,
                 null,
                 null,
-                usersServiceMock.Object);
+                usersServiceMock.Object,
+                null);
 
             usersServiceMock.Setup(us => us.IsUserExistsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(false));
@@ -101,7 +105,8 @@ namespace VacanciesService.Tests.Unit.Applications
                 null,
                 readVacanciesRepositoryMock.Object,
                 null,
-                usersServiceMock.Object);
+                usersServiceMock.Object,
+                null);
 
             usersServiceMock.Setup(us => us.IsUserExistsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(true));

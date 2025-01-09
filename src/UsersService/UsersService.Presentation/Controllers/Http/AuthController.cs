@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using UsersService.Application.Auth.Commands.LoginUserCommand;
-using UsersService.Application.Auth.Commands.RegisterUserCommand;
+using UsersService.Application.Auth.Commands.LoginUser;
+using UsersService.Application.Auth.Commands.RegisterUser;
 using UsersService.Domain.Constants;
 using UsersService.Domain.Models;
 

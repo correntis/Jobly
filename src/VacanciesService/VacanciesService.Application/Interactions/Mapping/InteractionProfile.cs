@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using VacanciesService.Application.Interactions.Commands.AddInteractionCommand;
+using VacanciesService.Application.Interactions.Commands.AddInteraction;
 using VacanciesService.Domain.Entities.SQL;
 using VacanciesService.Domain.Enums;
 using VacanciesService.Domain.Models;

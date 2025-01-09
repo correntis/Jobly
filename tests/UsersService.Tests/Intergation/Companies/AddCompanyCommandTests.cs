@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
-using UsersService.Application.Companies.Commands.AddCompanyCommand;
+using UsersService.Application.Companies.Commands.AddCompany;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 

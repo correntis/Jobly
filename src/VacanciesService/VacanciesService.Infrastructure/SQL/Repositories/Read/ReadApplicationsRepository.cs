@@ -23,7 +23,9 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Read
 
         public async Task<ApplicationEntity> GetAsync(Guid id, CancellationToken token = default)
         {
-            return await _vacanciesContext.Applications.FirstOrDefaultAsync(a => a.Id == id);
+            return await _vacanciesContext.Applications
+                .Include(app => app.Vacancy)
+                .FirstOrDefaultAsync(a => a.Id == id, token);
         }
 
         public async Task<List<ApplicationEntity>> GetPageByUserIncludeVacancy(

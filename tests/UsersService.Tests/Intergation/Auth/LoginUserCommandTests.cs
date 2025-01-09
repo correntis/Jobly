@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
-using UsersService.Application.Auth.Commands.LoginUserCommand;
+using UsersService.Application.Auth.Commands.LoginUser;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;
 

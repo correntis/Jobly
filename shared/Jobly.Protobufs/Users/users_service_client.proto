@@ -8,4 +8,6 @@ service UsersGrpcService {
 	rpc IsUserExists (UserExistenceRequest) returns (UserExistenceResponse);
 	rpc IsCompanyExists (CompanyExistenceRequest) returns (CompanyExistenceResponse);
 	rpc GetResume (GetResumeRequest) returns (GetResumeResponse);
+	rpc GetUserName (GetUserNameRequest) returns (GetUserNameResponse);
+	rpc GetBestResumes (GetBestResumesRequest) returns (GetBestResumesResponse);
 }

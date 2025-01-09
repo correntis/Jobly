@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VacanciesService.Application.Vacancies.Queries.GetVacancyQuery;
+using VacanciesService.Application.Vacancies.Queries.GetVacancy;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Entities.NoSQL;
 using VacanciesService.Domain.Entities.SQL;

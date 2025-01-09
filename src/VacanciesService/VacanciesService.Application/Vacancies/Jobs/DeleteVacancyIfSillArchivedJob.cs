@@ -51,7 +51,7 @@ namespace VacanciesService.Application.Vacancies.Jobs
 
         private async Task DeleteVacancyInteractions(Guid vacancyId)
         {
-            var interactionsEntities = await _readInteractionsRepository.GetAllByVacancy(vacancyId, CancellationToken.None);
+            var interactionsEntities = await _readInteractionsRepository.GetAllByVacancyAsync(vacancyId, CancellationToken.None);
 
             _writeInteractionsRepository.RemoveRange(interactionsEntities);
         }

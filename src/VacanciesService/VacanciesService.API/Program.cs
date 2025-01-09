@@ -1,4 +1,5 @@
 using Elastic.Serilog.Sinks;
+using Jobly.Brokers;
 using Serilog;
 using VacanciesService.Application;
 using VacanciesService.Infrastructure;
@@ -21,6 +22,8 @@ builder.Host.UseSerilog((context, configuration) =>
 services.AddApplication();
 services.AddPresentation();
 services.AddInfrastructure(configuration, builder.Environment);
+
+services.AddGlobalBrokers(configuration);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();

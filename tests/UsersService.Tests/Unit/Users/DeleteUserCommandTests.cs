@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
-using UsersService.Application.Users.Commands.DeleteUserCommand;
+using UsersService.Application.Users.Commands.DeleteUser;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.SQL;
 using UsersService.Domain.Exceptions;

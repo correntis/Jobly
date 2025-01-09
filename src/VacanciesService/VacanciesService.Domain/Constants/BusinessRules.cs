@@ -8,9 +8,11 @@
             public const int EmploymentTypeMaxLenght = 50;
 
             public const int CacheExpiresHours = 1;
-            public const float MinPredictionScore = 0.6f;
+            public const float MinRecommendationPredictionScore = 0.6f;
+            public const float MinNotificationPredictionScore = 0.5f;
 
             public static readonly TimeSpan DeletionAfterArchiveTime = TimeSpan.FromDays(30);
+            public static readonly DateTime NotifyAboutDeadlineTime = DateTime.UtcNow.AddDays(2);
         }
 
         public static class Application

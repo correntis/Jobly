@@ -6,6 +6,8 @@ namespace VacanciesService.Domain.Models
     {
         [NoColumn]
         public Guid VacancyId { get; set; }
+        [NoColumn]
+        public Guid UserId { get; set; }
 
         public string ResumeSkills { get; set; }
         public string ResumeTags { get; set; }

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetailsCommand;
+using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetails;
 using VacanciesService.Application.VacanciesDetails.Mapping.Converters;
 using VacanciesService.Domain.Entities.NoSQL;
 using VacanciesService.Domain.Filters.VacancyDetails;

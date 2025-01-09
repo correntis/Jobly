@@ -48,5 +48,37 @@ namespace VacanciesService.Infrastructure.Grpc
 
             return _mapper.Map<Resume>(getResumeResponse.Resume);
         }
+
+        public async Task<List<Resume>> GetBestResumesAsync(
+            List<string> skills,
+            List<string> tags,
+            List<Language> languages,
+            CancellationToken token = default)
+        {
+            var getBestResumesRequest = new GetBestResumesRequest();
+
+            getBestResumesRequest.Skills.AddRange(skills);
+            getBestResumesRequest.Tags.AddRange(tags);
+            getBestResumesRequest.Languages.AddRange(languages.Select(language => new LanguageMessage()
+            {
+                Level = language.Level,
+                Name = language.Name,
+            }));
+
+            var getBestResumesResponse =
+                await _usersGrpcService.GetBestResumesAsync(getBestResumesRequest, cancellationToken: token);
+
+            return _mapper.Map<List<Resume>>(getBestResumesResponse.Resumes.ToList());
+        }
+
+        public async Task<string> GetUserNameAsync(Guid userId, CancellationToken token = default)
+        {
+            var getUserNameRequest = new GetUserNameRequest() { UserId = userId.ToString() };
+
+            var getUserNameResponse =
+                await _usersGrpcService.GetUserNameAsync(getUserNameRequest, cancellationToken: token);
+
+            return getUserNameResponse.UserName;
+        }
     }
 }

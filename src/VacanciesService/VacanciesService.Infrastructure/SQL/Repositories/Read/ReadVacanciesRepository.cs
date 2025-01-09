@@ -33,6 +33,16 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Read
                 .ToListAsync(token);
         }
 
+        public async Task<List<VacancyEntity>> GetByDeadlineAsync(DateTime deadline, CancellationToken token = default)
+        {
+            var currentDate = DateTime.UtcNow;
+
+            return await _vacanciesContext.Vacancies
+                .Where(v => !v.Archived)
+                .Where(v => v.DeadlineAt >= currentDate && v.DeadlineAt <= deadline)
+                .ToListAsync(token);
+        }
+
         public async Task LoadApplications(VacancyEntity vacancyEntity, CancellationToken token = default)
         {
             await _vacanciesContext.Vacancies
