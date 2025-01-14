@@ -61,6 +61,8 @@ namespace VacanciesService.Presentation.Middleware.Authorization
             var cookieOptions = new CookieOptions()
             {
                 Expires = DateTime.UtcNow.AddDays(BusinessRules.Token.AccessTokenExpiresDays),
+                SameSite = SameSiteMode.None,
+                Secure = true,
             };
 
             context.Response.Cookies.Append(BusinessRules.Token.AccessTokenName, accessToken, cookieOptions);

@@ -38,7 +38,7 @@ namespace UsersService.Presentation.Controllers.Http
         [HttpPost]
         [Route("views")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
-        public async Task<ActionResult<Guid>> ViewResume([FromForm] ViewResumeCommand viewResumeCommand, CancellationToken cancellationToken)
+        public async Task<ActionResult<Guid>> ViewResume(ViewResumeCommand viewResumeCommand, CancellationToken cancellationToken)
         {
             await _mediator.Send(viewResumeCommand, cancellationToken);
 

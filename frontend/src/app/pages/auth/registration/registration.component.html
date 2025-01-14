@@ -1,0 +1,347 @@
+<div class="min-h-screen flex items-center justify-center bg-red-100">
+  <div
+    *ngIf="step === 1"
+    class="w-full max-w-xl bg-white rounded-lg shadow-md p-8"
+  >
+    <h2 class="text-2xl font-bold text-gray-800 text-center">
+      Create an Account
+    </h2>
+    <form
+      [formGroup]="registrationForm"
+      (ngSubmit)="register()"
+      class="space-y-6"
+    >
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input
+          matInput
+          formControlName="firstName"
+          type="text"
+          placeholder="Enter your first name"
+          required
+          aria-describedby="firstNameError"
+        />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error
+          id="firstNameError"
+          *ngIf="registrationForm.get('firstName')?.errors"
+        >
+          <ng-container
+            *ngIf="registrationForm.get('firstName')?.hasError('required')"
+          >
+            First name is required.
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input
+          matInput
+          formControlName="lastName"
+          type="text"
+          placeholder="Enter your last name"
+          required
+          aria-describedby="lastNameError"
+        />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error
+          id="lastNameError"
+          *ngIf="registrationForm.get('lastName')?.errors"
+        >
+          <ng-container
+            *ngIf="registrationForm.get('lastName')?.hasError('required')"
+          >
+            Last name is required.
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          type="email"
+          placeholder="Enter your email"
+          required
+          aria-describedby="emailError"
+        />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error
+          id="emailError"
+          *ngIf="registrationForm.get('email')?.errors"
+        >
+          <ng-container
+            *ngIf="registrationForm.get('email')?.hasError('required')"
+          >
+            Email is required.
+          </ng-container>
+          <ng-container
+            *ngIf="registrationForm.get('email')?.hasError('email')"
+          >
+            Invalid email format.
+          </ng-container>
+
+          <ng-container
+            *ngIf="registrationForm.get('email')?.hasError('existingEmail')"
+          >
+            User with email already exist.
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          formControlName="password"
+          [type]="hidePassword ? 'password' : 'text'"
+          placeholder="Enter your password"
+          required
+          minlength="6"
+          pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!%&])[A-Za-z\d!%&]{6,}$"
+          aria-describedby="passwordError"
+        />
+        <mat-icon matSuffix (click)="togglePasswordVisibility()">
+          {{ hidePassword ? "visibility_off" : "visibility" }}
+        </mat-icon>
+        <mat-error
+          id="passwordError"
+          *ngIf="registrationForm.get('password')?.errors"
+        >
+          <ng-container
+            *ngIf="registrationForm.get('password')?.hasError('required')"
+          >
+            Password is required.
+          </ng-container>
+          <ng-container
+            *ngIf="registrationForm.get('password')?.hasError('minlength')"
+          >
+            Minimum 6 characters required.
+          </ng-container>
+          <ng-container
+            *ngIf="registrationForm.get('password')?.hasError('pattern')"
+          >
+            Password must contain one uppercase letter, number, and one special
+            char (!%&).
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Confirm Password</mat-label>
+        <input
+          matInput
+          formControlName="confirmPassword"
+          [type]="hideConfirmPassword ? 'password' : 'text'"
+          placeholder="Confirm your password"
+          required
+        />
+        <mat-icon matSuffix (click)="toggleConfirmPasswordVisibility()">
+          {{ hideConfirmPassword ? "visibility_off" : "visibility" }}
+        </mat-icon>
+        <mat-error
+          *ngIf="registrationForm.get('confirmPassword')?.hasError('mustMatch')"
+        >
+          Passwords must match.
+        </mat-error>
+        <mat-error
+          *ngIf="registrationForm.get('confirmPassword')?.hasError('required')"
+        >
+          Confirm Password is required.
+        </mat-error>
+      </mat-form-field>
+
+      <div class="w-full">
+        <label id="example-radio-group-label" class="block mb-2 font-medium">
+          Please choose the role that best describes your purpose in using our
+          platform:
+        </label>
+        <mat-radio-group
+          aria-labelledby="example-radio-group-label"
+          class="flex flex-col mb-4"
+          formControlName="choosedRole"
+        >
+          <mat-radio-button
+            *ngFor="let role of appRoles"
+            class="mb-2"
+            [value]="role.roleName"
+          >
+            {{ role.text }}
+          </mat-radio-button>
+
+          <mat-error
+            *ngIf="registrationForm.get('choosedRole')?.hasError('required')"
+          >
+            Role is required.
+          </mat-error>
+        </mat-radio-group>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full py-2 rounded-lg hover:bg-blue-600"
+        type="submit"
+      >
+        Register
+      </button>
+    </form>
+  </div>
+
+  <!-- Company -->
+  <div
+    *ngIf="step === 2"
+    class="w-full max-w-xl bg-white rounded-lg shadow-md p-8"
+  >
+    <h2 class="text-2xl font-bold text-gray-800 text-center">
+      Create an Company
+    </h2>
+    <form [formGroup]="companyForm" (ngSubmit)="register()" class="space-y-6">
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Company Name</mat-label>
+        <input
+          matInput
+          formControlName="companyName"
+          type="text"
+          placeholder="Enter company name"
+          required
+          aria-describedby="companyNameError"
+        />
+        <mat-icon matSuffix>name</mat-icon>
+        <mat-error
+          id="companyNameError"
+          *ngIf="companyForm.get('companyName')?.errors"
+        >
+          <ng-container
+            *ngIf="companyForm.get('companyName')?.hasError('required')"
+          >
+            Company name is required.
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Company Type</mat-label>
+        <input
+          matInput
+          formControlName="companyType"
+          type="text"
+          placeholder="Enter company type"
+          required
+          aria-describedby="companyTypeError"
+        />
+        <mat-icon matSuffix>type</mat-icon>
+        <mat-error
+          id="companyTypeError"
+          *ngIf="companyForm.get('companyType')?.errors"
+        >
+          <ng-container
+            *ngIf="companyForm.get('companyType')?.hasError('required')"
+          >
+            Company type is required.
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Company Email</mat-label>
+        <input
+          matInput
+          formControlName="companyEmail"
+          type="email"
+          placeholder="Enter company email"
+          email
+          aria-describedby="companyEmailError"
+        />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error
+          id="companyEmailError"
+          *ngIf="companyForm.get('companyEmail')?.errors"
+        >
+          <ng-container
+            *ngIf="companyForm.get('companyEmail')?.hasError('email')"
+          >
+            Company email is invaldid.
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Company Phone</mat-label>
+        <input
+          matInput
+          formControlName="companyPhone"
+          type="tel"
+          pattern="/^\d{10}$/"
+          placeholder="Enter company phone"
+          aria-describedby="companyPhoneError"
+        />
+        <mat-icon matSuffix>phone</mat-icon>
+        <mat-error
+          id="companyPhoneError"
+          *ngIf="companyForm.get('companyPhone')?.errors"
+        >
+          <ng-container
+            *ngIf="companyForm.get('companyPhone')?.hasError('pattern')"
+          >
+            Company phone is invaldid.
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Company City</mat-label>
+        <input
+          matInput
+          formControlName="companyCity"
+          type="text"
+          placeholder="Enter company city"
+        />
+        <mat-icon matSuffix>city</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Company Description</mat-label>
+        <textarea
+          matInput
+          formControlName="companyDescription"
+          type="text"
+          placeholder="Enter company description"
+        ></textarea>
+        <mat-icon matSuffix>description</mat-icon>
+      </mat-form-field>
+
+      <div class="w-full">
+        <label class="mat-label">Company Image</label>
+        <input
+          type="file"
+          (change)="onFileSelect($event)"
+          placeholder="Choose company image"
+          class="custom-file-input"
+        />
+      </div>
+
+      <div class="flex align-middle justify-center">
+        <button
+          mat-raised-button
+          color="warn"
+          class="py-5 mr-5 rounded-lg hover:bg-gray-600"
+          type="button"
+          (click)="backToFirstStep()"
+        >
+          Back
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="py-2 w-full rounded-lg hover:bg-blue-600"
+          type="submit"
+        >
+          Complete registration
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="min-h-screen flex items-center justify-center bg-red-100">
+  <div class="w-full max-w-xl bg-white rounded-lg shadow-md p-8">
+    <h2 class="text-2xl font-bold text-gray-800 text-center">Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-6">
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          type="email"
+          placeholder="Enter your email"
+          required
+          aria-describedby="emailError"
+        />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error id="emailError" *ngIf="loginForm.get('email')?.errors">
+          <ng-container *ngIf="loginForm.get('email')?.hasError('required')">
+            Email is required.
+          </ng-container>
+          <ng-container *ngIf="loginForm.get('email')?.hasError('email')">
+            Invalid email format.
+          </ng-container>
+
+          <ng-container
+            *ngIf="loginForm.get('email')?.hasError('emailNotFound')"
+          >
+            User with email doesn't exist.
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          formControlName="password"
+          [type]="hidePassword ? 'password' : 'text'"
+          placeholder="Enter your password"
+          required
+          minlength="6"
+          pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!%&])[A-Za-z\d!%&]{6,}$"
+          aria-describedby="passwordError"
+        />
+        <mat-icon matSuffix (click)="togglePasswordVisibility()">
+          {{ hidePassword ? "visibility_off" : "visibility" }}
+        </mat-icon>
+        <mat-error id="passwordError" *ngIf="loginForm.get('password')?.errors">
+          <ng-container *ngIf="loginForm.get('password')?.hasError('required')">
+            Password is required.
+          </ng-container>
+          <ng-container
+            *ngIf="loginForm.get('password')?.hasError('minlength')"
+          >
+            Minimum 6 characters required.
+          </ng-container>
+          <ng-container *ngIf="loginForm.get('password')?.hasError('pattern')">
+            Password must contain one uppercase letter, number, and one special
+            char (!%&).
+          </ng-container>
+
+          <ng-container
+            *ngIf="loginForm.get('password')?.hasError('invalidPassword')"
+          >
+            Password for user is invalid
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full py-2 rounded-lg hover:bg-blue-600"
+        type="submit"
+      >
+        Login
+      </button>
+    </form>
+  </div>
+</div>

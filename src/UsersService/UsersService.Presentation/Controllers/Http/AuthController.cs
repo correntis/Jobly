@@ -57,6 +57,8 @@ namespace UsersService.Presentation.Controllers.Http
             var cookieOptions = new CookieOptions()
             {
                 Expires = expiresTime,
+                SameSite = SameSiteMode.None,
+                Secure = true,
             };
 
             HttpContext.Response.Cookies.Append(key, value, cookieOptions);

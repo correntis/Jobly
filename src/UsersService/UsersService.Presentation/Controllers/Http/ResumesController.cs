@@ -31,7 +31,9 @@ namespace UsersService.Presentation.Controllers.Http
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<ActionResult<string>> Add(AddResumeCommand addResumeCommand, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(addResumeCommand, cancellationToken));
+            var resumeId = await _mediator.Send(addResumeCommand, cancellationToken);
+
+            return Ok(resumeId);
         }
 
         [HttpPut]

@@ -45,6 +45,8 @@ namespace UsersService.Application.Auth.Commands.LoginUser
 
             var userRoles = await _unitOfWork.UsersRepository.GetRolesAsync(userEntity);
 
+            user.Role = userRoles.FirstOrDefault();
+
             var token = await _authService.IssueTokenAsync(userEntity.Id, userRoles, cancellationToken);
 
             _logger.LogInformation("Successfully handled {CommandName} for user ID {UserId}", request.GetType().Name, userEntity.Id);

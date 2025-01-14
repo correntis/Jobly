@@ -26,6 +26,12 @@ namespace UsersService.Presentation.Middleware
 
                 await HandleExceptionAsync(context, ex, JsonSerializer.Serialize(ex.Errors));
             }
+            catch(InvalidPasswordException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+                await HandleExceptionAsync(context, ex);
+            }
             catch (EntityNotFoundException ex)
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;

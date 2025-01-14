@@ -25,7 +25,6 @@ services.AddInfrastructure(configuration);
 
 services.AddGlobalBrokers(configuration);
 
-services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
@@ -34,9 +33,10 @@ var app = builder.Build();
 app.UseCors(options =>
 {
     options
-        .AllowAnyOrigin()
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
         .AllowAnyHeader()
-        .AllowAnyMethod();
+        .AllowCredentials();
 });
 
 app.UsePresentation();
@@ -50,8 +50,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();
 

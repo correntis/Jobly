@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VacanciesService.Domain.Abstractions.Services;
+using VacanciesService.Domain.Models;
 
 namespace VacanciesService.Presentation.Controllers
 {
@@ -15,7 +16,7 @@ namespace VacanciesService.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCurrencies(CancellationToken token)
+        public async Task<ActionResult<List<Currency>>> GetCurrencies(CancellationToken token)
         {
             return Ok(await _currencyApi.GetCurrenciesAsync(token));
         }

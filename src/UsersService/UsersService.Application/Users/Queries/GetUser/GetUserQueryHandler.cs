@@ -30,9 +30,14 @@ namespace UsersService.Application.Users.Queries.GetUser
             var userEntity = await _unitOfWork.UsersRepository.GetByIdAsync(request.Id)
                 ?? throw new EntityNotFoundException($"User with id {request.Id} not found");
 
+            var userRoles = await _unitOfWork.UsersRepository.GetRolesAsync(userEntity);
+
+            var user = _mapper.Map<User>(userEntity);
+            user.Role = userRoles.FirstOrDefault();
+
             _logger.LogInformation("Successfully handled {QueryName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);
 
-            return _mapper.Map<User>(userEntity);
+            return user;
         }
     }
 }

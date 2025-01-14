@@ -1,0 +1,82 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable, ɵgetUnknownElementStrictMode } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ApiConfig } from '../../environments/api.config';
+import AddResumeRequest from '../requests/resumes/addResumeRequest';
+import Resume from '../models/resumes/resume';
+import UpdateCompanyRequest from '../requests/companies/updateCompanyRequest';
+import UpdateResumeRequest from '../requests/resumes/updateResumeRequest';
+import Certification from '../models/resumes/certification';
+import Education from '../models/resumes/education';
+import JobExperience from '../models/resumes/jobExperience';
+import Language from '../models/resumes/language';
+import Project from '../models/resumes/project';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ResumesService {
+  basePath = ApiConfig.resumes;
+  constructor(private httpClient: HttpClient) {}
+
+  add(addRequest: AddResumeRequest): Observable<string> {
+    return this.httpClient.post<string>(`${this.basePath}`, addRequest);
+  }
+
+  update(updateRequest: UpdateResumeRequest): Observable<string> {
+    return this.httpClient.put<string>(`${this.basePath}`, updateRequest);
+  }
+
+  updateCertifications(
+    id: string,
+    certifications: Certification[]
+  ): Observable<string> {
+    return this.httpClient.put<string>(`${this.basePath}/certifications`, {
+      id,
+      certifications,
+    });
+  }
+
+  updateEducations(id: string, educations: Education[]): Observable<string> {
+    return this.httpClient.put<string>(`${this.basePath}/educations`, {
+      id,
+      educations,
+    });
+  }
+
+  updateJobExpiriences(
+    id: string,
+    jobExperiences: JobExperience[]
+  ): Observable<string> {
+    return this.httpClient.put<string>(`${this.basePath}/expiriences`, {
+      id,
+      jobExperiences,
+    });
+  }
+
+  updateLanguages(id: string, languages: Language[]): Observable<string> {
+    return this.httpClient.put<string>(`${this.basePath}/languages`, {
+      id,
+      languages,
+    });
+  }
+
+  updateProjects(id: string, projects: Project[]): Observable<string> {
+    return this.httpClient.put<string>(`${this.basePath}/projects`, {
+      id,
+      projects,
+    });
+  }
+
+  get(id: string): Observable<Resume> {
+    return this.httpClient.get<Resume>(`${this.basePath}/${id}`);
+  }
+
+  getByUser(userId: string): Observable<Resume> {
+    return this.httpClient.get<Resume>(`${this.basePath}/users/${userId}`);
+  }
+
+  delete(id: string): Observable<string> {
+    return this.httpClient.delete<string>(`${this.basePath}/${id}`);
+  }
+}

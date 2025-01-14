@@ -1,0 +1,44 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ApiConfig } from '../../environments/api.config';
+import { Observable } from 'rxjs';
+import AddApplicationRequest from '../requests/applications/addApplicationRequest';
+import Application from '../models/application';
+import UpdateApplicationRequest from '../requests/applications/updateApplicationRequest';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ApplicationsService {
+  basePath = ApiConfig.applications;
+
+  constructor(private httpClient: HttpClient) {}
+
+  add(addRequest: AddApplicationRequest): Observable<string> {
+    return this.httpClient.post<string>(`${this.basePath}`, addRequest);
+  }
+
+  update(updateRequest: UpdateApplicationRequest): Observable<string> {
+    return this.httpClient.put<string>(`${this.basePath}`, updateRequest);
+  }
+
+  getPageByUser(
+    userId: string,
+    pageNumber: number,
+    pageSize: number
+  ): Observable<Application[]> {
+    return this.httpClient.get<Application[]>(
+      `${this.basePath}/users/${userId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+  }
+
+  getPageByVacancy(
+    vacancyId: string,
+    pageNumber: number,
+    pageSize: number
+  ): Observable<Application[]> {
+    return this.httpClient.get<Application[]>(
+      `${this.basePath}/vacancies/${vacancyId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+  }
+}
