@@ -4,10 +4,11 @@ using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Entities.NoSQL;
 using UsersService.Domain.Exceptions;
+using UsersService.Domain.Models;
 
 namespace UsersService.Application.Resumes.Commands.AddResume
 {
-    public class AddResumeCommandHandler : IRequestHandler<AddResumeCommand, string>
+    public class AddResumeCommandHandler : IRequestHandler<AddResumeCommand, Resume>
     {
         private readonly ILogger<AddResumeCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,7 +24,7 @@ namespace UsersService.Application.Resumes.Commands.AddResume
             _mapper = mapper;
         }
 
-        public async Task<string> Handle(AddResumeCommand request, CancellationToken cancellationToken = default)
+        public async Task<Resume> Handle(AddResumeCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 
@@ -46,7 +47,7 @@ namespace UsersService.Application.Resumes.Commands.AddResume
 
             _logger.LogInformation("Successfully handled {CommandName} for user with ID {UserId}", request.GetType().Name, request.UserId);
 
-            return resumeEntity.Id;
+            return _mapper.Map<Resume>(resumeEntity);
         }
     }
 }

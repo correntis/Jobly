@@ -10,7 +10,7 @@
         public DateTime UpdatedAt { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Tags { get; set; }
-        public List<JobExpirience> JobExpiriences { get; set; }
+        public List<JobExperience> JobExperiences { get; set; }
         public List<Education> Educations { get; set; }
         public List<Certification> Certifications { get; set; }
         public List<Project> Projects { get; set; }

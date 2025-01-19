@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using UsersService.Domain.Models;
 
 namespace UsersService.Application.Resumes.Commands.UpdateResume
 {
@@ -8,5 +9,5 @@ namespace UsersService.Application.Resumes.Commands.UpdateResume
         string Title,
         string Summary,
         List<string> Skills,
-        List<string> Tags) : IRequest<string>;
+        List<string> Tags) : IRequest<Resume>;
 }

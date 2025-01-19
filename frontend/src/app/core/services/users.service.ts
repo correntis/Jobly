@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import User from '../models/user';
 import { ApiConfig } from '../../environments/api.config';
+import { UpdateUserRequest } from '../requests/users/updateUserRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -16,15 +17,8 @@ export class UsersService {
     return this.httpClient.get<User>(`${this.basePath}/${id}`);
   }
 
-  public update(user: User): Observable<string> {
-    const userToUpdate = {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
-    };
-
-    return this.httpClient.put<string>(`${this.basePath}`, userToUpdate);
+  public update(updateUserRequest: UpdateUserRequest): Observable<string> {
+    return this.httpClient.put<string>(`${this.basePath}`, updateUserRequest);
   }
 
   public delete(id: string): Observable<string> {

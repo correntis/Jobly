@@ -17,6 +17,10 @@ export class CompaniesService {
     return this.httpClient.get<Company>(`${this.basePath}/${id}`);
   }
 
+  getByUser(userId: string): Observable<Company> {
+    return this.httpClient.get<Company>(`${this.basePath}/users/${userId}`);
+  }
+
   add(addRequest: AddCompanyRequest, image: File | null): Observable<string> {
     const formData = new FormData();
 

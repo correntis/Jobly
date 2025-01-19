@@ -5,6 +5,7 @@ using UsersService.Application.Companies.Commands.DeleteCompany;
 using UsersService.Application.Companies.Commands.UpdateCompany;
 using UsersService.Application.Companies.Commands.ViewResume;
 using UsersService.Application.Companies.Queries.GetCompany;
+using UsersService.Application.Companies.Queries.GetCompanyByUser;
 using UsersService.Domain.Constants;
 using UsersService.Domain.Models;
 using UsersService.Presentation.Middleware.Authentication;
@@ -57,6 +58,13 @@ namespace UsersService.Presentation.Controllers.Http
         public async Task<ActionResult<Company>> Get(Guid id, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetCompanyQuery(id), cancellationToken));
+        }
+
+        [HttpGet("users/{userId}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        public async Task<ActionResult<Company>> GetByUser(Guid userId, CancellationToken cancellationToken)
+        {
+            return Ok(await _mediator.Send(new GetCompanyByUserQuery(userId), cancellationToken));
         }
     }
 }

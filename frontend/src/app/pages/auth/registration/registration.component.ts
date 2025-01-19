@@ -20,7 +20,7 @@ import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
 import { UserRoles } from '../../../core/enums/userRoles';
 import { Faker } from '../../../core/utils/faker';
-import { Env } from '../../../environments/environment';
+import { EnvParams } from '../../../environments/environment';
 import { AuthService } from './../../../core/services/auth.service';
 import { CompaniesService } from '../../../core/services/companies.service';
 import { HashedCookieService } from '../../../core/services/hashedCookie.service';
@@ -181,15 +181,15 @@ export class RegistrationComponent {
 
   hashUserInformation(id: string, role: string) {
     this.hashedCookieService.set(
-      Env.UserIdCookieName,
+      EnvParams.UserIdCookieName,
       id,
-      Env.UserIdCookieExpiresDays
+      EnvParams.UserIdCookieExpiresDays
     );
 
     this.hashedCookieService.set(
-      Env.UserRoleCookieName,
-      id,
-      Env.UserRoleCookieExpiresDays
+      EnvParams.UserRoleCookieName,
+      role,
+      EnvParams.UserRoleCookieExpiresDays
     );
   }
 

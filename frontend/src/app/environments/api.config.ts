@@ -1,5 +1,6 @@
 export class ApiConfig {
   static readonly basePath = 'https://localhost';
+  static readonly resources = `${ApiConfig.basePath}/resources`;
   static readonly auth = `${ApiConfig.basePath}/auth`;
   static readonly users = `${ApiConfig.basePath}/users`;
   static readonly companies = `${ApiConfig.basePath}/companies`;

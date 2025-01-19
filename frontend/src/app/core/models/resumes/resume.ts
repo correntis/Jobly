@@ -13,9 +13,9 @@ export default interface Resume {
   updatedAt: Date;
   skills: string[];
   tags: string[];
-  jobExperience: JobExperience[];
-  educations: Education[];
-  certifications: Certification[];
-  projects: Project[];
-  languages: Language[];
+  jobExperiences: JobExperience[]; // -
+  educations: Education[]; // +
+  certifications: Certification[]; // +
+  projects: Project[]; // +
+  languages: Language[]; //+
 }

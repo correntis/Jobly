@@ -33,7 +33,7 @@ namespace UsersService.Application.Users.Queries.GetUser
             var userRoles = await _unitOfWork.UsersRepository.GetRolesAsync(userEntity);
 
             var user = _mapper.Map<User>(userEntity);
-            user.Role = userRoles.FirstOrDefault();
+            user.Roles = [.. userRoles];
 
             _logger.LogInformation("Successfully handled {QueryName} for user with ID {UserId}", request.GetType().Name, userEntity.Id);
 

@@ -1,0 +1,149 @@
+<div class="min-h-screen flex flex-col items-center justify-start">
+  <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
+    <h1 class="text-center text-3xl mb-5">Company information</h1>
+    <form
+      [formGroup]="companyForm"
+      (ngSubmit)="updateCompany()"
+      class="space-y-6"
+    >
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          formControlName="name"
+          type="text"
+          placeholder="Type name"
+        />
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          type="text"
+          placeholder="Type description"
+        ></textarea>
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>City</mat-label>
+        <input
+          matInput
+          formControlName="city"
+          type="text"
+          placeholder="Type city"
+        />
+        <mat-icon matSuffix>city</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Address</mat-label>
+        <input
+          matInput
+          formControlName="address"
+          type="text"
+          placeholder="Type address"
+        />
+        <mat-icon matSuffix>address</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          type="email"
+          email
+          placeholder="Type email"
+        />
+        <mat-icon matSuffix>address</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Phone</mat-label>
+        <input
+          matInput
+          formControlName="phone"
+          type="tel"
+          pattern="^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4,5}$"
+          placeholder="New phone"
+          aria-describedby="phoneError"
+        />
+        <mat-icon matSuffix>phone</mat-icon>
+
+        <mat-error id="phoneError">
+          <ng-container *ngIf="companyForm.get('phone')?.hasError('pattern')">
+            Invalid phone
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Web Site</mat-label>
+        <input
+          matInput
+          formControlName="webSite"
+          type="text"
+          placeholder="Type web site"
+        />
+        <mat-icon matSuffix>web</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Type</mat-label>
+        <input
+          matInput
+          formControlName="type"
+          type="text"
+          placeholder="Type company type"
+        />
+        <mat-icon matSuffix>type</mat-icon>
+      </mat-form-field>
+
+      <div class="file-input-wrapper">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="fileInput.click()"
+        >
+          Choose File
+        </button>
+        <input
+          #fileInput
+          type="file"
+          hidden
+          (change)="onFileSelected($event)"
+        />
+        <span class="ml-10">{{ fileName }}</span>
+        <div *ngIf="!image" class="mt-4">
+          <img
+            [src]="imageSrc"
+            alt="Selected Image"
+            class="max-w-xs rounded shadow"
+          />
+        </div>
+
+        <div *ngIf="imageLocalUrl" class="mt-4">
+          <img
+            [src]="imageLocalUrl"
+            alt="Selected Image"
+            class="max-w-xs rounded shadow"
+          />
+        </div>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full py-2 rounded-lg hover:bg-blue-600"
+        type="submit"
+      >
+        Change
+      </button>
+    </form>
+  </div>
+</div>

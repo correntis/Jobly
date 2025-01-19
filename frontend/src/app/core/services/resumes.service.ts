@@ -19,12 +19,12 @@ export class ResumesService {
   basePath = ApiConfig.resumes;
   constructor(private httpClient: HttpClient) {}
 
-  add(addRequest: AddResumeRequest): Observable<string> {
-    return this.httpClient.post<string>(`${this.basePath}`, addRequest);
+  add(addRequest: AddResumeRequest): Observable<Resume> {
+    return this.httpClient.post<Resume>(`${this.basePath}`, addRequest);
   }
 
-  update(updateRequest: UpdateResumeRequest): Observable<string> {
-    return this.httpClient.put<string>(`${this.basePath}`, updateRequest);
+  update(updateRequest: UpdateResumeRequest): Observable<Resume> {
+    return this.httpClient.put<Resume>(`${this.basePath}`, updateRequest);
   }
 
   updateCertifications(
@@ -48,7 +48,7 @@ export class ResumesService {
     id: string,
     jobExperiences: JobExperience[]
   ): Observable<string> {
-    return this.httpClient.put<string>(`${this.basePath}/expiriences`, {
+    return this.httpClient.put<string>(`${this.basePath}/experiences`, {
       id,
       jobExperiences,
     });

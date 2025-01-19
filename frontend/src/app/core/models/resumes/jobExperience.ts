@@ -3,5 +3,5 @@ export default interface JobExperience {
   companyName: string;
   startDate: Date;
   endDate: Date;
-  responsobilities: string[];
+  responsibilities: string[];
 }

@@ -17,7 +17,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { HashedCookieService } from '../../../../core/services/hashedCookie.service';
-import { Env } from '../../../../environments/environment';
+import { EnvParams } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -74,17 +74,17 @@ export class LoginComponent {
     }
   }
 
-  hashUserInformation(id: string, role: string) {
+  hashUserInformation(id: string, roles: string[]) {
     this.hashedCookieService.set(
-      Env.UserIdCookieName,
+      EnvParams.UserIdCookieName,
       id,
-      Env.UserIdCookieExpiresDays
+      EnvParams.UserIdCookieExpiresDays
     );
 
     this.hashedCookieService.set(
-      Env.UserRoleCookieName,
-      id,
-      Env.UserRoleCookieExpiresDays
+      EnvParams.UserRoleCookieName,
+      JSON.stringify(roles),
+      EnvParams.UserRoleCookieExpiresDays
     );
   }
 
@@ -98,7 +98,7 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: (user) => {
-        this.hashUserInformation(user.id, user.role);
+        this.hashUserInformation(user.id, user.roles);
 
         this.router.navigate(['/home']);
       },

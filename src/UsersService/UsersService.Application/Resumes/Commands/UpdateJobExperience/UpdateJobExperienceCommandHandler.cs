@@ -30,7 +30,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateJobExperience
             _ = await _unitOfWork.ResumesRepository.GetAsync(request.Id, cancellationToken)
                 ?? throw new EntityNotFoundException($"Resume with id {request.Id} not found");
 
-            var jobExpereincesEntities = _mapper.Map<List<JobExpirienceEntity>>(request.JobExpiriences);
+            var jobExpereincesEntities = _mapper.Map<List<JobExperienceEntity>>(request.JobExperiences);
 
             if(jobExpereincesEntities.Count == 0)
             {
@@ -39,7 +39,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateJobExperience
 
             await _unitOfWork.ResumesRepository.UpdateByAsync(
                 request.Id,
-                r => r.JobExpiriences,
+                r => r.JobExperiences,
                 jobExpereincesEntities,
                 cancellationToken);
 

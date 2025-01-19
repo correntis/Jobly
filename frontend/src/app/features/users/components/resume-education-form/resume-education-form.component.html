@@ -1,0 +1,153 @@
+<section class="p-6 bg-gray-100 rounded-lg shadow-md mt-3">
+  <div class="flex justify-between">
+    <h2 class="text-2xl font-bold text-gray-700 mb-4">Educations</h2>
+    <button
+      mat-fab
+      color="accent"
+      type="button"
+      (click)="addEducation()"
+      class="text-3xl transform scale-[0.55] align-middle"
+    >
+      <mat-icon matSuffix>add</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="educationForm" (ngSubmit)="saveEducations()">
+    <ng-container formArrayName="educations">
+      <hr *ngIf="educations.length > 0" class="border-t-1 border-blue-300" />
+
+      <ng-container
+        class="w-full"
+        *ngFor="let educationForm of educations.controls; let i = index"
+      >
+        <div class="flex flex-row align-middle">
+          <div [formGroupName]="i">
+            <span class="text-2xl font-bold">{{ i + 1 }}:</span>
+            <mat-form-field color="primary" class="w-full" appearance="fill">
+              <mat-label>Institution</mat-label>
+
+              <input
+                matInput
+                formControlName="institution"
+                aria-describedby="educationInstError-{{ i }}"
+                required
+              />
+
+              <mat-error id="educationInstError-{{ i }}">
+                <ng-container
+                  *ngIf="
+                    educations.controls[i]
+                      .get('institution')
+                      ?.hasError('required')
+                  "
+                >
+                  Input smth or delete education
+                </ng-container>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="primary" class="w-full" appearance="fill">
+              <mat-label>Degree</mat-label>
+
+              <input
+                matInput
+                formControlName="degree"
+                aria-describedby="educationDegreeError-{{ i }}"
+                required
+              />
+
+              <mat-error id="educationDegreeError-{{ i }}">
+                <ng-container
+                  *ngIf="
+                    educations.controls[i].get('degree')?.hasError('required')
+                  "
+                >
+                  Input smth or delete education
+                </ng-container>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="primary" class="w-full" appearance="fill">
+              <mat-label>Start Date</mat-label>
+
+              <input
+                matInput
+                [matDatepicker]="educationStartDate"
+                formControlName="startDate"
+                aria-describedby="educationStartDateError-{{ i }}"
+                required
+                readonly
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="educationStartDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #educationStartDate>
+                <mat-datepicker-actions>
+                  <button mat-button matDatepickerCancel>Cancel</button>
+                  <button mat-raised-button matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+              </mat-datepicker>
+
+              <mat-error id="educationStartDateError-{{ i }}">
+                <ng-container
+                  *ngIf="
+                    educations.controls[i]
+                      .get('startDate')
+                      ?.hasError('required')
+                  "
+                >
+                  Pick date or delete education
+                </ng-container>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field color="primary" class="w-full" appearance="fill">
+              <mat-label>End Date</mat-label>
+
+              <input
+                matInput
+                [matDatepicker]="educationEndDate"
+                formControlName="endDate"
+                aria-describedby="educationEndDateError-{{ i }}"
+                required
+                readonly
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="educationEndDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #educationEndDate>
+                <mat-datepicker-actions>
+                  <button mat-button matDatepickerCancel>Cancel</button>
+                  <button mat-raised-button matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+              </mat-datepicker>
+
+              <mat-error id="educationEndDateError-{{ i }}">
+                <ng-container
+                  *ngIf="
+                    educations.controls[i].get('endDate')?.hasError('required')
+                  "
+                >
+                  Pick date or delete education
+                </ng-container>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div
+            (click)="removeEducation(i)"
+            class="hover:cursor-pointer hover:bg-red-400 rounded-xl flex align-middle items-center justify-center p-3 mb-[22px]"
+          >
+            <mat-icon matSuffix> close</mat-icon>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <button mat-raised-button color="primary" type="submit">
+      Save Certifications
+    </button>
+  </form>
+</section>

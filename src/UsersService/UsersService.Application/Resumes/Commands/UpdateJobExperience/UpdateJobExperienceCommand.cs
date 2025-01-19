@@ -5,5 +5,5 @@ namespace UsersService.Application.Resumes.Commands.UpdateJobExperience
 {
     public sealed record UpdateJobExperienceCommand(
         string Id,
-        IEnumerable<JobExpirience> JobExpiriences) : IRequest<string>;
+        IEnumerable<JobExperience> JobExperiences) : IRequest<string>;
 }

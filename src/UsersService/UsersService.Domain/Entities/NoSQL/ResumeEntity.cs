@@ -15,7 +15,7 @@ namespace UsersService.Domain.Entities.NoSQL
         public DateTime UpdatedAt { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Tags { get; set; }
-        public List<JobExpirienceEntity> JobExpiriences { get; set; }
+        public List<JobExperienceEntity> JobExperiences { get; set; }
         public List<EducationEntity> Educations { get; set; }
         public List<CertificationEntity> Certifications { get; set; }
         public List<ProjectEntity> Projects { get; set; }
