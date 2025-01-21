@@ -1,0 +1,672 @@
+<div class="flex flex-row">
+  <section class="p-6 bg-gray-100 rounded-lg shadow-md mt-3 max-w-80">
+    <div class="flex justify-between">
+      <h2 class="text-2xl font-bold text-gray-700 mb-4">Filters</h2>
+    </div>
+
+    <form [formGroup]="vacanciesFilterForm" (ngSubmit)="applyFilters()">
+      <!-- Requirements -->
+      <div formArrayName="requirements">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Requirements</h3>
+          <button
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addToArray('requirements')"
+            class="text-3xl transform scale-[0.55] align-middle"
+          >
+            <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </div>
+
+        <hr
+          *ngIf="getFormArrayControls('requirements').length > 0"
+          class="border-t-1 border-blue-300"
+        />
+
+        <div
+          *ngFor="
+            let control of getFormArrayControls('requirements').controls;
+            let i = index
+          "
+        >
+          <mat-form-field color="primary" class="w-full" appearance="fill">
+            <mat-label>Requirement {{ i + 1 }}</mat-label>
+            <input
+              matInput
+              [formControlName]="i"
+              aria-describedby="requirementsError - {{ i }}"
+            />
+            <mat-icon
+              matSuffix
+              class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+              (click)="removeFormArray('requirements', i)"
+            >
+              close</mat-icon
+            >
+
+            <mat-error id="requirementsError - {{ i }}">
+              <ng-container
+                *ngIf="
+                  getFormArrayControls('requirements')
+                    .at(i)
+                    .hasError('required')
+                "
+              >
+                Required field
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div formArrayName="skills">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Skills</h3>
+          <button
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addToArray('skills')"
+            class="text-3xl transform scale-[0.55] align-middle"
+          >
+            <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </div>
+
+        <hr
+          *ngIf="getFormArrayControls('skills').length > 0"
+          class="border-t-1 border-blue-300"
+        />
+
+        <div
+          *ngFor="
+            let control of getFormArrayControls('skills').controls;
+            let i = index
+          "
+        >
+          <mat-form-field color="primary" class="w-full" appearance="fill">
+            <mat-label>Skill {{ i + 1 }}</mat-label>
+            <input
+              matInput
+              [formControlName]="i"
+              aria-describedby="skillsError - {{ i }}"
+            />
+            <mat-icon
+              matSuffix
+              class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+              (click)="removeFormArray('skills', i)"
+            >
+              close</mat-icon
+            >
+
+            <mat-error id="skillsError - {{ i }}">
+              <ng-container
+                *ngIf="
+                  getFormArrayControls('skills').at(i).hasError('required')
+                "
+              >
+                Required field
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div formArrayName="tags">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Tags</h3>
+          <button
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addToArray('tags')"
+            class="text-3xl transform scale-[0.55] align-middle"
+          >
+            <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </div>
+
+        <hr
+          *ngIf="getFormArrayControls('tags').length > 0"
+          class="border-t-1 border-blue-300"
+        />
+
+        <div
+          *ngFor="
+            let control of getFormArrayControls('tags').controls;
+            let i = index
+          "
+        >
+          <mat-form-field color="primary" class="w-full" appearance="fill">
+            <mat-label>Tag {{ i + 1 }}</mat-label>
+            <input
+              matInput
+              [formControlName]="i"
+              aria-describedby="tagsError - {{ i }}"
+            />
+            <mat-icon
+              matSuffix
+              class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+              (click)="removeFormArray('tags', i)"
+            >
+              close</mat-icon
+            >
+
+            <mat-error id="tagsError - {{ i }}">
+              <ng-container
+                *ngIf="getFormArrayControls('tags').at(i).hasError('required')"
+              >
+                Required field
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Responsibilities -->
+      <div formArrayName="responsibilities">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">
+            Responsibilities
+          </h3>
+          <button
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addToArray('responsibilities')"
+            class="text-3xl transform scale-[0.55] align-middle"
+          >
+            <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </div>
+
+        <hr
+          *ngIf="getFormArrayControls('responsibilities').length > 0"
+          class="border-t-1 border-blue-300"
+        />
+
+        <div
+          *ngFor="
+            let control of getFormArrayControls('responsibilities').controls;
+            let i = index
+          "
+        >
+          <mat-form-field color="primary" class="w-full" appearance="fill">
+            <mat-label>Responsibility {{ i + 1 }}</mat-label>
+            <input
+              matInput
+              [formControlName]="i"
+              aria-describedby="responsibilitiesError - {{ i }}"
+            />
+            <mat-icon
+              matSuffix
+              class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+              (click)="removeFormArray('responsibilities', i)"
+            >
+              close</mat-icon
+            >
+
+            <mat-error id="responsibilitiesError - {{ i }}">
+              <ng-container
+                *ngIf="
+                  getFormArrayControls('responsibilities')
+                    .at(i)
+                    .hasError('required')
+                "
+              >
+                Required field
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Benefits -->
+      <div formArrayName="benefits">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Benefits</h3>
+          <button
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addToArray('benefits')"
+            class="text-3xl transform scale-[0.55] align-middle"
+          >
+            <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </div>
+
+        <hr
+          *ngIf="getFormArrayControls('benefits').length > 0"
+          class="border-t-1 border-blue-300"
+        />
+
+        <div
+          *ngFor="
+            let control of getFormArrayControls('benefits').controls;
+            let i = index
+          "
+        >
+          <mat-form-field color="primary" class="w-full" appearance="fill">
+            <mat-label>Benefit {{ i + 1 }}</mat-label>
+            <input
+              matInput
+              [formControlName]="i"
+              aria-describedby="benefitsError - {{ i }}"
+            />
+            <mat-icon
+              matSuffix
+              class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+              (click)="removeFormArray('benefits', i)"
+            >
+              close</mat-icon
+            >
+
+            <mat-error id="benefitsError - {{ i }}">
+              <ng-container
+                *ngIf="
+                  getFormArrayControls('benefits').at(i).hasError('required')
+                "
+              >
+                Required field
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Technologies -->
+      <div formArrayName="technologies">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Technologies</h3>
+          <button
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addToArray('technologies')"
+            class="text-3xl transform scale-[0.55] align-middle"
+          >
+            <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </div>
+
+        <hr
+          *ngIf="getFormArrayControls('technologies').length > 0"
+          class="border-t-1 border-blue-300"
+        />
+
+        <div
+          *ngFor="
+            let control of getFormArrayControls('technologies').controls;
+            let i = index
+          "
+        >
+          <mat-form-field color="primary" class="w-full" appearance="fill">
+            <mat-label>Technology {{ i + 1 }}</mat-label>
+            <input
+              matInput
+              [formControlName]="i"
+              aria-describedby="technologiesError - {{ i }}"
+            />
+            <mat-icon
+              matSuffix
+              class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+              (click)="removeFormArray('technologies', i)"
+            >
+              close</mat-icon
+            >
+
+            <mat-error id="technologiesError - {{ i }}">
+              <ng-container
+                *ngIf="
+                  getFormArrayControls('technologies')
+                    .at(i)
+                    .hasError('required')
+                "
+              >
+                Required field
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div formArrayName="education">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Education</h3>
+          <button
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addToArray('education')"
+            class="text-3xl transform scale-[0.55] align-middle"
+          >
+            <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </div>
+
+        <hr
+          *ngIf="getFormArrayControls('education').length > 0"
+          class="border-t-1 border-blue-300"
+        />
+
+        <div
+          *ngFor="
+            let control of getFormArrayControls('education').controls;
+            let i = index
+          "
+        >
+          <mat-form-field color="primary" class="w-full" appearance="fill">
+            <mat-label>Education {{ i + 1 }}</mat-label>
+            <input
+              matInput
+              [formControlName]="i"
+              aria-describedby="educationError - {{ i }}"
+            />
+            <mat-icon
+              matSuffix
+              class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+              (click)="removeFormArray('education', i)"
+            >
+              close</mat-icon
+            >
+
+            <mat-error id="educationError - {{ i }}">
+              <ng-container
+                *ngIf="
+                  getFormArrayControls('education').at(i).hasError('required')
+                "
+              >
+                Required field
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Languages -->
+      <div>
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Languages</h3>
+          <button
+            mat-fab
+            color="accent"
+            type="button"
+            (click)="addLanguage()"
+            class="text-3xl transform scale-[0.55] align-middle"
+          >
+            <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </div>
+
+        <ng-container formArrayName="languages">
+          <hr
+            *ngIf="getFormArrayControls('languages').length > 0"
+            class="border-t-1 border-blue-300"
+          />
+
+          <ng-container
+            class="w-full"
+            *ngFor="
+              let languageForm of getFormArrayControls('languages').controls;
+              let i = index
+            "
+          >
+            <div
+              [formGroupName]="i"
+              class="flex flex-row justify-evenly align-middle items-center"
+            >
+              <span class="text-xl">{{ i + 1 }}:</span>
+              <mat-form-field color="primary" class="w-[40%]" appearance="fill">
+                <mat-label>Name</mat-label>
+
+                <input
+                  matInput
+                  formControlName="name"
+                  aria-describedby="languageNameError-{{ i }}"
+                  required
+                />
+
+                <mat-error id="languageNameError-{{ i }}">
+                  <ng-container
+                    *ngIf="
+                      getFormArrayControls('languages')
+                        .controls[i].get('name')
+                        ?.hasError('required')
+                    "
+                  >
+                    Required
+                  </ng-container>
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field color="primary" class="w-[40%]" appearance="fill">
+                <mat-label>Level</mat-label>
+
+                <input
+                  matInput
+                  formControlName="level"
+                  aria-describedby="languageLevelError-{{ i }}"
+                  required
+                />
+
+                <mat-error id="languageLevelError-{{ i }}">
+                  <ng-container
+                    *ngIf="
+                      getFormArrayControls('languages')
+                        .controls[i].get('level')
+                        ?.hasError('required')
+                    "
+                  >
+                    Required
+                  </ng-container>
+                </mat-error>
+              </mat-form-field>
+
+              <div
+                (click)="removeFormArray('languages', i)"
+                class="hover:cursor-pointer hover:bg-red-400 rounded-xl flex justify-center p-3 mb-[22px]"
+              >
+                <mat-icon matSuffix> close</mat-icon>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <!-- Experience -->
+      <div formGroupName="experience" aria-describedby="experienceGroupError">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Experience</h3>
+        </div>
+        <mat-error id="experienceGroupError">
+          <ng-container
+            *ngIf="
+              vacanciesFilterForm
+                .get('experience')
+                ?.hasError('minGreaterThanMax')
+            "
+          >
+            Min greater then or equal max
+          </ng-container>
+        </mat-error>
+        <mat-form-field color="primary" class="w-full" appearance="fill">
+          <mat-label>Minimum</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="min"
+            aria-describedby="minExperienceError"
+          />
+
+          <mat-error id="minExperienceError">
+            <ng-container
+              *ngIf="
+                vacanciesFilterForm
+                  .get('experience')
+                  ?.get('min')
+                  ?.hasError('negative')
+              "
+            >
+              Negative number
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field color="primary" class="w-full" appearance="fill">
+          <mat-label>Maximum</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="max"
+            aria-describedby="maxExperienceError"
+          />
+          <mat-error id="maxExperienceError">
+            <ng-container
+              *ngIf="
+                vacanciesFilterForm
+                  .get('experience')
+                  ?.get('max')
+                  ?.hasError('negative')
+              "
+            >
+              Negative number
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Salary -->
+      <div formGroupName="salary" aria-describedby="salaryGroupError">
+        <div
+          class="flex justify-between border-b-2 border-blue-500 border-solid"
+        >
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Experience</h3>
+        </div>
+        <mat-error id="salaryGroupError">
+          <ng-container
+            *ngIf="
+              vacanciesFilterForm.get('salary')?.hasError('minGreaterThanMax')
+            "
+          >
+            Min greater then or equal max
+          </ng-container>
+
+          <ng-container
+            *ngIf="
+              vacanciesFilterForm.get('salary')?.hasError('requiredCurrency')
+            "
+          >
+            Currency required
+          </ng-container>
+        </mat-error>
+
+        <mat-form-field color="primary" class="w-full" appearance="fill">
+          <mat-label>Currency</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="currency"
+            aria-describedby="currencyError"
+          />
+        </mat-form-field>
+
+        <mat-form-field color="primary" class="w-full" appearance="fill">
+          <mat-label>Minimum</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="min"
+            aria-describedby="minSalaryError"
+          />
+
+          <mat-error id="minSalaryError">
+            <ng-container
+              *ngIf="
+                vacanciesFilterForm
+                  .get('salary')
+                  ?.get('min')
+                  ?.hasError('negative')
+              "
+            >
+              Negative number
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field color="primary" class="w-full" appearance="fill">
+          <mat-label>Maximum</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="max"
+            aria-describedby="maxSalaryError"
+          />
+          <mat-error id="maxSalaryError">
+            <ng-container
+              *ngIf="
+                vacanciesFilterForm
+                  .get('salary')
+                  ?.get('max')
+                  ?.hasError('negative')
+              "
+            >
+              Negative number
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <button type="submit" mat-raised-button color="primary">
+        Apply Filters
+      </button>
+    </form>
+  </section>
+
+  <div>
+    <div
+      class="vacancies-container bg-[#e2e2e2] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 px-5 py-3 items-stretch"
+    >
+      <ng-container *ngFor="let vacancy of vacanciesList; let i = index">
+        <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>
+
+        <div
+          *ngIf="(i + 1) % 3 === 0"
+          class="row-delimiter col-span-full border-t-2 border-gray-300 my-6"
+        ></div>
+      </ng-container>
+    </div>
+
+    <div class="flex justify-center my-5">
+      <button
+        mat-raised-button
+        color="warn"
+        class="w-52 hover:scale-105 active:scale-90"
+        (click)="loadVacancies()"
+      >
+        Load More
+      </button>
+    </div>
+  </div>
+</div>
