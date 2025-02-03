@@ -85,6 +85,11 @@ namespace VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetai
 
             var exchangeRate = await _currencyApi.GetExchangeRateAsync(sourceEntity.Currency);
 
+            if(exchangeRate is null)
+            {
+                throw new EntityNotFoundException($"Currency with code {exchangeRate.Code} not found");
+            }
+
             var targetEntity = new SalaryEntity
             {
                 Currency = BusinessRules.Salary.DefaultCurrency,

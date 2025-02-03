@@ -14,7 +14,11 @@ namespace MessagesService.Presentation
     {
         public static void AddPresentation(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSignalR();
+            services.AddSignalR()
+                .AddHubOptions<MessagesHub>(options =>
+                {
+                    options.EnableDetailedErrors = true;
+                });
 
             services.AddSingleton<NotificationsService>();
             services.AddSingleton<ChatsService>();

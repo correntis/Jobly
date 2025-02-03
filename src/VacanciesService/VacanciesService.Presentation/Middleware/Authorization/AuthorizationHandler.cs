@@ -31,7 +31,7 @@ namespace VacanciesService.Presentation.Middleware.Authorization
                 return false;
             }
 
-            context.Request.Cookies.TryGetValue(BusinessRules.Token.AccessTokenName, out string refreshToken);
+            context.Request.Cookies.TryGetValue(BusinessRules.Token.RefreshTokenName, out string refreshToken);
 
             var tokenValidationResult =
                 await _authService.ValidateTokenAsync(accessToken, refreshToken, roles, context.RequestAborted);

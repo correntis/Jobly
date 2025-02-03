@@ -6,6 +6,7 @@ import { AppendUserIdGuard } from '../core/guards/apppend-user-id.guard';
 import { UserAccountComponent } from '../pages/accounts/user-account/user-account.component';
 import { CompanyAccountComponent } from '../pages/accounts/company-account/company-account.component';
 import { CompanyRoleGuard } from '../core/guards/company-role.guard';
+import { VacancyFormComponent } from '../pages/vacancies/vacancy-form/vacancy-form.component';
 
 export const accountRoutes: Route[] = [
   {
@@ -27,5 +28,10 @@ export const accountRoutes: Route[] = [
     path: 'account/company/:userId',
     component: CompanyAccountComponent,
     canActivate: [AuthGuard, UserRoleGuard],
+  },
+  {
+    path: 'account/company/:companyId/vacancy',
+    component: VacancyFormComponent,
+    canActivate: [AuthGuard, CompanyRoleGuard],
   },
 ];

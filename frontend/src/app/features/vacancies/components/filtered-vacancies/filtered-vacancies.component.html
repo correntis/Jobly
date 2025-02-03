@@ -513,6 +513,7 @@
             Min greater then or equal max
           </ng-container>
         </mat-error>
+
         <mat-form-field color="primary" class="w-full" appearance="fill">
           <mat-label>Minimum</mat-label>
           <input
@@ -563,7 +564,7 @@
         <div
           class="flex justify-between border-b-2 border-blue-500 border-solid"
         >
-          <h3 class="text-lg font-medium text-gray-800 mt-4">Experience</h3>
+          <h3 class="text-lg font-medium text-gray-800 mt-4">Salary</h3>
         </div>
         <mat-error id="salaryGroupError">
           <ng-container
@@ -583,15 +584,11 @@
           </ng-container>
         </mat-error>
 
-        <mat-form-field color="primary" class="w-full" appearance="fill">
-          <mat-label>Currency</mat-label>
-          <input
-            matInput
-            type="text"
-            formControlName="currency"
-            aria-describedby="currencyError"
-          />
-        </mat-form-field>
+        <app-currency-select
+          formControlName="currency"
+          aria-describedby="currencyError"
+          [control]="currency"
+        />
 
         <mat-form-field color="primary" class="w-full" appearance="fill">
           <mat-label>Minimum</mat-label>
@@ -658,7 +655,12 @@
       </ng-container>
     </div>
 
-    <div class="flex justify-center my-5">
+    <div
+      *ngIf="
+        vacanciesList && vacanciesList.length % vacanciesFilter.pageSize === 0
+      "
+      class="flex justify-center my-5"
+    >
       <button
         mat-raised-button
         color="warn"

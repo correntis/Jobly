@@ -137,7 +137,6 @@ export class RegistrationComponent {
   }
 
   backToFirstStep() {
-    console.log(this.registrationForm);
     this.step = 1;
   }
 

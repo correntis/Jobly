@@ -54,7 +54,6 @@ namespace UsersService.Presentation.Controllers.Http
         }
 
         [HttpGet("{id}")]
-        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<ActionResult<Company>> Get(Guid id, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetCompanyQuery(id), cancellationToken));

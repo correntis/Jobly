@@ -162,7 +162,6 @@ export class ResumeProjectsFormComponent {
 
     if (this.resumeProjects && this.resumeId) {
       this.resumesService.updateProjects(this.resumeId, projects).subscribe({
-        next: (id) => console.log('Successfully updated projects:', id),
         error: (err) => console.error(err),
       });
     }

@@ -1,3 +1,4 @@
+import User from './user';
 import Vacancy from './vacancies/vacancy';
 
 export default interface Application {
@@ -6,5 +7,6 @@ export default interface Application {
   createdAt: Date;
   appliedAt?: Date;
   status: string;
-  vacancy: Vacancy;
+  vacancy?: Vacancy;
+  user?: User;
 }

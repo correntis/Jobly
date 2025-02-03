@@ -132,7 +132,6 @@ export class ResumeCertificationsFormComponent {
       this.resumesService
         .updateCertifications(this.resumeId, certifications)
         .subscribe({
-          next: (id) => console.log('Updated certs, ', id),
           error: (err) => console.error(err),
         });
     }

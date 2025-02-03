@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HashedCookieService } from '../core/services/hashedCookie.service';
+import { UserRoles } from '../core/enums/userRoles';
 
 export class EnvParams {
   public static hashSecretKet = 'secrethashkey';
   public static UserIdCookieName = 'userId';
   public static UserRoleCookieName = 'userRole';
+
+  public static DefaultCurrency = 'USD';
 
   public static UserIdCookieExpiresDays = 7;
   public static UserRoleCookieExpiresDays = 7;
@@ -26,5 +29,13 @@ export class EnvService {
       this.hashedCookieService.get(EnvParams.UserRoleCookieName)
     );
     return roles;
+  }
+
+  isUser(): boolean {
+    return this.getUserRoles().includes(UserRoles.User);
+  }
+
+  isCompany(): boolean {
+    return this.getUserRoles().includes(UserRoles.Company);
   }
 }

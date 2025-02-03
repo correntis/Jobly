@@ -1,0 +1,47 @@
+<div [formGroup]="container">
+  <div>
+    <div class="flex justify-between">
+      <h3 class="text-lg font-medium text-gray-800 mt-4">{{ label }}</h3>
+      <button
+        mat-fab
+        color="accent"
+        type="button"
+        (click)="addItem()"
+        class="text-3xl transform scale-[0.55] align-middle"
+      >
+        <mat-icon matSuffix>add</mat-icon>
+      </button>
+    </div>
+
+    <hr *ngIf="formArray.length > 0" class="border-t-1 border-blue-300" />
+
+    <ng-container
+      [formArrayName]="formArrayName"
+      *ngFor="let itemForm of formArray.controls; let i = index"
+    >
+      <div [formGroupName]="i">
+        <mat-form-field color="primary" class="w-full" appearance="fill">
+          <mat-label>{{ placeholder }} {{ i + 1 }}</mat-label>
+          <input
+            matInput
+            formControlName="name"
+            aria-describedby="error-{{ formArrayName }}-{{ i }}"
+            required
+          />
+          <mat-icon
+            matSuffix
+            class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+            (click)="remove(i)"
+          >
+            close
+          </mat-icon>
+          <mat-error id="error-{{ formArrayName }}-{{ i }}">
+            <ng-container *ngIf="itemForm.get('name')?.hasError('required')">
+              Input something or delete this field.
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </div>
+</div>

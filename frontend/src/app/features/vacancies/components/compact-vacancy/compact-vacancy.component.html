@@ -10,12 +10,23 @@
     </div>
 
     <div class="text-sm text-gray-600">
-      <p class="text-[17px] mb-1">Type: {{ vacancy?.employmentType }}</p>
       <p class="text-[17px] mb-1">
-        Created: {{ vacancy?.createdAt | date : "shortDate" }}
+        Type:
+        <span class="text-[18px] text-gray-800">
+          {{ vacancy?.employmentType }}
+        </span>
       </p>
       <p class="text-[17px] mb-1">
-        Deadline: {{ vacancy?.deadlineAt | date : "shortDate" }}
+        Created at
+        <span class="text-[18px] text-gray-800">{{
+          vacancy?.createdAt | date : "longDate"
+        }}</span>
+      </p>
+      <p class="text-[17px] mb-1">
+        Deadline at
+        <span class="text-[18px] text-gray-800">{{
+          vacancy?.deadlineAt | date : "longDate"
+        }}</span>
       </p>
     </div>
 
@@ -24,7 +35,7 @@
       <div class="flex flex-wrap gap-1 mt-1">
         <span
           *ngFor="let skill of vacancy?.vacancyDetails?.skills"
-          class="bg-blue-100 text-blue-600 rounded-full px-2 py-1 text-xs"
+          class="bg-blue-100 text-blue-600 rounded-full px-3 py-2 text-sm"
         >
           {{ skill }}
         </span>
@@ -36,14 +47,61 @@
       <div class="flex flex-wrap gap-1 mt-1 overflow-hidden max-h-12">
         <span
           *ngFor="let tech of vacancy?.vacancyDetails?.technologies"
-          class="bg-green-100 text-green-600 rounded-full px-2 py-1 text-xs"
+          class="bg-green-100 text-green-600 rounded-full px-3 py-2 text-sm"
         >
           {{ tech }}
         </span>
       </div>
     </div>
 
-    <div *ngIf="vacancy?.vacancyDetails?.salary" class="mt-2">
+    <div
+      *ngIf="
+        vacancy?.vacancyDetails?.salary &&
+        vacancy?.vacancyDetails?.salary?.original
+      "
+      class="mt-2"
+    >
+      <h4 class="text-sm font-medium text-gray-700">Salary</h4>
+      <p>
+        <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.min">From</span>
+        <span
+          *ngIf="vacancy?.vacancyDetails?.salary?.original?.min != null"
+          class="font-semibold text-xl text-gray-900"
+        >
+          {{
+            vacancy?.vacancyDetails?.salary?.original?.min | number : "1.0-2"
+          }}
+        </span>
+
+        <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.max != null">
+          {{
+            vacancy?.vacancyDetails?.salary?.original?.max != null
+              ? " to "
+              : "To "
+          }}
+        </span>
+
+        <span
+          *ngIf="vacancy?.vacancyDetails?.salary?.original?.max != null"
+          class="font-semibold text-xl text-gray-900"
+        >
+          {{
+            vacancy?.vacancyDetails?.salary?.original?.max | number : "1.0-2"
+          }}
+        </span>
+        <span class="text-2xl italic font-medium text-gray-600">
+          {{ vacancy?.vacancyDetails?.salary?.original?.currency }}
+        </span>
+      </p>
+    </div>
+
+    <div
+      *ngIf="
+        vacancy?.vacancyDetails?.salary &&
+        !vacancy?.vacancyDetails?.salary?.original
+      "
+      class="mt-2"
+    >
       <h4 class="text-sm font-medium text-gray-700">Salary</h4>
       <p>
         <span *ngIf="vacancy?.vacancyDetails?.salary?.min != null">From</span>
@@ -76,6 +134,7 @@
       type="submit"
       mat-raised-button
       color="primary"
+      (click)="redirectToVacancyPage()"
       class="bg-blue-500 text-white font-medium w-full py-2 px-4 rounded-md hover:bg-blue-600 transition hover:scale-105"
     >
       View Details

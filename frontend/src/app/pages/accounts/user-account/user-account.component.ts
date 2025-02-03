@@ -30,6 +30,7 @@ import { ResumeCertificationsFormComponent } from '../../../features/users/compo
 import { ResumeEducationFormComponent } from '../../../features/users/components/resume-education-form/resume-education-form.component';
 import { ResumeExperiencesFormComponent } from '../../../features/users/components/resume-experiences-form/resume-experiences-form.component';
 import { ResumeProjectsFormComponent } from '../../../features/users/components/resume-projects-form/resume-projects-form.component';
+import HashService from '../../../core/services/hash.service';
 
 @Component({
   selector: 'app-user-account',
@@ -68,6 +69,7 @@ export class UserAccountComponent implements OnInit {
     private actevatedRoute: ActivatedRoute,
     private usersService: UsersService,
     private resumesService: ResumesService,
+    private hashService: HashService,
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef
   ) {
@@ -87,7 +89,7 @@ export class UserAccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.actevatedRoute.params.subscribe((params) => {
-      this.userId = params['userId'];
+      this.userId = this.hashService.decrypt(params['userId']);
     });
 
     this.usersService.get(this.userId).subscribe({
@@ -178,7 +180,6 @@ export class UserAccountComponent implements OnInit {
   }
 
   addResume(): void {
-    console.log('addresume');
     if (!this.resumeDescriptionForm.valid) {
       alert('Pls fill out description correctly');
     }
@@ -270,8 +271,6 @@ export class UserAccountComponent implements OnInit {
     }: { firstName: string; lastName: string; phone: string } =
       this.userForm.value;
 
-    console.log(this.userForm.value);
-
     const updateUserRequest: UpdateUserRequest = {
       id: this.user.id,
       firstName: !firstName || firstName.length === 0 ? null : firstName,
@@ -280,7 +279,6 @@ export class UserAccountComponent implements OnInit {
     };
 
     this.usersService.update(updateUserRequest).subscribe({
-      next: (id) => console.log('Succesfully updated ', id),
       error: (err) => console.error(err),
     });
   }

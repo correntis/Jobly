@@ -1,6 +1,26 @@
 <div class="min-h-screen flex flex-col items-center justify-start">
+  <div class="my-5">
+    <button
+      class="w-[500px] scale-150"
+      mat-raised-button
+      color="primary"
+      (click)="goToVacancyForm()"
+    >
+      <span class="text-base">Post vacancy</span>
+    </button>
+  </div>
+
+  <div (click)="goToCompany()">
+    <span
+      class="text-blue-800 underline cursor-pointer hover:text-[15px] hover:text-blue-500"
+    >
+      View company details
+    </span>
+  </div>
+
   <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
     <h1 class="text-center text-3xl mb-5">Company information</h1>
+
     <form
       [formGroup]="companyForm"
       (ngSubmit)="updateCompany()"

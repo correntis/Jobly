@@ -9,12 +9,17 @@ import {
   UrlTree,
 } from '@angular/router';
 import { EnvService } from '../../environments/environment';
+import HashService from '../services/hash.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppendUserIdGuard implements CanActivate {
-  constructor(private envSevrice: EnvService, private router: Router) {}
+  constructor(
+    private envSevrice: EnvService,
+    private router: Router,
+    private hashService: HashService
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -24,7 +29,9 @@ export class AppendUserIdGuard implements CanActivate {
 
     if (userId) {
       if (state.url.indexOf(userId) === -1) {
-        const modifiedUrl = `${state.url}/${userId}`;
+        var hashedUserId = this.hashService.encrypt(userId);
+
+        const modifiedUrl = `${state.url}/${hashedUserId}`;
         return this.router.createUrlTree([modifiedUrl]);
       }
       return true;

@@ -1,0 +1,196 @@
+<div class="vacancy-page p-6 bg-gray-100 flex flex-row justify-center">
+  <div
+    *ngIf="vacancy"
+    class="vacancy-details max-w-4xl mx-5 border-[1.7px] bg-white rounded-lg shadow"
+  >
+    <div class="border-[1.7px] border-black border-solid p-6 rounded-lg">
+      <div class="header">
+        <h1 class="text-3xl font-bold text-gray-900">{{ vacancy.title }}</h1>
+      </div>
+
+      <div class="employment-details mb-3">
+        <div *ngIf="vacancy.vacancyDetails">
+          <div
+            *ngIf="
+              vacancy.vacancyDetails?.salary &&
+              vacancy.vacancyDetails.salary.original
+            "
+            class="salary-details"
+          >
+            <p class="text-xl">
+              <span *ngIf="vacancy.vacancyDetails?.salary?.original?.min">
+                From
+              </span>
+              <span
+                *ngIf="vacancy.vacancyDetails.salary.original.min"
+                class="font-semibold text-2xl text-green-700"
+              >
+                {{
+                  vacancy.vacancyDetails.salary.original.min | number : "1.0-2"
+                }}
+              </span>
+              <span *ngIf="vacancy.vacancyDetails?.salary?.original?.max">
+                to
+              </span>
+              <span class="font-semibold text-2xl text-green-700">
+                {{
+                  vacancy.vacancyDetails.salary.original.max | number : "1.0-2"
+                }}
+              </span>
+              <span class="italic"
+                >({{ vacancy.vacancyDetails.salary.original.currency }})</span
+              >
+            </p>
+          </div>
+
+          <div
+            *ngIf="
+              vacancy.vacancyDetails?.salary &&
+              !vacancy.vacancyDetails.salary.original
+            "
+            class="salary-details"
+          >
+            <p class="text-xl">
+              <span *ngIf="vacancy.vacancyDetails?.salary?.min"> From </span>
+              <span
+                *ngIf="vacancy.vacancyDetails.salary.min"
+                class="font-semibold text-2xl text-green-700"
+              >
+                {{ vacancy.vacancyDetails.salary.min | number : "1.0-2" }}
+              </span>
+              <span *ngIf="vacancy.vacancyDetails?.salary?.max"> to </span>
+              <span class="font-semibold text-2xl text-green-700">
+                {{ vacancy.vacancyDetails.salary.max | number : "1.0-2" }}
+              </span>
+              <span class="italic"
+                >({{ vacancy.vacancyDetails.salary.currency }})</span
+              >
+            </p>
+          </div>
+
+          <div *ngIf="vacancy.vacancyDetails?.experience">
+            <div *ngIf="vacancy.vacancyDetails.experience" class="mb-4">
+              <p class="text-xl text-gray-700">
+                <span>Experience </span>
+                <span *ngIf="vacancy.vacancyDetails.experience.min">from </span>
+                <span
+                  class="font-bold"
+                  *ngIf="vacancy.vacancyDetails.experience.min"
+                  >{{ vacancy.vacancyDetails.experience.min }}
+                </span>
+
+                <span *ngIf="vacancy.vacancyDetails.experience.max">to </span>
+                <span
+                  class="font-bold"
+                  *ngIf="vacancy.vacancyDetails.experience.max"
+                  >{{ vacancy.vacancyDetails.experience.max }}
+                </span>
+                <span> years </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-[20px] leading-normal">
+          Type: {{ vacancy.employmentType }}
+        </p>
+        <p class="text-[20px] leading-normal">
+          Posted at {{ vacancy.createdAt | date : "longDate" }}
+        </p>
+        <p class="text-[20px] leading-normal">
+          Deadline at {{ vacancy.deadlineAt | date : "longDate" }}
+        </p>
+      </div>
+
+      <div *ngIf="vacancy.vacancyDetails">
+        <!-- Skills -->
+        <div *ngIf="vacancy.vacancyDetails.skills?.length" class="mb-4">
+          <h2 class="text-xl font-semibold">Skills</h2>
+          <div class="flex flex-wrap gap-2">
+            <span
+              *ngFor="let skill of vacancy.vacancyDetails.skills"
+              class="bg-blue-100 text-blue-600 rounded-full px-3 py-2 text-sm"
+            >
+              {{ skill }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Technologies -->
+        <div *ngIf="vacancy.vacancyDetails.technologies?.length" class="mb-4">
+          <h2 class="text-xl font-semibold">Technologies</h2>
+          <div class="flex flex-wrap gap-2">
+            <span
+              *ngFor="let technology of vacancy.vacancyDetails.technologies"
+              class="bg-green-100 text-green-600 rounded-full px-3 py-2 text-sm"
+            >
+              {{ technology }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p *ngIf="alreadyApplied" class="text-lg italic text-red-600">
+          You already applied this vacancy
+        </p>
+        <button
+          mat-raised-button
+          color="primary"
+          class="w-full"
+          (click)="apply()"
+        >
+          Apply Now
+        </button>
+      </div>
+    </div>
+
+    <div class="border-[1.7px] border-black border-solid p-6 rounded-lg mt-10">
+      <ng-container *ngIf="vacancy && vacancy.vacancyDetails">
+        <!-- Languages -->
+        <div *ngIf="vacancy.vacancyDetails.languages?.length" class="mb-4">
+          <h2 class="text-xl font-semibold">Languages</h2>
+          <ul class="list-disc pl-5">
+            <li *ngFor="let language of vacancy.vacancyDetails.languages">
+              {{ language.name }} - {{ language.level }}
+            </li>
+          </ul>
+        </div>
+
+        <div *ngFor="let category of getDetailsKeys()">
+          <div
+            *ngIf="vacancy?.vacancyDetails && hasDetails(category)"
+            class="mb-4"
+          >
+            <h2 class="text-xl font-semibold capitalize">{{ category }}</h2>
+
+            <ul class="list-disc pl-5">
+              <li *ngFor="let item of getDetails(category)">
+                {{ item }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div>
+    <div
+      *ngIf="company"
+      class="border-[1.7px] border-black border-solid mx-5 rounded-lg px-6 pt-6"
+    >
+      <p class="text-3xl font-semibold">{{ company.name }}</p>
+      <p class="text-sm text-gray-500 mt-2">{{ company.email }}</p>
+      <p class="text-sm text-gray-500">{{ company.phone }}</p>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="goToCompany(company.id)"
+        class="w-full mt-2 mb-5"
+      >
+        View Details
+      </button>
+    </div>
+  </div>
+</div>

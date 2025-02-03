@@ -21,7 +21,7 @@ namespace MessagesService.Presentation.Services
         public async Task NotifyAboutNewChatAsync(Chat newChat)
         {
             await _hubContext.Clients
-                .Users(newChat.UserId.ToString(), newChat.CompanyId.ToString())
+                .Users($"{newChat.UserId}", $"{newChat.CompanyId}")
                 .SendAsync("NewChat", newChat);
         }
     }

@@ -1,0 +1,162 @@
+<div>
+  <div class="bg-red-300">
+    <div class="min-h-screen flex flex-col items-center justify-start">
+      <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
+        <h1 class="text-center text-3xl mb-5">Main information</h1>
+        <form
+          [formGroup]="vacancyForm"
+          (ngSubmit)="postVacancy()"
+          class="space-y-6"
+        >
+          <!-- title -->
+          <mat-form-field class="w-full" appearance="fill">
+            <mat-label>Title</mat-label>
+            <input
+              matInput
+              formControlName="title"
+              type="text"
+              placeholder="Input title"
+              aria-describedby="titleError"
+              required
+            />
+            <mat-icon matSuffix>title</mat-icon>
+
+            <mat-error id="titleError">
+              <ng-container
+                *ngIf="vacancyForm.get('title')?.hasError('required')"
+              >
+                Required
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- type -->
+          <mat-form-field class="w-full" appearance="fill">
+            <mat-label>Employment type </mat-label>
+            <input
+              matInput
+              formControlName="employmentType"
+              type="text"
+              placeholder="Input employment type"
+              required
+              aria-describedby="employmentTypeError"
+            />
+            <mat-icon matSuffix>type</mat-icon>
+
+            <mat-error id="employmentTypeError">
+              <ng-container
+                *ngIf="vacancyForm.get('employmentType')?.hasError('required')"
+              >
+                Required
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- deadline -->
+          <mat-form-field color="primary" class="w-full" appearance="fill">
+            <mat-label>Deadline At</mat-label>
+
+            <input
+              matInput
+              [matDatepicker]="deadlineAtDate"
+              formControlName="deadlineAt"
+              aria-describedby="deadlineAtError"
+              required
+              readonly
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="deadlineAtDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #deadlineAtDate>
+              <mat-datepicker-actions>
+                <button mat-button matDatepickerCancel>Cancel</button>
+                <button mat-raised-button matDatepickerApply>Apply</button>
+              </mat-datepicker-actions>
+            </mat-datepicker>
+
+            <mat-error id="deadlineAtError">
+              <ng-container
+                *ngIf="vacancyForm.get('deadlineAt')?.hasError('required')"
+              >
+                Pick date
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- requirements -->
+
+          <app-dynamic-form-array
+            formArrayName="requirements"
+            label="Requirements"
+            placeholder="Requirement"
+            [formArray]="requirements"
+          ></app-dynamic-form-array>
+
+          <app-dynamic-form-array
+            formArrayName="skills"
+            label="Skills"
+            placeholder="Skill"
+            [formArray]="skills"
+          ></app-dynamic-form-array>
+
+          <app-dynamic-form-array
+            formArrayName="tags"
+            label="Tags"
+            placeholder="Tag"
+            [formArray]="tags"
+          ></app-dynamic-form-array>
+
+          <app-dynamic-form-array
+            formArrayName="responsibilities"
+            label="Responsibilities"
+            placeholder="Responsibility"
+            [formArray]="responsibilities"
+          ></app-dynamic-form-array>
+
+          <app-dynamic-form-array
+            formArrayName="benefits"
+            label="Benefits"
+            placeholder="Benefit"
+            [formArray]="benefits"
+          ></app-dynamic-form-array>
+
+          <app-dynamic-form-array
+            formArrayName="education"
+            label="Education"
+            placeholder="Education"
+            [formArray]="education"
+          ></app-dynamic-form-array>
+
+          <app-dynamic-form-array
+            formArrayName="technologies"
+            label="Technologies"
+            placeholder="Technology"
+            [formArray]="technologies"
+          ></app-dynamic-form-array>
+
+          <app-vacancy-languages-form
+            formArrayName="languages"
+            [formArray]="languages"
+          >
+          </app-vacancy-languages-form>
+
+          <!-- experience -->
+          <app-vacancy-experience-form [jobExperiencesForm]="experience" />
+
+          <!-- salary -->
+          <app-vacancy-salary-form [salaryForm]="salary" />
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="w-full"
+          >
+            Post Vacancy
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

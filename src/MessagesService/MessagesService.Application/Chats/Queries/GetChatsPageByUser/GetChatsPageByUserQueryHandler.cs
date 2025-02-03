@@ -30,7 +30,7 @@ namespace MessagesService.Application.Chats.Queries.GetChatsPageByUser
              request.GetType().Name,
              request.UserId);
 
-            var chatsEntities = await _chatsRepository.GetPageBy(
+            var chatsEntities = await _chatsRepository.GetPageByAsync(
                 chat => chat.UserId,
                 request.UserId,
                 request.PageIndex,

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import User from '../../../core/models/user';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from '../../../core/services/users.service';
 import { CompaniesService } from '../../../core/services/companies.service';
 import Company from '../../../core/models/company';
@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import UpdateCompanyRequest from '../../../core/requests/companies/updateCompanyRequest';
 import { ApiConfig } from '../../../environments/api.config';
+import HashService from '../../../core/services/hash.service';
 
 @Component({
   selector: 'app-company-account',
@@ -48,7 +49,9 @@ export class CompanyAccountComponent {
     private actevatedRoute: ActivatedRoute,
     private usersService: UsersService,
     private companiesService: CompaniesService,
-    private fb: FormBuilder
+    private hashService: HashService,
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.companyForm = this.fb.group({
       name: [''],
@@ -64,7 +67,7 @@ export class CompanyAccountComponent {
 
   ngOnInit(): void {
     this.actevatedRoute.params.subscribe((params) => {
-      this.userId = params['userId'];
+      this.userId = this.hashService.decrypt(params['userId']);
     });
 
     this.usersService.get(this.userId).subscribe({
@@ -123,7 +126,6 @@ export class CompanyAccountComponent {
       };
 
       this.companiesService.update(companyUpdateRequest, this.image).subscribe({
-        next: (id) => console.log('updated ', id),
         error: (err) => console.error(err),
       });
     }
@@ -141,6 +143,24 @@ export class CompanyAccountComponent {
         this.imageLocalUrl = reader.result;
       };
       reader.readAsDataURL(this.image);
+    }
+  }
+
+  goToVacancyForm() {
+    if (this.company) {
+      const hashedCompanyId = this.hashService.encrypt(this.company.id);
+
+      this.router.navigate(['account/company', hashedCompanyId, 'vacancy']);
+    }
+  }
+
+  goToCompany() {
+    const companyId = this.company?.id;
+
+    if (companyId) {
+      const hashedId = this.hashService.encrypt(companyId);
+
+      this.router.navigate(['company', hashedId]);
     }
   }
 }

@@ -8,6 +8,7 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import Company from '../../../../core/models/company';
 import { CompaniesService } from '../../../../core/services/companies.service';
 import { MatButton, MatButtonModule } from '@angular/material/button';
+import HashService from '../../../../core/services/hash.service';
 
 @Component({
   selector: 'app-compact-vacancy',
@@ -22,6 +23,7 @@ export class CompactVacancyComponent {
 
   constructor(
     private companiesService: CompaniesService,
+    private hashService: HashService,
     private router: Router
   ) {}
 
@@ -31,6 +33,14 @@ export class CompactVacancyComponent {
         next: (company) => (this.company = company),
         error: (err) => console.error(err),
       });
+    }
+  }
+
+  redirectToVacancyPage() {
+    if (this.vacancy?.id) {
+      const hashedId = this.hashService.encrypt(this.vacancy.id);
+
+      this.router.navigate(['/vacancy', hashedId]);
     }
   }
 }

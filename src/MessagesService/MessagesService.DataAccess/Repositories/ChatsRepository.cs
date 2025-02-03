@@ -38,7 +38,7 @@ namespace MessagesService.DataAccess.Repositories
             await _context.Chats.DeleteOneAsync(Eq(field, value), cancellationToken: token);
         }
 
-        public async Task<ChatEntity> GetOneBy<TValue>(
+        public async Task<ChatEntity> GetOneByAsync<TValue>(
             Expression<Func<ChatEntity, TValue>> field,
             TValue value,
             CancellationToken token = default)
@@ -46,7 +46,7 @@ namespace MessagesService.DataAccess.Repositories
             return await _context.Chats.Find(Eq(field, value)).FirstOrDefaultAsync(token);
         }
 
-        public async Task<List<ChatEntity>> GetPageBy<TValue>(
+        public async Task<List<ChatEntity>> GetPageByAsync<TValue>(
             Expression<Func<ChatEntity, TValue>> field,
             TValue value,
             int pageIndex,

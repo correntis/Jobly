@@ -34,8 +34,6 @@ export class CompaniesService {
       formData.append('image', image, image.name);
     }
 
-    console.log('Form data:', formData);
-
     return this.httpClient.post<string>(`${this.basePath}`, formData);
   }
 

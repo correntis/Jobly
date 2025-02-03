@@ -83,7 +83,7 @@ export class LoginComponent {
 
     this.hashedCookieService.set(
       EnvParams.UserRoleCookieName,
-      JSON.stringify(roles),
+      JSON.stringify([...roles]),
       EnvParams.UserRoleCookieExpiresDays
     );
   }

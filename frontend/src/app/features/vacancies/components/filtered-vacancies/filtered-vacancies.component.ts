@@ -5,6 +5,7 @@ import {
   FormArray,
   FormBuilder,
   FormControl,
+  FormControlName,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -18,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import Vacancy from '../../../../core/models/vacancies/vacancy';
 import { VacanciesService } from '../../../../core/services/vacancies.service';
 import { CompactVacancyComponent } from '../compact-vacancy/compact-vacancy.component';
+import { CurrencySelectComponent } from '../../../../shared/components/currency-select/currency-select.component';
 
 @Component({
   selector: 'app-filtered-vacancies',
@@ -32,6 +34,7 @@ import { CompactVacancyComponent } from '../compact-vacancy/compact-vacancy.comp
     FormsModule,
     MatIconModule,
     CompactVacancyComponent,
+    CurrencySelectComponent,
   ],
   templateUrl: './filtered-vacancies.component.html',
 })
@@ -93,11 +96,18 @@ export class FilteredVacanciesComponent {
     });
   }
 
+  get salary(): FormGroup {
+    return this.vacanciesFilterForm.get('salary') as FormGroup;
+  }
+
+  get currency(): FormControl {
+    return this.salary.get('currency') as FormControl;
+  }
+
   ngOnInit() {
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
         this.vacanciesList = vacancies;
-        console.log(this.vacanciesList);
       },
       error: (err) => console.error(err),
     });
@@ -167,7 +177,6 @@ export class FilteredVacanciesComponent {
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
         this.vacanciesList = vacancies;
-        console.log(this.vacanciesList);
       },
       error: (err) => console.error(err),
     });
@@ -180,7 +189,6 @@ export class FilteredVacanciesComponent {
       next: (vacancies) => {
         if (this.vacanciesList) {
           this.vacanciesList = [...this.vacanciesList, ...vacancies];
-          console.log(this.vacanciesList);
         }
       },
       error: (err) => console.error(err),

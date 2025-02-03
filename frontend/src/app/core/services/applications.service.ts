@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiConfig } from '../../environments/api.config';
 import { Observable } from 'rxjs';
@@ -40,5 +40,11 @@ export class ApplicationsService {
     return this.httpClient.get<Application[]>(
       `${this.basePath}/vacancies/${vacancyId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
+  }
+
+  getByIds(applicationsIds: string[]): Observable<Application[]> {
+    return this.httpClient.post<Application[]>(`${this.basePath}/ids`, [
+      ...applicationsIds,
+    ]);
   }
 }

@@ -6,6 +6,7 @@ import { ApiConfig } from '../../environments/api.config';
 import { AddVacancyRequest } from '../requests/vacancies/addVacancyRequest';
 import { Observable } from 'rxjs';
 import Vacancy from '../models/vacancies/vacancy';
+import AddVacancyDetailsRequest from '../requests/vacancies/addVacancyDetailsRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,13 @@ export class VacanciesService {
 
   add(addVacancyRequest: AddVacancyRequest): Observable<string> {
     return this.httpClient.post<string>(`${this.basePath}`, addVacancyRequest);
+  }
+
+  addDetails(addDetailsRequest: AddVacancyDetailsRequest): Observable<string> {
+    return this.httpClient.post<string>(
+      `${this.basePath}/details`,
+      addDetailsRequest
+    );
   }
 
   archive(id: string): Observable<string> {
@@ -46,7 +54,7 @@ export class VacanciesService {
     pageSize: number
   ): Observable<Vacancy[]> {
     return this.httpClient.get<Vacancy[]>(
-      `${this.basePath}/recommendations//${resumeId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+      `${this.basePath}/recommendations/${resumeId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
 }

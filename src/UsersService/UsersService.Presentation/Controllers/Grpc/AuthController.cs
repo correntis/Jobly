@@ -38,7 +38,7 @@ namespace UsersService.Presentation.Controllers.Grpc
                     request.GetType().Name,
                     request.RequiredRoles);
 
-                return new ValidateTokenResponse() { IsValidRoles = false };
+                return new ValidateTokenResponse() { IsValidToken = true, IsValidRoles = false };
             }
 
             if (tokenValidationResult == TokenValidationResults.SuccessExpired)

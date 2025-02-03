@@ -122,7 +122,6 @@ export class ResumeLanguageFormComponent {
 
     if (this.resumeLanguages && this.resumeId) {
       this.resumesService.updateLanguages(this.resumeId, languages).subscribe({
-        next: (id) => console.log('Succesfully updated langs, ', id),
         error: (err) => console.error(err),
       });
     }

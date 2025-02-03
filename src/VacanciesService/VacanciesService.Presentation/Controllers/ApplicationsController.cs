@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VacanciesService.Application.Applications.Commands.AddApplication;
 using VacanciesService.Application.Applications.Commands.UpdateApplication;
+using VacanciesService.Application.Applications.Queries.GetApplicationsByIds;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByUser;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByVacancy;
 using VacanciesService.Domain.Constants;
@@ -48,6 +49,15 @@ namespace VacanciesService.Presentation.Controllers
         public async Task<IActionResult> GetByVacancy(Guid vacancyId, int pageNumber, int pageSize, CancellationToken token)
         {
             return Ok(await _sender.Send(new GetApplicationsPageByVacancyQuery(vacancyId, pageNumber, pageSize), token));
+        }
+
+        [HttpPost]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        [Route("ids")]
+        public async Task<IActionResult> GetByIds([FromBody] List<Guid> applicationsIds, CancellationToken token)
+        {
+            return Ok(await _sender.Send(new GetApplicationsByIdsQuery(applicationsIds), token));
         }
     }
 }

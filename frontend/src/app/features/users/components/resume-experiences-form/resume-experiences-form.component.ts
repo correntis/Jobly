@@ -167,8 +167,6 @@ export class ResumeExperiencesFormComponent {
   }
 
   saveJobExperiences() {
-    console.log('save job exp', this.jobExperiencesForm);
-
     if (!this.jobExperiencesForm.valid) {
       alert('Please fill out experiences correctly.');
       return;
@@ -181,7 +179,6 @@ export class ResumeExperiencesFormComponent {
       this.resumesService
         .updateJobExpiriences(this.resumeId, jobExperiences)
         .subscribe({
-          next: (id) => console.log('Successfully updated job experience:', id),
           error: (err) => console.error(err),
         });
     }
