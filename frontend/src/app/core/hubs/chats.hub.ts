@@ -1,9 +1,7 @@
-import { HashedCookieService } from './../services/hashedCookie.service';
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { EnvParams } from '../../environments/environment';
-import { ApiConfig } from '../../environments/api.config';
 import { Observable } from 'rxjs';
+import { ApiConfig } from '../../environments/api.config';
 import Chat from '../models/chat';
 
 @Injectable({

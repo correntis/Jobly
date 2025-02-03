@@ -1,8 +1,8 @@
 import { Route } from '@angular/router';
-import { RegistrationComponent } from '../pages/auth/registration/registration.component';
-import { LoginComponent } from '../pages/auth/login/login/login.component';
+import { LoginPageComponent } from '../pages/auth/login/login-page.component';
+import { RegistrationPageComponent } from '../pages/auth/registration/registration-page.component';
 
 export const authRoutes: Route[] = [
-  { path: 'registration', component: RegistrationComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'registration', component: RegistrationPageComponent },
+  { path: 'login', component: LoginPageComponent },
 ];

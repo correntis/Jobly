@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
-import { ApiConfig } from '../../environments/api.config';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import Chat from '../models/chat';
+import { ApiConfig } from '../../environments/api.config';
 import Message from '../models/message';
 
 @Injectable({

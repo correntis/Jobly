@@ -1,9 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApiConfig } from '../../environments/api.config';
 import { Observable } from 'rxjs';
-import AddApplicationRequest from '../requests/applications/addApplicationRequest';
+import { ApiConfig } from '../../environments/api.config';
 import Application from '../models/application';
+import AddApplicationRequest from '../requests/applications/addApplicationRequest';
 import UpdateApplicationRequest from '../requests/applications/updateApplicationRequest';
 
 @Injectable({

@@ -1,36 +1,31 @@
 import { Route } from '@angular/router';
-import { HomeComponent } from '../pages/main/home/home.component';
 import { AuthGuard } from '../core/guards/auth.guard';
-import { FullVacancyComponent } from '../pages/main/full-vacancy/full-vacancy.component';
-import { RecommendationsComponent } from '../pages/main/recommendations/recommendations.component';
-import { UserApplicationsComponent } from '../pages/applications/user-applications/user-applications.component';
-import { FullResumeComponent } from '../pages/main/full-resume/full-resume.component';
-import { AppendUserIdGuard } from '../core/guards/apppend-user-id.guard';
-import { RedirectComponent } from '../shared/components/redirect/redirect.component';
-import { FullCompanyComponent } from '../pages/main/full-company/full-company.component';
-import { VacancyFormComponent } from '../pages/vacancies/vacancy-form/vacancy-form.component';
-import { CompanyRoleGuard } from '../core/guards/company-role.guard';
+import { CompanyPageComponent } from '../pages/company/company-page.component';
+import { HomePageComponent } from '../pages/home/home-page.component';
+import { RecommendationsPageComponent } from '../pages/recommendations/recommendations-page.component';
+import { ResumePageComponent } from '../pages/resume/resume-page.component';
+import { VacancyPageComponent } from '../pages/vacancy/vacancy-page.component';
 
 export const mainRoutes: Route[] = [
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomePageComponent, canActivate: [AuthGuard] },
   {
     path: 'vacancy/:id',
-    component: FullVacancyComponent,
+    component: VacancyPageComponent,
     canActivate: [AuthGuard],
   },
   {
     path: 'recommendations',
-    component: RecommendationsComponent,
+    component: RecommendationsPageComponent,
     canActivate: [AuthGuard],
   },
   {
     path: 'resume/:userId',
-    component: FullResumeComponent,
+    component: ResumePageComponent,
     canActivate: [AuthGuard],
   },
   {
     path: 'company/:companyId',
-    component: FullCompanyComponent,
+    component: CompanyPageComponent,
     canActivate: [AuthGuard],
   },
 ];

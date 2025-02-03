@@ -1,16 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, ɵgetUnknownElementStrictMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiConfig } from '../../environments/api.config';
-import AddResumeRequest from '../requests/resumes/addResumeRequest';
-import Resume from '../models/resumes/resume';
-import UpdateCompanyRequest from '../requests/companies/updateCompanyRequest';
-import UpdateResumeRequest from '../requests/resumes/updateResumeRequest';
 import Certification from '../models/resumes/certification';
 import Education from '../models/resumes/education';
 import JobExperience from '../models/resumes/jobExperience';
 import Language from '../models/resumes/language';
 import Project from '../models/resumes/project';
+import Resume from '../models/resumes/resume';
+import AddResumeRequest from '../requests/resumes/addResumeRequest';
+import UpdateResumeRequest from '../requests/resumes/updateResumeRequest';
 
 @Injectable({
   providedIn: 'root',

@@ -8,7 +8,6 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 

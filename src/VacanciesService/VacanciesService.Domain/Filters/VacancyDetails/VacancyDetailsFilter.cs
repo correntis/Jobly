@@ -12,7 +12,7 @@
         public List<LanguageFilter> Languages { get; set; } = null;
         public ExperienceLevelFilter Experience { get; set; } = null;
         public SalaryFilter Salary { get; set; } = null;
-        public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 10;
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
     }
 }

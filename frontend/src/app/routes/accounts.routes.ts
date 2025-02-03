@@ -1,37 +1,37 @@
 import { Route } from '@angular/router';
-import { RedirectComponent } from '../shared/components/redirect/redirect.component';
-import { AuthGuard } from '../core/guards/auth.guard';
-import { UserRoleGuard } from '../core/guards/user-role.guard';
 import { AppendUserIdGuard } from '../core/guards/apppend-user-id.guard';
-import { UserAccountComponent } from '../pages/accounts/user-account/user-account.component';
-import { CompanyAccountComponent } from '../pages/accounts/company-account/company-account.component';
+import { AuthGuard } from '../core/guards/auth.guard';
 import { CompanyRoleGuard } from '../core/guards/company-role.guard';
-import { VacancyFormComponent } from '../pages/vacancies/vacancy-form/vacancy-form.component';
+import { UserRoleGuard } from '../core/guards/user-role.guard';
+import { CompanyAccountPageComponent } from '../pages/accounts/company-account/company-account-page.component';
+import { UserAccountPageComponent } from '../pages/accounts/user-account/user-account-page.component';
+import { VacancyAddPageComponent } from '../pages/vacancy-add/vacancy-add-page.component';
+import { RedirectPageComponent } from '../shared/pages/redirect/redirect-page.component';
 
 export const accountRoutes: Route[] = [
   {
     path: 'account/user',
-    component: RedirectComponent,
+    component: RedirectPageComponent,
     canActivate: [AppendUserIdGuard],
   },
   {
     path: 'account/user/:userId',
-    component: UserAccountComponent,
+    component: UserAccountPageComponent,
     canActivate: [AuthGuard, UserRoleGuard],
   },
   {
     path: 'account/company',
-    component: RedirectComponent,
+    component: RedirectPageComponent,
     canActivate: [AppendUserIdGuard],
   },
   {
     path: 'account/company/:userId',
-    component: CompanyAccountComponent,
+    component: CompanyAccountPageComponent,
     canActivate: [AuthGuard, UserRoleGuard],
   },
   {
     path: 'account/company/:companyId/vacancy',
-    component: VacancyFormComponent,
+    component: VacancyAddPageComponent,
     canActivate: [AuthGuard, CompanyRoleGuard],
   },
 ];

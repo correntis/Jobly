@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { HashedCookieService } from '../services/hashedCookie.service';
-import { EnvParams } from '../../environments/environment';
-import { ApiConfig } from '../../environments/api.config';
 import { Observable } from 'rxjs';
+import { ApiConfig } from '../../environments/api.config';
 import Message from '../models/message';
-import { observeNotification } from 'rxjs/internal/Notification';
 import SendMessageRequest from '../requests/messages/sendMessageRequest';
-import Chat from '../models/chat';
 
 @Injectable({
   providedIn: 'root',

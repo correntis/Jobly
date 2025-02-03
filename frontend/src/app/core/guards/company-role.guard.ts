@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
-import { HashedCookieService } from '../services/hashedCookie.service';
-import { EnvParams, EnvService } from '../../environments/environment';
+import { CanActivate } from '@angular/router';
+import { EnvService } from '../../environments/environment';
 import { UserRoles } from '../enums/userRoles';
-import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',

@@ -1,11 +1,10 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
-import Vacancy from '../../../core/models/vacancies/vacancy';
-import { HashedCookieService } from '../../../core/services/hashedCookie.service';
-import { EnvParams, EnvService } from '../../../environments/environment';
-import { UserRoles } from '../../../core/enums/userRoles';
-import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { UserRoles } from '../../../core/enums/userRoles';
 import HashService from '../../../core/services/hash.service';
+import { HashedCookieService } from '../../../core/services/hashedCookie.service';
+import { EnvParams } from '../../../environments/environment';
 
 type Route = {
   path: string;

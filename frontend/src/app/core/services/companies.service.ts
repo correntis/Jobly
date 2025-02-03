@@ -1,10 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ApiConfig } from '../../environments/api.config';
 import Company from '../models/company';
-import { HttpClient } from '@angular/common/http';
 import AddCompanyRequest from '../requests/companies/addCompanyRequest';
 import UpdateCompanyRequest from '../requests/companies/updateCompanyRequest';
-import { ApiConfig } from '../../environments/api.config';
 
 @Injectable({
   providedIn: 'root',

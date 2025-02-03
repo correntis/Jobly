@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HashedCookieService } from '../core/services/hashedCookie.service';
 import { UserRoles } from '../core/enums/userRoles';
+import { HashedCookieService } from '../core/services/hashedCookie.service';
 
 export class EnvParams {
   public static hashSecretKet = 'secrethashkey';

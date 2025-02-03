@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { ApiConfig } from '../../environments/api.config';
-import { Observable } from 'rxjs';
-import Chat from '../models/chat';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ApiConfig } from '../../environments/api.config';
+import Chat from '../models/chat';
 
 @Injectable({
   providedIn: 'root',

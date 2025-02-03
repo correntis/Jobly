@@ -6,6 +6,7 @@ using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Domain.Entities.NoSQL;
+using VacanciesService.Domain.Exceptions;
 using VacanciesService.Domain.Filters.VacancyDetails;
 using VacanciesService.Domain.Models;
 
@@ -79,6 +80,11 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacancies
             }
 
             var exchangeRate = await _currencyApi.GetExchangeRateAsync(sourceFilter.Currency);
+
+            if(exchangeRate is null)
+            {
+                throw new EntityNotFoundException($"Currenct with code {sourceFilter.Currency} not found");
+            }
 
             var targetFilter = new SalaryFilter()
             {

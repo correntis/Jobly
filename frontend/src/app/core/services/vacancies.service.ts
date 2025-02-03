@@ -1,12 +1,11 @@
-import { VacanciesFilter } from './../models/vacancies/vacanciesFilter';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EnvParams } from '../../environments/environment';
-import { ApiConfig } from '../../environments/api.config';
-import { AddVacancyRequest } from '../requests/vacancies/addVacancyRequest';
 import { Observable } from 'rxjs';
+import { ApiConfig } from '../../environments/api.config';
 import Vacancy from '../models/vacancies/vacancy';
 import AddVacancyDetailsRequest from '../requests/vacancies/addVacancyDetailsRequest';
+import { AddVacancyRequest } from '../requests/vacancies/addVacancyRequest';
+import { VacanciesFilter } from './../models/vacancies/vacanciesFilter';
 
 @Injectable({
   providedIn: 'root',

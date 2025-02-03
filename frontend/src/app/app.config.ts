@@ -1,18 +1,14 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  provideHttpClient,
-  withInterceptors,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   ApplicationConfig,
   importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { routes } from './app.routes';
 import { cookieInterceptor } from './core/interceptors/cookie.interceptor';
-import { CookieService } from 'ngx-cookie-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

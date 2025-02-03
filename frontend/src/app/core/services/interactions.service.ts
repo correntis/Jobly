@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApiConfig } from '../../environments/api.config';
 import { Observable } from 'rxjs';
-import Interaction from '../models/interaction';
+import { ApiConfig } from '../../environments/api.config';
 import { InteractionType } from '../enums/interactionType';
+import Interaction from '../models/interaction';
 
 @Injectable({
   providedIn: 'root',

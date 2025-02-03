@@ -15,19 +15,28 @@ namespace VacanciesService.Infrastructure.NoSQL.Specifications
         {
             var filter = Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Salary);
 
-            if (salaryFilter.Min is not null && salaryFilter.Max is not null)
+            if (salaryFilter.Min is not null || salaryFilter.Max is not null)
             {
-                filter &= Builders<VacancyDetailsEntity>.Filter.And(
-                    Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Salary.Min, salaryFilter.Max),
-                    Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Salary.Max, salaryFilter.Min));
-            }
-            else if (salaryFilter.Min is not null)
-            {
-                filter &= Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Salary.Max, salaryFilter.Min);
-            }
-            else if (salaryFilter.Max is not null)
-            {
-                filter &= Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Salary.Min, salaryFilter.Max);
+                var minFilter = Builders<VacancyDetailsEntity>.Filter.Or(
+                    Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Salary.Min, false),
+                    Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Salary.Min, salaryFilter.Min));
+
+                var maxFilter = Builders<VacancyDetailsEntity>.Filter.Or(
+                    Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Salary.Max, false),
+                    Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Salary.Max, salaryFilter.Max));
+
+                if(salaryFilter.Min is not null && salaryFilter.Max is not null)
+                {
+                    filter &= Builders<VacancyDetailsEntity>.Filter.And(minFilter, maxFilter);
+                }
+                else if(salaryFilter.Min is not null)
+                {
+                    filter &= minFilter;
+                }
+                else if(salaryFilter.Max is not null)
+                {
+                    filter &= maxFilter;
+                }
             }
 
             return filter;
