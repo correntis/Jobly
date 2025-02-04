@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UserRoles } from '../../../core/enums/userRoles';
 import HashService from '../../../core/services/hash.service';
-import { HashedCookieService } from '../../../core/services/hashedCookie.service';
-import { EnvParams } from '../../../environments/environment';
+import { EnvService } from '../../../environments/environment';
 
 type Route = {
   path: string;
@@ -18,28 +17,19 @@ type Route = {
   imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
 })
-export class HeaderComponent {
-  userId?: string;
-  userRoles?: string[];
-
+export class HeaderComponent implements OnInit {
   constructor(
-    private hashedCookieService: HashedCookieService,
+    private envService: EnvService,
     private hashService: HashService,
     private rotuer: Router,
     private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.userId = this.hashedCookieService.get(EnvParams.UserIdCookieName);
-
-    this.userRoles = JSON.parse(
-      this.hashedCookieService.get(EnvParams.UserRoleCookieName)
-    );
-
     this.cdRef.detectChanges();
   }
 
-  getRoutes(): Route[] {
+  getHeaderLinksRoutes(): Route[] {
     const routes: Route[] = [
       {
         path: 'recommendations',
@@ -47,12 +37,12 @@ export class HeaderComponent {
         condition: this.isUser(),
       },
       {
-        path: this.getApplicationsRouteWithRole(UserRoles.User),
+        path: this.getApplicationsRouteForRole(UserRoles.User),
         name: 'UserApplications',
         condition: this.isUser(),
       },
       {
-        path: this.getApplicationsRouteWithRole(UserRoles.Company),
+        path: this.getApplicationsRouteForRole(UserRoles.Company),
         name: 'CompanyApplications',
         condition: this.isCompany(),
       },
@@ -71,31 +61,22 @@ export class HeaderComponent {
     return routes;
   }
 
-  getApplicationsRouteWithRole(role: string) {
+  getApplicationsRouteForRole(role: string) {
     let hashedUserId: string = '';
     let hashedForRole: string = '';
 
-    if (this.userId) {
-      hashedUserId = this.hashService.encrypt(this.userId);
-    }
-
+    hashedUserId = this.hashService.encrypt(this.envService.getUserId());
     hashedForRole = this.hashService.encrypt(role);
 
     return `applications/${hashedUserId}/${hashedForRole}`;
   }
 
   isUser(): boolean {
-    if (this.userRoles) {
-      return this.userRoles?.includes(UserRoles.User);
-    }
-    return false;
+    return this.envService.isUser();
   }
 
   isCompany(): boolean {
-    if (this.userRoles) {
-      return this.userRoles?.includes(UserRoles.Company);
-    }
-    return false;
+    return this.envService.isCompany();
   }
 
   goToRoute(route: string) {

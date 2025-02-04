@@ -15,7 +15,8 @@ import UpdateResumeRequest from '../requests/resumes/updateResumeRequest';
   providedIn: 'root',
 })
 export class ResumesService {
-  basePath = ApiConfig.resumes;
+  private basePath: string = ApiConfig.resumes;
+
   constructor(private httpClient: HttpClient) {}
 
   add(addRequest: AddResumeRequest): Observable<Resume> {

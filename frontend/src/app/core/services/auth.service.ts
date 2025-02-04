@@ -9,7 +9,7 @@ import RegistrationRequest from '../requests/auth/registrationRequest';
   providedIn: 'root',
 })
 export class AuthService {
-  basePath: string = ApiConfig.auth;
+  private basePath: string = ApiConfig.auth;
 
   constructor(private httpClient: HttpClient) {}
 

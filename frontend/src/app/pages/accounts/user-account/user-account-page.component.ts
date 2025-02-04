@@ -60,47 +60,58 @@ export class UserAccountPageComponent implements OnInit {
   resumeDescriptionForm: FormGroup;
 
   userId: string = '';
-  user: User | undefined = undefined;
 
-  resume: Resume | undefined = undefined;
+  user?: User;
+  resume?: Resume;
+
   isNewResume: boolean = true;
 
   constructor(
-    private actevatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
+    private fb: FormBuilder,
+    private cdRef: ChangeDetectorRef,
     private usersService: UsersService,
     private resumesService: ResumesService,
-    private hashService: HashService,
-    private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef
+    private hashService: HashService
   ) {
     this.userForm = this.fb.group({
-      firstName: [''],
-      lastName: [''],
-      phone: [''],
+      firstName: [null],
+      lastName: [null],
+      phoneNumber: [null],
     });
 
     this.resumeDescriptionForm = this.fb.group({
-      title: ['', Validators.required],
-      summary: ['', Validators.required],
+      title: [null, Validators.required],
+      summary: [null, Validators.required],
       skills: this.fb.array([]),
       tags: this.fb.array([]),
     });
   }
 
   ngOnInit(): void {
-    this.actevatedRoute.params.subscribe((params) => {
+    this.loadRouteParams();
+    this.loadUser();
+  }
+
+  loadRouteParams(): void {
+    this.activatedRoute.params.subscribe((params) => {
       this.userId = this.hashService.decrypt(params['userId']);
     });
+  }
 
+  loadUser() {
     this.usersService.get(this.userId).subscribe({
       next: (user: User) => {
         this.user = user;
         this.patchUserForm();
+        this.loadResumeForUser(user.id);
       },
       error: (err) => console.error(err),
     });
+  }
 
-    this.resumesService.getByUser(this.userId).subscribe({
+  loadResumeForUser(userId: string) {
+    this.resumesService.getByUser(userId).subscribe({
       next: (resume) => {
         this.resume = resume;
         this.isNewResume = false;
@@ -115,7 +126,7 @@ export class UserAccountPageComponent implements OnInit {
     });
   }
 
-  get skills() {
+  get skills(): FormArray {
     return this.resumeDescriptionForm.get('skills') as FormArray;
   }
 
@@ -123,20 +134,8 @@ export class UserAccountPageComponent implements OnInit {
     return this.resumeDescriptionForm.get('tags') as FormArray;
   }
 
-  lastSkillIsEmpty(): boolean | undefined {
-    return this.skills.controls[this.skills.length - 1]
-      ?.get('name')
-      ?.hasError('required');
-  }
-
-  lastTagIsEmpty(): boolean | undefined {
-    return this.tags.controls[this.tags.length - 1]
-      ?.get('name')
-      ?.hasError('required');
-  }
-
   addSkill(): void {
-    if (this.skills.length > 0 && this.lastSkillIsEmpty()) {
+    if (this.skills.length > 0 && this.lastItemIsEmpty(this.skills)) {
       this.skills.markAllAsTouched();
       return;
     }
@@ -144,7 +143,22 @@ export class UserAccountPageComponent implements OnInit {
     const skillForm = this.fb.group({
       name: ['', Validators.required],
     });
+
     this.skills.push(skillForm);
+    this.cdRef.detectChanges();
+  }
+
+  addTag(): void {
+    if (this.tags.length > 0 && this.lastItemIsEmpty(this.tags)) {
+      this.tags.markAllAsTouched();
+      return;
+    }
+
+    const tagForm = this.fb.group({
+      name: ['', Validators.required],
+    });
+
+    this.tags.push(tagForm);
     this.cdRef.detectChanges();
   }
 
@@ -153,22 +167,15 @@ export class UserAccountPageComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  addTag(): void {
-    if (this.tags.length > 0 && this.lastTagIsEmpty()) {
-      this.tags.markAllAsTouched();
-      return;
-    }
-
-    const tagForm = this.fb.group({
-      name: ['', Validators.required],
-    });
-    this.tags.push(tagForm);
-    this.cdRef.detectChanges();
-  }
-
   removeTag(index: number): void {
     this.tags.removeAt(index);
     this.cdRef.detectChanges();
+  }
+
+  lastItemIsEmpty(formArray: FormArray): boolean | undefined {
+    return formArray.controls[formArray.length - 1]
+      ?.get('name')
+      ?.hasError('required');
   }
 
   onDesctiptionSubmit(): void {
@@ -179,9 +186,27 @@ export class UserAccountPageComponent implements OnInit {
     }
   }
 
+  updateUser() {
+    if (!this.user) {
+      return;
+    }
+
+    const updateUserRequest: UpdateUserRequest = {
+      id: this.user.id,
+      ...this.userForm.value,
+    };
+
+    console.log(updateUserRequest);
+
+    this.usersService.update(updateUserRequest).subscribe({
+      error: (err) => console.error(err),
+    });
+  }
+
   addResume(): void {
     if (!this.resumeDescriptionForm.valid) {
-      alert('Pls fill out description correctly');
+      this.resumeDescriptionForm.markAllAsTouched();
+      return;
     }
 
     const { title, summary, skills, tags } = this.resumeDescriptionForm.value;
@@ -251,35 +276,15 @@ export class UserAccountPageComponent implements OnInit {
     });
   }
 
-  patchUserForm() {
-    this.userForm.patchValue({
-      firstName: this.user?.firstName,
-      lastName: this.user?.lastName,
-      phone: this.user?.phoneNumber,
-    });
-  }
-
-  updateUser() {
+  patchUserForm(): void {
     if (!this.user) {
       return;
     }
 
-    const {
-      firstName,
-      lastName,
-      phone,
-    }: { firstName: string; lastName: string; phone: string } =
-      this.userForm.value;
-
-    const updateUserRequest: UpdateUserRequest = {
-      id: this.user.id,
-      firstName: !firstName || firstName.length === 0 ? null : firstName,
-      lastName: !lastName || lastName.length === 0 ? null : lastName,
-      phoneNumber: !phone || phone.length === 0 ? null : phone,
-    };
-
-    this.usersService.update(updateUserRequest).subscribe({
-      error: (err) => console.error(err),
+    this.userForm.patchValue({
+      firstName: this.user.firstName,
+      lastName: this.user.lastName,
+      phoneNumber: this.user.phoneNumber,
     });
   }
 }

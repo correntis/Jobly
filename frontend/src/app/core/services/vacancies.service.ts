@@ -11,7 +11,7 @@ import { VacanciesFilter } from './../models/vacancies/vacanciesFilter';
   providedIn: 'root',
 })
 export class VacanciesService {
-  basePath = ApiConfig.vacancies;
+  private basePath: string = ApiConfig.vacancies;
 
   constructor(private httpClient: HttpClient) {}
 

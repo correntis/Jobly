@@ -9,7 +9,7 @@ import Interaction from '../models/interaction';
   providedIn: 'root',
 })
 export class InteractionsService {
-  basePath = ApiConfig.interactions;
+  private basePath: string = ApiConfig.interactions;
 
   constructor(private httpClient: HttpClient) {}
 

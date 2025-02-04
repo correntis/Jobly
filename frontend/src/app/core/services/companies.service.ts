@@ -10,7 +10,8 @@ import UpdateCompanyRequest from '../requests/companies/updateCompanyRequest';
   providedIn: 'root',
 })
 export class CompaniesService {
-  basePath = ApiConfig.companies;
+  private basePath: string = ApiConfig.companies;
+
   constructor(private httpClient: HttpClient) {}
 
   get(id: string): Observable<Company> {

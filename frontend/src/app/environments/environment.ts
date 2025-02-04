@@ -3,14 +3,14 @@ import { UserRoles } from '../core/enums/userRoles';
 import { HashedCookieService } from '../core/services/hashedCookie.service';
 
 export class EnvParams {
-  public static hashSecretKet = 'secrethashkey';
+  public static HashSecretKet = 'secrethashkey';
   public static UserIdCookieName = 'userId';
   public static UserRoleCookieName = 'userRole';
 
   public static DefaultCurrency = 'USD';
 
-  public static UserIdCookieExpiresDays = 7;
-  public static UserRoleCookieExpiresDays = 7;
+  public static UserIdCookieExpiresDays = 14;
+  public static UserRoleCookieExpiresDays = 14;
 }
 
 @Injectable({

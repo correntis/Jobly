@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
@@ -14,7 +15,7 @@ import HashService from '../../../core/services/hash.service';
   imports: [MatCardModule, CommonModule, MatButtonModule],
   templateUrl: './compact-vacancy.component.html',
 })
-export class CompactVacancyComponent {
+export class CompactVacancyComponent implements OnInit {
   @Input() vacancy?: Vacancy;
 
   company?: Company;
@@ -26,17 +27,21 @@ export class CompactVacancyComponent {
   ) {}
 
   ngOnInit() {
+    this.loadCompany();
+  }
+
+  loadCompany(): void {
     if (this.vacancy?.companyId) {
       this.companiesService.get(this.vacancy?.companyId).subscribe({
-        next: (company) => (this.company = company),
-        error: (err) => console.error(err),
+        next: (company: Company) => (this.company = company),
+        error: (err: HttpErrorResponse) => console.error(err),
       });
     }
   }
 
-  redirectToVacancyPage() {
+  redirectToVacancyPage(): void {
     if (this.vacancy?.id) {
-      const hashedId = this.hashService.encrypt(this.vacancy.id);
+      const hashedId: string = this.hashService.encrypt(this.vacancy.id);
 
       this.router.navigate(['/vacancy', hashedId]);
     }

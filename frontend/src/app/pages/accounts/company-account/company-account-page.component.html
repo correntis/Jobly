@@ -4,13 +4,13 @@
       class="w-[500px] scale-150"
       mat-raised-button
       color="primary"
-      (click)="goToVacancyForm()"
+      (click)="goToVacancyFormPage()"
     >
       <span class="text-base">Post vacancy</span>
     </button>
   </div>
 
-  <div (click)="goToCompany()">
+  <div (click)="goToCompanyPage()">
     <span
       class="text-blue-800 underline cursor-pointer hover:text-[15px] hover:text-blue-500"
     >
@@ -138,7 +138,7 @@
           hidden
           (change)="onFileSelected($event)"
         />
-        <span class="ml-10">{{ fileName }}</span>
+        <span class="ml-10">{{ imageName }}</span>
         <div *ngIf="!image" class="mt-4">
           <img
             [src]="imageSrc"

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -33,25 +33,26 @@ import { ApiConfig } from '../../../environments/api.config';
   ],
   templateUrl: './company-account-page.component.html',
 })
-export class CompanyAccountPageComponent {
+export class CompanyAccountPageComponent implements OnInit {
   userId: string = '';
+
   user: User | undefined = undefined;
   company: Company | undefined = undefined;
 
   companyForm: FormGroup;
-  image: File | null = null;
-  imageLocalUrl: string | ArrayBuffer | null = null;
-  fileName: string = '';
 
+  image: File | null = null;
+  imageName: string = '';
+  imageLocalUrl: string | ArrayBuffer | null = null;
   imageSrc: string = '';
 
   constructor(
-    private actevatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private fb: FormBuilder,
     private usersService: UsersService,
     private companiesService: CompaniesService,
-    private hashService: HashService,
-    private fb: FormBuilder,
-    private router: Router
+    private hashService: HashService
   ) {
     this.companyForm = this.fb.group({
       name: [''],
@@ -66,18 +67,28 @@ export class CompanyAccountPageComponent {
   }
 
   ngOnInit(): void {
-    this.actevatedRoute.params.subscribe((params) => {
+    this.loadRouteParams();
+    this.loadUser();
+  }
+
+  loadRouteParams(): void {
+    this.activatedRoute.params.subscribe((params) => {
       this.userId = this.hashService.decrypt(params['userId']);
     });
+  }
 
+  loadUser(): void {
     this.usersService.get(this.userId).subscribe({
       next: (user: User) => {
         this.user = user;
+        this.loadCompanyForUser(user.id);
       },
       error: (err) => console.error(err),
     });
+  }
 
-    this.companiesService.getByUser(this.userId).subscribe({
+  loadCompanyForUser(userId: string): void {
+    this.companiesService.getByUser(userId).subscribe({
       next: (company: Company) => {
         this.company = company;
         this.imageSrc = `${ApiConfig.resources}/${company.logoPath}`;
@@ -102,27 +113,16 @@ export class CompanyAccountPageComponent {
     }
   }
 
-  updateCompany() {
+  updateCompany(): void {
     if (!this.companyForm.valid) {
-      alert('pls fill out form correctly');
       this.companyForm.markAllAsTouched();
       return;
     }
 
     if (this.company) {
-      const { name, description, city, address, email, phone, webSite, type } =
-        this.companyForm.value;
-
       const companyUpdateRequest: UpdateCompanyRequest = {
-        id: this.company?.id,
-        name,
-        description,
-        city,
-        address,
-        email,
-        phone,
-        webSite,
-        type,
+        id: this.company.id,
+        ...this.companyForm.value,
       };
 
       this.companiesService.update(companyUpdateRequest, this.image).subscribe({
@@ -133,34 +133,36 @@ export class CompanyAccountPageComponent {
 
   async onFileSelected(event: Event): Promise<void> {
     const fileInput = event.target as HTMLInputElement;
+
     if (fileInput.files && fileInput.files.length > 0) {
       const file: File = fileInput.files[0];
+
       this.image = file;
-      this.fileName = file.name;
+      this.imageName = file.name;
 
       const reader = new FileReader();
+
       reader.onload = () => {
         this.imageLocalUrl = reader.result;
       };
+
       reader.readAsDataURL(this.image);
     }
   }
 
-  goToVacancyForm() {
-    if (this.company) {
+  goToVacancyFormPage(): void {
+    if (this.company?.id) {
       const hashedCompanyId = this.hashService.encrypt(this.company.id);
 
       this.router.navigate(['account/company', hashedCompanyId, 'vacancy']);
     }
   }
 
-  goToCompany() {
-    const companyId = this.company?.id;
+  goToCompanyPage(): void {
+    if (this.company?.id) {
+      const hashedCompanyId = this.hashService.encrypt(this.company.id);
 
-    if (companyId) {
-      const hashedId = this.hashService.encrypt(companyId);
-
-      this.router.navigate(['company', hashedId]);
+      this.router.navigate(['company', hashedCompanyId]);
     }
   }
 }

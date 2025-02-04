@@ -1,6 +1,7 @@
 export class ApiConfig {
   static readonly baseHttpsPath = 'https://localhost';
   static readonly baseHttpPath = 'http://localhost';
+  static readonly baseHubsPath = `${ApiConfig.baseHttpPath}/api/hubs`;
 
   static readonly resources = `${ApiConfig.baseHttpsPath}/resources`;
   static readonly auth = `${ApiConfig.baseHttpsPath}/auth`;
@@ -14,7 +15,6 @@ export class ApiConfig {
   static readonly chats = `${ApiConfig.baseHttpsPath}/chats`;
   static readonly messages = `${ApiConfig.baseHttpsPath}/messages`;
 
-  static readonly hubsBasePath = `${this.baseHttpPath}/api/hubs`;
-  static readonly messagesHub = `${this.hubsBasePath}/messages`;
-  static readonly chatsHub = `${this.hubsBasePath}/chats`;
+  static readonly messagesHub = `${ApiConfig.baseHubsPath}/messages`;
+  static readonly chatsHub = `${ApiConfig.baseHubsPath}/chats`;
 }

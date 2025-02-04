@@ -38,6 +38,10 @@ export class VacancyPageComponent {
   ) {}
 
   ngOnInit() {
+    this.loadParams();
+  }
+
+  loadParams(): void {
     this.activatedRoutes.params.subscribe((params) => {
       this.vacancyId = this.hashService.decrypt(params['id']);
       if (this.vacancyId) {
@@ -93,23 +97,15 @@ export class VacancyPageComponent {
   }
 
   hasDetails(category: string): boolean {
-    var key = category as keyof VacancyDetails;
+    const key = category as keyof VacancyDetails;
 
-    if (key) {
-      return (
-        !!this.vacancy &&
-        !!this.vacancy.vacancyDetails &&
-        !!this.vacancy.vacancyDetails[key]
-      );
-    }
-
-    return false;
+    return !!this.vacancy?.vacancyDetails?.[key];
   }
 
   getDetails(category: string): string[] {
     var key = category as keyof VacancyDetails;
 
-    if (this.vacancy && this.vacancy.vacancyDetails) {
+    if (this.vacancy?.vacancyDetails) {
       return this.vacancy.vacancyDetails[key] as string[];
     }
 

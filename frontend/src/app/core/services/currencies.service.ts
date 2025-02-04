@@ -8,7 +8,7 @@ import Currency from '../models/currency';
   providedIn: 'root',
 })
 export class CurrenciesService {
-  basePath = ApiConfig.currencies;
+  private basePath: string = ApiConfig.currencies;
 
   constructor(private httpClient: HttpClient) {}
 

@@ -8,7 +8,7 @@ import Message from '../models/message';
   providedIn: 'root',
 })
 export default class MessagesService {
-  basePath: string = ApiConfig.messages;
+  private basePath: string = ApiConfig.messages;
 
   constructor(private httpClient: HttpClient) {}
 

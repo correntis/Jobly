@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,7 +25,7 @@ import { CurrenciesService } from './../../../../core/services/currencies.servic
   ],
   templateUrl: './vacancy-salary-form.component.html',
 })
-export class VacancySalaryFormComponent {
+export class VacancySalaryFormComponent implements OnInit {
   @Input() salaryForm!: FormGroup;
 
   isVisible: boolean = false;
@@ -38,7 +38,13 @@ export class VacancySalaryFormComponent {
     return this.salaryForm.get('currency') as FormControl;
   }
 
-  constructor(private currenciesService: CurrenciesService) {
+  constructor(private currenciesService: CurrenciesService) {}
+
+  ngOnInit() {
+    this.loadCurrencies();
+  }
+
+  loadCurrencies() {
     this.currenciesService.get().subscribe({
       next: (currencies) => {
         this.currencies = currencies;

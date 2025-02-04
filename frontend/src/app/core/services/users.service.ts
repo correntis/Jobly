@@ -9,7 +9,7 @@ import { UpdateUserRequest } from '../requests/users/updateUserRequest';
   providedIn: 'root',
 })
 export class UsersService {
-  private readonly basePath: string = ApiConfig.users;
+  private basePath: string = ApiConfig.users;
 
   constructor(private httpClient: HttpClient) {}
 

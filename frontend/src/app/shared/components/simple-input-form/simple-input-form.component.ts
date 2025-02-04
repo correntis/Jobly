@@ -21,6 +21,7 @@ export class SimpleInputFormComponent implements OnInit, AfterViewInit {
   @ViewChild('formInput') formInputElement!: ElementRef;
 
   @Output() submit = new EventEmitter<string>();
+
   @Input() placeHolder?: string;
   @Input() buttonText?: string;
   @Input() input?: string;
@@ -38,7 +39,7 @@ export class SimpleInputFormComponent implements OnInit, AfterViewInit {
     this.formInputElement.nativeElement.focus();
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.newInput.trim()) {
       this.submit.emit(this.newInput);
       this.newInput = '';

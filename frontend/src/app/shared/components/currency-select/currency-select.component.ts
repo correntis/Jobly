@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,17 +22,23 @@ import { CurrenciesService } from '../../../core/services/currencies.service';
   ],
   templateUrl: './currency-select.component.html',
 })
-export class CurrencySelectComponent {
+export class CurrencySelectComponent implements OnInit {
   @Input() control: FormControl = new FormControl();
 
   currencies: Currency[] = [];
 
-  constructor(private currenciesService: CurrenciesService) {
+  constructor(private currenciesService: CurrenciesService) {}
+
+  ngOnInit() {
+    this.loadCurrencies();
+  }
+
+  loadCurrencies(): void {
     this.currenciesService.get().subscribe({
-      next: (currencies) => {
+      next: (currencies: Currency[]) => {
         this.currencies = currencies;
       },
-      error: (err) => console.error(err),
+      error: (err: HttpErrorResponse) => console.error(err),
     });
   }
 }

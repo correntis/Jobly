@@ -10,7 +10,7 @@ import UpdateApplicationRequest from '../requests/applications/updateApplication
   providedIn: 'root',
 })
 export class ApplicationsService {
-  basePath = ApiConfig.applications;
+  private basePath: string = ApiConfig.applications;
 
   constructor(private httpClient: HttpClient) {}
 

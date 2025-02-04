@@ -4,10 +4,9 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import Vacancy from '../../core/models/vacancies/vacancy';
-import { HashedCookieService } from '../../core/services/hashedCookie.service';
 import { ResumesService } from '../../core/services/resumes.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
-import { EnvParams } from '../../environments/environment';
+import { EnvService } from '../../environments/environment';
 import { CompactVacancyComponent } from '../../shared/components/compact-vacancy/compact-vacancy.component';
 
 @Component({
@@ -25,15 +24,17 @@ export class RecommendationsPageComponent {
   pageNumber: number = 1;
   pageSize: number = 15;
 
+  isFullLoaded: boolean = false;
+
   constructor(
     private resumesService: ResumesService,
     private vacanciesService: VacanciesService,
-    private hashedCookieService: HashedCookieService,
+    private envService: EnvService,
     private router: Router
   ) {}
 
   ngOnInit() {
-    const userId = this.hashedCookieService.get(EnvParams.UserIdCookieName);
+    const userId = this.envService.getUserId();
 
     if (userId) {
       this.resumesService.getByUser(userId).subscribe({
@@ -61,28 +62,16 @@ export class RecommendationsPageComponent {
         )
         .subscribe({
           next: (vacancies) => {
-            this.vacanciesList = vacancies;
-          },
-          error: (err) => console.error(err),
-        });
-    }
-  }
+            if (vacancies.length < this.pageSize) {
+              this.isFullLoaded = true;
+            }
 
-  loadMore() {
-    if (this.resumeId) {
-      this.pageNumber++;
-
-      this.vacanciesService
-        .getRecomendationsForResume(
-          this.resumeId,
-          this.pageNumber,
-          this.pageSize
-        )
-        .subscribe({
-          next: (vacancies) => {
             if (this.vacanciesList) {
               this.vacanciesList = [...this.vacanciesList, ...vacancies];
+            } else {
+              this.vacanciesList = vacancies;
             }
+            this.pageNumber++;
           },
           error: (err) => console.error(err),
         });

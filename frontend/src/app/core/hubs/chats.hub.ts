@@ -34,7 +34,7 @@ export class ChatsHub {
           observer.complete();
         })
         .catch((error) => {
-          console.error('error connecting to chats hub', error);
+          console.error('Error connecting to chats hub', error);
           observer.error(error);
         });
     });

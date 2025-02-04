@@ -1,31 +1,35 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import {
-  ReactiveFormsModule,
+  AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
-  AbstractControl,
   FormsModule,
+  ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { ChangeDetectorRef } from '@angular/core';
+import { Observable } from 'rxjs';
 import { UserRoles } from '../../../core/enums/userRoles';
+import RegistrationRequest from '../../../core/requests/auth/registrationRequest';
+import AddCompanyRequest from '../../../core/requests/companies/addCompanyRequest';
+import { CompaniesService } from '../../../core/services/companies.service';
+import { HashedCookieService } from '../../../core/services/hashedCookie.service';
 import { Faker } from '../../../core/utils/faker';
 import { EnvParams } from '../../../environments/environment';
 import { AuthService } from './../../../core/services/auth.service';
-import { CompaniesService } from '../../../core/services/companies.service';
-import { HashedCookieService } from '../../../core/services/hashedCookie.service';
-import AddCompanyRequest from '../../../core/requests/companies/addCompanyRequest';
-import RegistrationRequest from '../../../core/requests/auth/registrationRequest';
+
+type Role = {
+  text: string;
+  roleName: string;
+};
 
 @Component({
   selector: 'app-registration-page',
@@ -53,8 +57,8 @@ export class RegistrationPageComponent {
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
 
-  choosedRole: { text: string; roleName: string } | null = null;
-  appRoles: { text: string; roleName: string }[] = [
+  choosedRole: Role | null = null;
+  appRoles: Role[] = [
     {
       text: '🚀 I’m seeking exciting career opportunities.',
       roleName: UserRoles.User,
@@ -187,7 +191,7 @@ export class RegistrationPageComponent {
 
     this.hashedCookieService.set(
       EnvParams.UserRoleCookieName,
-      role,
+      JSON.stringify([role]),
       EnvParams.UserRoleCookieExpiresDays
     );
   }
@@ -196,8 +200,7 @@ export class RegistrationPageComponent {
     const emailControl = this.registrationForm.get('email');
     if (emailControl) {
       emailControl.setErrors({ existingEmail: true });
-      emailControl.markAsTouched();
-      emailControl.markAsDirty();
+      emailControl.markAllAsTouched();
       this.cdr.detectChanges();
     }
   }

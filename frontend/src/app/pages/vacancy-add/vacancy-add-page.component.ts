@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -46,7 +46,7 @@ import { VacancySalaryFormComponent } from './components/vacancy-salary-form/vac
   ],
   templateUrl: './vacancy-add-page.component.html',
 })
-export class VacancyAddPageComponent {
+export class VacancyAddPageComponent implements OnInit {
   companyId?: string;
 
   vacancyForm: FormGroup;
@@ -56,7 +56,6 @@ export class VacancyAddPageComponent {
     private hashService: HashService,
     private vacanciesService: VacanciesService,
     private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef,
     private router: Router
   ) {
     this.vacancyForm = this.fb.group({
@@ -94,6 +93,10 @@ export class VacancyAddPageComponent {
   }
 
   ngOnInit(): void {
+    this.loadRouteParams();
+  }
+
+  loadRouteParams(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.companyId = this.hashService.decrypt(params['companyId']);
     });
@@ -104,7 +107,9 @@ export class VacancyAddPageComponent {
       this.vacancyForm.markAllAsTouched();
       alert('pls fill out form correctly');
     }
+
     const addVacancyRequest = this.getAddVacancyRequest();
+
     if (addVacancyRequest) {
       this.vacanciesService.add(addVacancyRequest).subscribe({
         next: (id) => {
@@ -215,12 +220,11 @@ export class VacancyAddPageComponent {
       this.responsibilities.valid &&
       this.benefits.valid &&
       this.education.valid &&
-      this.technologies.valid
+      this.technologies.valid &&
+      this.languages.valid &&
+      this.experience.valid &&
+      this.salary.valid
     );
-  }
-
-  goToAccount() {
-    this.router.navigate(['account/company']);
   }
 
   negativeValidator(control: any) {
@@ -234,9 +238,15 @@ export class VacancyAddPageComponent {
   experienceRangeValidator(group: FormGroup): ValidationErrors | null {
     const min = group.get('min')?.value;
     const max = group.get('max')?.value;
+
     if (min !== null && max !== null && min >= max) {
       return { minGreaterThanMax: true };
     }
+
     return null;
+  }
+
+  goToAccount() {
+    this.router.navigate(['account/company']);
   }
 }

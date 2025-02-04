@@ -273,7 +273,10 @@ export class FullChatComponent {
 
   submitEditMessage(newContent: string) {
     if (this.selectedMessage) {
-      if (newContent !== this.selectedMessage.content) {
+      const isContentChainged = newContent !== this.selectedMessage.content;
+      const isContentEmpty = newContent.trim();
+
+      if (isContentEmpty && isContentChainged) {
         this.messagesHub.editMessage(this.selectedMessage.id, newContent);
       }
     }
@@ -283,7 +286,7 @@ export class FullChatComponent {
   }
 
   goToCompany() {
-    const companyId = this.chat?.application?.vacancy?.companyId;
+    const companyId = this.chat?.companyId;
 
     if (companyId) {
       const hashedId = this.hashService.encrypt(companyId);
@@ -292,15 +295,21 @@ export class FullChatComponent {
     }
   }
 
+  goToResume() {
+    const userId = this.chat?.userId;
+
+    if (userId) {
+      const hashedId = this.hashService.encrypt(userId);
+
+      this.router.navigate(['resume', hashedId]);
+    }
+  }
+
   isUnreadedRecipientMessage(message: Message): boolean {
     const isRecipient = this.currentSenderId !== message.senderId;
     const isUnreaded = message.isRead !== true;
 
     return isRecipient && isUnreaded;
-  }
-
-  goToResume() {
-    // TODO redirect to user resume page
   }
 
   isForUser() {

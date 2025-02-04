@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Company from '../../core/models/company';
 import Vacancy from '../../core/models/vacancies/vacancy';
@@ -14,7 +14,7 @@ import { CompactVacancyComponent } from '../../shared/components/compact-vacancy
   imports: [CommonModule, CompactVacancyComponent],
   templateUrl: './company-page.component.html',
 })
-export class CompanyPageComponent {
+export class CompanyPageComponent implements OnInit {
   companyId?: string;
 
   company?: Company;
@@ -26,14 +26,18 @@ export class CompanyPageComponent {
     private companiesService: CompaniesService,
     private vacanciesService: VacanciesService
   ) {
-    this.activatedRoutes.params.subscribe((params) => {
-      this.companyId = this.hashService.decrypt(params['companyId']);
-    });
+    this.loadRouteParams();
   }
 
   ngOnInit() {
     this.loadCompany();
     this.loadVacancies();
+  }
+
+  loadRouteParams(): void {
+    this.activatedRoutes.params.subscribe((params) => {
+      this.companyId = this.hashService.decrypt(params['companyId']);
+    });
   }
 
   loadCompany() {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -33,24 +33,31 @@ export class DynamicFormArrayComponent implements OnInit {
 
   container: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
     this.container = this.fb.group({});
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.container.addControl(this.formArrayName, this.formArray);
   }
 
-  addItem() {
+  getNewFormGroup(): FormGroup {
+    return this.fb.group({ name: ['', Validators.required] });
+  }
+
+  addItem(): void {
     if (this.formArray.length > 0 && this.lastItemIsEmpty()) {
       this.formArray.markAllAsTouched();
       return;
     }
-    this.formArray.push(this.fb.group({ name: ['', Validators.required] }));
+
+    this.formArray.push(this.getNewFormGroup());
+    this.cdRef.detectChanges();
   }
 
   remove(index: number) {
     this.formArray.removeAt(index);
+    this.cdRef.detectChanges();
   }
 
   lastItemIsEmpty(): boolean | undefined {

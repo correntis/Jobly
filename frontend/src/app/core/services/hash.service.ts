@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 import { EnvParams } from '../../environments/environment';
 
 @Injectable({
@@ -14,14 +14,14 @@ export default class HashService {
   public encrypt(value: string): string {
     const encrypted = CryptoJS.AES.encrypt(
       value,
-      EnvParams.hashSecretKet
+      EnvParams.HashSecretKet
     ).toString();
     return this.toUrlSafeBase64(encrypted);
   }
 
   public decrypt(value: string): string {
     const base64Value = this.fromUrlSafeBase64(value);
-    const bytes = CryptoJS.AES.decrypt(base64Value, EnvParams.hashSecretKet);
+    const bytes = CryptoJS.AES.decrypt(base64Value, EnvParams.HashSecretKet);
     return bytes.toString(CryptoJS.enc.Utf8);
   }
 

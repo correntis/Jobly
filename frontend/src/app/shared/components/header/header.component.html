@@ -7,13 +7,13 @@
   <nav class="flex">
     <div
       (click)="goToRoute(route.path)"
-      *ngFor="let route of getRoutes(); let i = index"
+      *ngFor="let route of getHeaderLinksRoutes(); let i = index"
       class="hover:cursor-pointer hover:scale-105 hover:text-[#cecece]"
     >
       <div *ngIf="route.condition" class="flex flex-row">
         <p class="py-4">{{ route.name }}</p>
         <div
-          *ngIf="i !== getRoutes().length - 1"
+          *ngIf="i !== getHeaderLinksRoutes().length - 1"
           class="w-[3px] bg-blue-500 rounded-xl mx-5"
         ></div>
       </div>

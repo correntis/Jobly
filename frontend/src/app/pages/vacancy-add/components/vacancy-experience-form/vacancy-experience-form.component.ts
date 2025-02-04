@@ -27,6 +27,7 @@ export class VacancyExperienceFormComponent {
   @Input() jobExperiencesForm!: FormGroup;
 
   isVisible: boolean = false;
+
   buttonIcon: 'add' | 'delete' = 'add';
   buttonColor: 'accent' | 'warn' = 'accent';
 

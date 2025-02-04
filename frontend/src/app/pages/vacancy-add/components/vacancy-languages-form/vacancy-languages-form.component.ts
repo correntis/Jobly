@@ -62,6 +62,7 @@ export class VacancyLanguagesFormComponent {
       name: ['', Validators.required],
       level: ['', Validators.required],
     });
+
     this.formArray.push(languageForm);
     this.cdRef.detectChanges();
   }

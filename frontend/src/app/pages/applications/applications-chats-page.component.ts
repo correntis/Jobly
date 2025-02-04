@@ -49,6 +49,10 @@ export class ApplicationsChatsPageComponent {
     private messagesHub: MessagesHub,
     private chatsHub: ChatsHub
   ) {
+    this.loadRouteParams();
+  }
+
+  loadRouteParams() {
     this.activatedRoute.params.subscribe((params) => {
       this.requestsId = this.hashService.decrypt(params['userId']);
       this.forRole = this.hashService.decrypt(params['forRole']);
@@ -56,28 +60,32 @@ export class ApplicationsChatsPageComponent {
   }
 
   ngOnInit() {
-    if (this.requestsId) {
-      if (this.forRole === UserRoles.Company) {
-        this.companiesService.getByUser(this.requestsId).subscribe({
-          next: (company) => {
-            this.company = company;
-            this.requestsId = company.id;
-            this.loadData();
-          },
-          error: (err) => console.error(err),
-        });
-      } else {
-        this.loadData();
-      }
+    if (this.forRole === UserRoles.Company) {
+      this.loadCompany();
+    } else {
+      this.loadData();
     }
   }
 
-  loadData() {
+  loadData(): void {
     this.loadChats();
     this.loadConnections();
   }
 
-  loadChatsApplications(chats: Chat[]) {
+  loadCompany(): void {
+    if (this.requestsId) {
+      this.companiesService.getByUser(this.requestsId).subscribe({
+        next: (company) => {
+          this.company = company;
+          this.requestsId = company.id;
+          this.loadData();
+        },
+        error: (err) => console.error(err),
+      });
+    }
+  }
+
+  loadChatsApplications(chats: Chat[]): void {
     const applicationIds = chats
       .map((chat) => chat.applicationId)
       .filter((id) => id !== undefined);
@@ -95,13 +103,13 @@ export class ApplicationsChatsPageComponent {
           this.cdRef.detectChanges();
         },
         error: (error) => {
-          console.error('Ошибка при получении приложений:', error);
+          console.error('Error while requiesting applications:', error);
         },
       });
     }
   }
 
-  loadChats() {
+  loadChats(): void {
     if (this.isLoadingChats || this.isFullLoaded) {
       return;
     }
@@ -150,41 +158,6 @@ export class ApplicationsChatsPageComponent {
         });
       }
     }
-  }
-
-  openChat(chat: Chat | undefined) {
-    if (!chat) {
-      return;
-    }
-
-    if (chat === this.selectedChat) {
-      return;
-    }
-
-    if (this.chats) {
-      const index = this.chats?.indexOf(chat);
-
-      if (index !== -1) {
-        this.isFullLoaded = false;
-        this.activeChatIndex = index;
-        chat.messages = [];
-        this.selectedChat = chat;
-      }
-    }
-  }
-
-  activatedClass(index: number): string {
-    if (index === this.activeChatIndex) {
-      return 'bg-gray-600';
-    }
-
-    return '';
-  }
-
-  correctSelectedIndex() {
-    this.activeChatIndex = this.chats?.findIndex(
-      (chat) => chat.id === this.selectedChat?.id
-    );
   }
 
   loadConnections() {
@@ -277,6 +250,41 @@ export class ApplicationsChatsPageComponent {
     this.correctSelectedIndex();
     this.loadChatsApplications([chat]);
     this.cdRef.detectChanges();
+  }
+
+  openChat(chat: Chat | undefined): void {
+    if (!chat) {
+      return;
+    }
+
+    if (chat === this.selectedChat) {
+      return;
+    }
+
+    if (this.chats) {
+      const index = this.chats?.indexOf(chat);
+
+      if (index !== -1) {
+        chat.messages = [];
+        this.isFullLoaded = false;
+        this.activeChatIndex = index;
+        this.selectedChat = chat;
+      }
+    }
+  }
+
+  activatedClass(index: number): string {
+    if (index === this.activeChatIndex) {
+      return 'bg-gray-600';
+    }
+
+    return '';
+  }
+
+  correctSelectedIndex(): void {
+    this.activeChatIndex = this.chats?.findIndex(
+      (chat) => chat.id === this.selectedChat?.id
+    );
   }
 
   onChatsScroll(event: Event) {

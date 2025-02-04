@@ -18,7 +18,10 @@ import { VacanciesFilter } from '../../../../core/models/vacancies/vacanciesFilt
 import Vacancy from '../../../../core/models/vacancies/vacancy';
 import { VacanciesService } from '../../../../core/services/vacancies.service';
 import { CompactVacancyComponent } from '../../../../shared/components/compact-vacancy/compact-vacancy.component';
-import { CurrencySelectComponent } from '../../../../shared/components/currency-select/currency-select.component';
+import { DynamicFormArrayComponent } from '../../../../shared/components/dynamic-form-array/dynamic-form-array.component';
+import { VacancyExperienceFormComponent } from '../../../vacancy-add/components/vacancy-experience-form/vacancy-experience-form.component';
+import { VacancyLanguagesFormComponent } from '../../../vacancy-add/components/vacancy-languages-form/vacancy-languages-form.component';
+import { VacancySalaryFormComponent } from '../../../vacancy-add/components/vacancy-salary-form/vacancy-salary-form.component';
 
 @Component({
   selector: 'app-filtered-vacancies',
@@ -33,7 +36,10 @@ import { CurrencySelectComponent } from '../../../../shared/components/currency-
     FormsModule,
     MatIconModule,
     CompactVacancyComponent,
-    CurrencySelectComponent,
+    DynamicFormArrayComponent,
+    VacancyLanguagesFormComponent,
+    VacancyExperienceFormComponent,
+    VacancySalaryFormComponent,
   ],
   templateUrl: './filtered-vacancies.component.html',
 })
@@ -99,14 +105,28 @@ export class FilteredVacanciesComponent {
     return this.vacanciesFilterForm.get('salary') as FormGroup;
   }
 
+  get experience(): FormGroup {
+    return this.vacanciesFilterForm.get('experience') as FormGroup;
+  }
+
   get currency(): FormControl {
     return this.salary.get('currency') as FormControl;
   }
 
   ngOnInit() {
+    this.searchVacancies();
+  }
+
+  searchVacancies(): void {
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
-        this.vacanciesList = vacancies;
+        if (this.vacanciesList) {
+          this.vacanciesList = [...this.vacanciesList, ...vacancies];
+        } else {
+          this.vacanciesList = vacancies;
+        }
+
+        this.vacanciesFilter.pageNumber++;
       },
       error: (err) => console.error(err),
     });
@@ -150,31 +170,26 @@ export class FilteredVacanciesComponent {
   }
 
   applyFilters(): void {
-    if (!this.vacanciesFilterForm.valid) {
+    if (!this.vacanciesFilterForm.valid || !this.isFormArraysValid()) {
       alert('pls fill out form correctly');
-    }
-
-    const vacanciesFilterValues: VacanciesFilter =
-      this.vacanciesFilterForm.value;
-
-    if (
-      vacanciesFilterValues.salary?.min === null &&
-      vacanciesFilterValues.salary.max === null
-    ) {
-      vacanciesFilterValues.salary = null;
-    }
-
-    if (
-      vacanciesFilterValues.experience?.min === null &&
-      vacanciesFilterValues.experience.max === null
-    ) {
-      vacanciesFilterValues.experience = null;
     }
 
     this.vacanciesFilter = {
       ...this.vacanciesFilter,
-      ...vacanciesFilterValues,
+      ...this.vacanciesFilterForm.value,
     };
+
+    this.getDetailsKeys().map((keyName) => {
+      const key = keyName as keyof VacanciesFilter;
+      this.vacanciesFilter[key] = this.parseFormArray(
+        this.getFormArrayControls(key)
+      );
+    });
+
+    this.vacanciesFilter.experience = this.experience.value;
+    this.vacanciesFilter.salary = this.salary.value;
+    this.vacanciesFilter.languages =
+      this.getFormArrayControls('languages').value;
 
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
@@ -184,17 +199,28 @@ export class FilteredVacanciesComponent {
     });
   }
 
-  loadVacancies(): void {
-    this.vacanciesFilter.pageNumber++;
+  parseFormArray(formArray: FormArray) {
+    return formArray.value.map((value: { name: string }) => value.name);
+  }
 
-    this.vacanciesService.search(this.vacanciesFilter).subscribe({
-      next: (vacancies) => {
-        if (this.vacanciesList) {
-          this.vacanciesList = [...this.vacanciesList, ...vacancies];
-        }
-      },
-      error: (err) => console.error(err),
-    });
+  getDetailsKeys(): string[] {
+    return [
+      'requirements',
+      'skills',
+      'tags',
+      'responsibilities',
+      'benefits',
+      'technologies',
+      'education',
+    ];
+  }
+
+  isFormArraysValid() {
+    const isFormArraysValid = this.getDetailsKeys().every(
+      (key) => this.getFormArrayControls(key).valid
+    );
+
+    return this.experience.valid && this.salary.valid && isFormArraysValid;
   }
 
   negativeValidator(control: any) {

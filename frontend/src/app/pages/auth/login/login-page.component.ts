@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import {
   FormBuilder,
@@ -7,16 +8,15 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { Faker } from '../../../core/utils/faker';
-import { MatInput, MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { AuthService } from '../../../core/services/auth.service';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 import { HashedCookieService } from '../../../core/services/hashedCookie.service';
+import { Faker } from '../../../core/utils/faker';
 import { EnvParams } from '../../../environments/environment';
 
 @Component({

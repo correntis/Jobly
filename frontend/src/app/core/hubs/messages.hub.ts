@@ -35,7 +35,7 @@ export class MessagesHub {
           observer.complete();
         })
         .catch((error) => {
-          console.error('error connecting to messages hub', error);
+          console.error('Error connecting to messages hub', error);
           observer.error(error);
         });
     });
@@ -45,7 +45,28 @@ export class MessagesHub {
     try {
       await this.hubConnection?.invoke('SendMessage', request);
     } catch (err) {
-      console.error('error sending message ', err);
+      console.error('Error sending message ', err);
+    }
+  }
+
+  async editMessage(messageId: string, content: string): Promise<void> {
+    try {
+      await this.hubConnection?.invoke('EditMessage', {
+        messageId,
+        content,
+      });
+    } catch (err) {
+      console.log('Error editing message:', err);
+    }
+  }
+
+  async readMessage(messageId: string): Promise<void> {
+    try {
+      await this.hubConnection?.invoke('ReadMessage', {
+        messageId,
+      });
+    } catch (err) {
+      console.log('Error reading message:', err);
     }
   }
 
@@ -57,33 +78,12 @@ export class MessagesHub {
     });
   }
 
-  async editMessage(messageId: string, content: string): Promise<void> {
-    try {
-      await this.hubConnection?.invoke('EditMessage', {
-        messageId,
-        content,
-      });
-    } catch (err) {
-      console.log('ERROR while sending message:', err);
-    }
-  }
-
   receiveEditedMessage(): Observable<Message> {
     return new Observable<Message>((observer) => {
       this.hubConnection?.on('EditMessage', (message: Message) => {
         observer.next(message);
       });
     });
-  }
-
-  async readMessage(messageId: string): Promise<void> {
-    try {
-      await this.hubConnection?.invoke('ReadMessage', {
-        messageId,
-      });
-    } catch (err) {
-      console.log('ERROR while sending message:', err);
-    }
   }
 
   receiveReadMessage(): Observable<Message> {
