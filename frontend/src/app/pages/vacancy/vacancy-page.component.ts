@@ -2,28 +2,34 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import Company from '../../core/models/company';
+import Interaction from '../../core/models/interaction';
 import Vacancy from '../../core/models/vacancies/vacancy';
 import VacancyDetails from '../../core/models/vacancies/vacancyDetails';
 import AddApplicationRequest from '../../core/requests/applications/addApplicationRequest';
 import { ApplicationsService } from '../../core/services/applications.service';
 import HashService from '../../core/services/hash.service';
+import { InteractionsService } from '../../core/services/interactions.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
-import { EnvParams } from '../../environments/environment';
+import { EnvService } from '../../environments/environment';
+import { InteractionType } from './../../core/enums/interactionType';
 import { CompaniesService } from './../../core/services/companies.service';
-import { HashedCookieService } from './../../core/services/hashedCookie.service';
 
 @Component({
   selector: 'app-vacancy-page',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './vacancy-page.component.html',
 })
 export class VacancyPageComponent {
   vacancyId: string = '';
   vacancy?: Vacancy;
   company?: Company;
+  interaction?: Interaction;
+
+  InteractionType = InteractionType;
 
   alreadyApplied: boolean = false;
 
@@ -33,8 +39,9 @@ export class VacancyPageComponent {
     private vacanciesService: VacanciesService,
     private companiesService: CompaniesService,
     private applicationService: ApplicationsService,
+    private interactionsService: InteractionsService,
     private hashService: HashService,
-    private hashedCookieService: HashedCookieService
+    private envService: EnvService
   ) {}
 
   ngOnInit() {
@@ -54,10 +61,25 @@ export class VacancyPageComponent {
     this.vacanciesService.get(this.vacancyId).subscribe({
       next: (vacancy) => {
         this.vacancy = vacancy;
+        this.loadInteraction(this.envService.getUserId(), vacancy.id);
         this.loadCompany(this.vacancy.companyId);
       },
       error: (err) => {
         console.error('Error fetching vacancy:', err);
+      },
+    });
+  }
+
+  loadInteraction(userId: string, vacancyId: string): void {
+    this.interactionsService.getByUserAndVacancy(userId, vacancyId).subscribe({
+      next: (interaction) => {
+        this.interaction = interaction;
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === HttpStatusCode.NotFound) {
+          this.postInteraction(InteractionType.Click);
+          this.loadInteraction(userId, vacancyId);
+        }
       },
     });
   }
@@ -69,9 +91,19 @@ export class VacancyPageComponent {
     });
   }
 
+  postInteraction(interactionType: number): void {
+    if (this.vacancy) {
+      this.interactionsService
+        .add(this.envService.getUserId(), this.vacancy.id, interactionType)
+        .subscribe({
+          error: (err) => console.error(err),
+        });
+    }
+  }
+
   apply() {
     if (this.vacancy) {
-      const userId = this.hashedCookieService.get(EnvParams.UserIdCookieName);
+      const userId = this.envService.getUserId();
 
       if (userId) {
         const addApplicationRequest: AddApplicationRequest = {
@@ -87,6 +119,26 @@ export class VacancyPageComponent {
           },
         });
       }
+    }
+  }
+
+  onInteraction(interactionType: InteractionType) {
+    if (interactionType === this.interaction?.type) {
+      interactionType = InteractionType.Click;
+    }
+
+    if (this.vacancy?.id) {
+      this.interactionsService
+        .add(this.envService.getUserId(), this.vacancy.id, interactionType)
+        .subscribe({
+          next: (id) => {
+            console.log('interaction added');
+            if (this.interaction) {
+              this.interaction.type = interactionType;
+            }
+          },
+          error: (err) => console.error(err),
+        });
     }
   }
 

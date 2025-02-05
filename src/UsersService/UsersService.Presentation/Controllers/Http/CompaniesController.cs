@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using UsersService.Application.Companies.Commands.AddCompany;
 using UsersService.Application.Companies.Commands.DeleteCompany;
 using UsersService.Application.Companies.Commands.UpdateCompany;
-using UsersService.Application.Companies.Commands.ViewResume;
 using UsersService.Application.Companies.Queries.GetCompany;
 using UsersService.Application.Companies.Queries.GetCompanyByUser;
 using UsersService.Domain.Constants;
@@ -34,16 +33,6 @@ namespace UsersService.Presentation.Controllers.Http
         public async Task<ActionResult<Guid>> Update([FromForm] UpdateCompanyCommand updateCompanyCommand, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(updateCompanyCommand, cancellationToken));
-        }
-
-        [HttpPost]
-        [Route("views")]
-        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
-        public async Task<ActionResult<Guid>> ViewResume(ViewResumeCommand viewResumeCommand, CancellationToken cancellationToken)
-        {
-            await _mediator.Send(viewResumeCommand, cancellationToken);
-
-            return Ok();
         }
 
         [HttpDelete("{id}")]

@@ -27,6 +27,13 @@ export class ResumesService {
     return this.httpClient.put<Resume>(`${this.basePath}`, updateRequest);
   }
 
+  viewResume(companyId: string, resumeId: string): Observable<string> {
+    return this.httpClient.post<string>(`${this.basePath}/views`, {
+      companyId,
+      resumeId,
+    });
+  }
+
   updateCertifications(
     id: string,
     certifications: Certification[]

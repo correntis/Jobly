@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using UsersService.Application.Companies.Commands.ViewResume;
 using UsersService.Application.Resumes.Commands.AddResume;
 using UsersService.Application.Resumes.Commands.DeleteResume;
 using UsersService.Application.Resumes.Commands.UpdateCertification;
@@ -41,6 +42,16 @@ namespace UsersService.Presentation.Controllers.Http
         public async Task<ActionResult<string>> Update(UpdateResumeCommand updateResumeCommand, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(updateResumeCommand, cancellationToken));
+        }
+
+        [HttpPost]
+        [Route("views")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        public async Task<ActionResult<Guid>> ViewResume(ViewResumeCommand viewResumeCommand, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(viewResumeCommand, cancellationToken);
+
+            return Ok();
         }
 
         [HttpPut("certifications")]

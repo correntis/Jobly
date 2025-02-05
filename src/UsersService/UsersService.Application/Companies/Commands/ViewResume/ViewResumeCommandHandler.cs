@@ -33,7 +33,7 @@ namespace UsersService.Application.Companies.Commands.ViewResume
                 request.CompanyId,
                 request.ResumeId);
 
-            var companyEntity = await _unitOfWork.CompaniesRepository.GetAsync(request.CompanyId, cancellationToken)
+            var companyEntity = await _unitOfWork.CompaniesRepository.GetByUserAsync(request.CompanyId, cancellationToken)
                 ?? throw new EntityNotFoundException($"Company with id {request.CompanyId} not found");
 
             var resumeEntity = await _unitOfWork.ResumesRepository.GetAsync(request.ResumeId, cancellationToken)

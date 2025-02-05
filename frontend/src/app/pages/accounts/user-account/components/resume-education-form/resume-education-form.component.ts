@@ -116,7 +116,7 @@ export class ResumeEducationFormComponent {
       this.educations.push(
         this.fb.group({
           institution: [education.institution, Validators.required],
-          degree: [education.endDate, Validators.required],
+          degree: [education.degree, Validators.required],
           startDate: [education.startDate, Validators.required],
           endDate: [education.endDate, Validators.required],
         })

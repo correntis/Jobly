@@ -4,6 +4,32 @@
   <div class="absolute top-0 left-0 h-1 w-full bg-blue-500 rounded-t-lg"></div>
 
   <div class="flex-1 flex flex-col gap-2">
+    <div class="flex justify-end gap-2">
+      <div
+        *ngIf="interaction?.type === InteractionType.Like"
+        class="text-green-500"
+      >
+        <mat-icon>favorite</mat-icon>
+      </div>
+
+      <div
+        *ngIf="interaction?.type === InteractionType.Dislike"
+        class="text-red-500"
+      >
+        <mat-icon>hide_source</mat-icon>
+      </div>
+
+      <div
+        *ngIf="interaction?.type === InteractionType.Click"
+        class="text-gray-500"
+      >
+        <mat-icon>visibility</mat-icon>
+      </div>
+
+      <div *ngIf="!interaction" class="text-gray-500">
+        <mat-icon>visibility_off</mat-icon>
+      </div>
+    </div>
     <div class="flex justify-between items-center">
       <h3 class="text-lg font-semibold text-gray-800">{{ vacancy?.title }}</h3>
       <span class="text-gray-600">{{ company?.name }}</span>

@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Resume from '../../../core/models/resumes/resume';
 import User from '../../../core/models/user';
 import AddResumeRequest from '../../../core/requests/resumes/addResumeRequest';
@@ -68,6 +68,7 @@ export class UserAccountPageComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef,
     private usersService: UsersService,
@@ -286,5 +287,11 @@ export class UserAccountPageComponent implements OnInit {
       lastName: this.user.lastName,
       phoneNumber: this.user.phoneNumber,
     });
+  }
+
+  goToResume(): void {
+    var hashedId = this.hashService.encrypt(this.userId);
+
+    this.router.navigate(['/resume', hashedId]);
   }
 }

@@ -36,4 +36,13 @@ export class InteractionsService {
       `${this.basePath}/users/${userId}`
     );
   }
+
+  getByUserAndVacancy(
+    userId: string,
+    vacancyId: string
+  ): Observable<Interaction> {
+    return this.httpClient.get<Interaction>(
+      `${this.basePath}/users/${userId}/vacancies/${vacancyId}`
+    );
+  }
 }

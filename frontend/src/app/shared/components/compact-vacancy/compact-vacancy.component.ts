@@ -3,31 +3,53 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { InteractionType } from '../../../core/enums/interactionType';
 import Company from '../../../core/models/company';
+import Interaction from '../../../core/models/interaction';
 import Vacancy from '../../../core/models/vacancies/vacancy';
 import { CompaniesService } from '../../../core/services/companies.service';
 import HashService from '../../../core/services/hash.service';
+import { InteractionsService } from '../../../core/services/interactions.service';
+import { EnvService } from '../../../environments/environment';
 
 @Component({
   selector: 'app-compact-vacancy',
   standalone: true,
-  imports: [MatCardModule, CommonModule, MatButtonModule],
+  imports: [MatCardModule, CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './compact-vacancy.component.html',
 })
 export class CompactVacancyComponent implements OnInit {
   @Input() vacancy?: Vacancy;
 
   company?: Company;
+  interaction?: Interaction;
+
+  InteractionType = InteractionType;
 
   constructor(
+    private interactionsService: InteractionsService,
     private companiesService: CompaniesService,
+    private envService: EnvService,
     private hashService: HashService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.loadCompany();
+    this.loadUserInteraction();
+  }
+
+  loadUserInteraction() {
+    if (this.vacancy?.id) {
+      this.interactionsService
+        .getByUserAndVacancy(this.envService.getUserId(), this.vacancy?.id)
+        .subscribe({
+          next: (intercation) => (this.interaction = intercation),
+          error: (err) => console.error(err),
+        });
+    }
   }
 
   loadCompany(): void {

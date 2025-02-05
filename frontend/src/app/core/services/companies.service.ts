@@ -57,13 +57,6 @@ export class CompaniesService {
     return this.httpClient.put<string>(`${this.basePath}`, formData);
   }
 
-  viewResume(companyId: string, resumeId: string): Observable<string> {
-    return this.httpClient.post<string>(`${this.basePath}/views`, {
-      companyId,
-      resumeId,
-    });
-  }
-
   delete(id: string): Observable<string> {
     return this.httpClient.delete<string>(`${this.basePath}/${id}}`);
   }

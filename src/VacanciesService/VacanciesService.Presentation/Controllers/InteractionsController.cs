@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using VacanciesService.Application.Interactions.Commands.AddInteraction;
+using VacanciesService.Application.Interactions.Queries.GetUserForVacancyInteractions;
 using VacanciesService.Application.Interactions.Queries.GetUserInteractions;
 using VacanciesService.Application.Interactions.Queries.GetVacancyInteractions;
 using VacanciesService.Domain.Constants;
@@ -29,6 +30,7 @@ namespace VacanciesService.Presentation.Controllers
 
         [HttpGet]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         [Route("vacancies/{vacancyId}")]
         public async Task<ActionResult<List<VacancyInteraction>>> GetVacancyInteractions(Guid vacancyId, CancellationToken token)
         {
@@ -36,11 +38,23 @@ namespace VacanciesService.Presentation.Controllers
         }
 
         [HttpGet]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         [Route("users/{userId}")]
         public async Task<ActionResult<List<VacancyInteraction>>> GetUserInteractions(Guid userId, CancellationToken token)
         {
             return Ok(await _sender.Send(new GetUserInteractionsQuery(userId), token));
+        }
+
+        [HttpGet]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        [Route("users/{userId}/vacancies/{vacancyId}")]
+        public async Task<ActionResult<VacancyInteraction>> GetUserForVacancyInteractions(Guid userId, Guid vacancyId, CancellationToken token)
+        {
+            var interaction = await _sender.Send(new GetUserForVacancyInteractionQuery(userId, vacancyId), token);
+
+            return Ok(interaction);
         }
     }
 }

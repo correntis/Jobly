@@ -66,6 +66,19 @@
       <span> Please fill out form and click submit to add resume!</span>
     </h3>
 
+    <div
+      *ngIf="!isNewResume"
+      class="flex flex-col items-center justify-evenly w-[100%] pb-2"
+    >
+      <div (click)="goToResume()">
+        <span
+          class="text-blue-800 underline cursor-pointer hover:text-[15px] hover:text-blue-500"
+        >
+          View on resume page
+        </span>
+      </div>
+    </div>
+
     <!-- Описание резюме -->
     <section class="p-6 bg-gray-100 rounded-lg shadow-md">
       <h2 class="text-2xl font-bold text-gray-700 mb-4">Resume Description</h2>

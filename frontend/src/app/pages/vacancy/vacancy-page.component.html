@@ -4,6 +4,61 @@
     class="vacancy-details max-w-4xl mx-5 border-[1.7px] bg-white rounded-lg shadow"
   >
     <div class="border-[1.7px] border-black border-solid p-6 rounded-lg">
+      <div class="flex justify-between">
+        <div class="flex gap-2">
+          <div class="flex gap-2">
+            <button
+              class="hover:scale-110"
+              (click)="onInteraction(InteractionType.Like)"
+              [ngClass]="{
+                'text-green-500 hover:text-green-600':
+                  interaction?.type === InteractionType.Like,
+                'text-gray-500 hover:text-gray-600':
+                  interaction?.type !== InteractionType.Like
+              }"
+            >
+              <mat-icon>thumb_up</mat-icon>
+            </button>
+
+            <button
+              class="hover:scale-110"
+              (click)="onInteraction(InteractionType.Dislike)"
+              [ngClass]="{
+                'text-red-500 hover:text-red-600':
+                  interaction?.type === InteractionType.Dislike,
+                'text-gray-500 hover:text-gray-600':
+                  interaction?.type !== InteractionType.Dislike
+              }"
+            >
+              <mat-icon>thumb_down</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2">
+          <div
+            *ngIf="interaction?.type === InteractionType.Like"
+            class="text-green-500"
+          >
+            <mat-icon>favorite</mat-icon>
+          </div>
+
+          <div
+            *ngIf="interaction?.type === InteractionType.Dislike"
+            class="text-red-500"
+          >
+            <mat-icon>hide_source</mat-icon>
+          </div>
+
+          <div
+            *ngIf="interaction?.type === InteractionType.Click"
+            class="text-gray-500"
+          >
+            <mat-icon>visibility</mat-icon>
+          </div>
+        </div>
+      </div>
+
       <div class="header">
         <h1 class="text-3xl font-bold text-gray-900">{{ vacancy.title }}</h1>
       </div>
