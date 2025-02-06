@@ -328,6 +328,16 @@ export class FullChatComponent {
     }
   }
 
+  goToVacancy() {
+    const vacancyId = this.chat?.vacancyId;
+
+    if (vacancyId) {
+      const hashedId = this.hashService.encrypt(vacancyId);
+
+      this.router.navigate(['vacancy', hashedId]);
+    }
+  }
+
   isUnreadedRecipientMessage(message: Message): boolean {
     const isRecipient = this.currentSenderId !== message.senderId;
     const isUnreaded = message.isRead !== true;

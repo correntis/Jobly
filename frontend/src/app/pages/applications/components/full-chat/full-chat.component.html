@@ -1,19 +1,30 @@
 <div class="flex flex-col align-middle items-center bg-gray-100">
   <div
     *ngIf="isForUser()"
-    class="flex flex-col items-center justify-evenly bg-blue-700 w-[100%] py-2"
+    class="flex flex-col items-center justify-evenly bg-blue-600 w-[100%] py-2"
   >
     <div>
       <h2 class="text-3xl text-white">
         {{ chat?.application?.vacancy?.title }}
       </h2>
     </div>
-    <div (click)="goToCompany()">
-      <span
-        class="text-blue-300 underline cursor-pointer hover:text-[15px] hover:text-blue-100"
-      >
-        View company details
-      </span>
+
+    <div class="flex gap-10">
+      <div (click)="goToCompany()">
+        <span
+          class="text-blue-300 underline cursor-pointer hover:text-[15px] hover:text-blue-100"
+        >
+          View company details
+        </span>
+      </div>
+
+      <div (click)="goToVacancy()">
+        <span
+          class="text-blue-300 underline cursor-pointer hover:text-[15px] hover:text-blue-100"
+        >
+          View vacancy
+        </span>
+      </div>
     </div>
   </div>
 
@@ -62,7 +73,7 @@
   </div>
 
   <div
-    class="flex flex-col h-[92vh] rounded-lg p-4 w-[80%] min-w-[400px] max-w-[800px]"
+    class="flex flex-col h-[85vh] rounded-lg p-4 w-[80%] min-w-[400px] max-w-[800px]"
   >
     <div
       class="flex flex-col-reverse flex-grow overflow-y-auto mb-4 pb-6 rounded-xl border border-gray-300 border-solid bg-gray-200"

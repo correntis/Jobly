@@ -62,6 +62,8 @@ export class FilteredVacanciesComponent {
 
   vacanciesList?: Vacancy[];
 
+  isFullLoaded?: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef,
@@ -120,6 +122,10 @@ export class FilteredVacanciesComponent {
   searchVacancies(): void {
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
+        if (vacancies.length === 0) {
+          this.isFullLoaded = true;
+        }
+
         if (this.vacanciesList) {
           this.vacanciesList = [...this.vacanciesList, ...vacancies];
         } else {
@@ -187,13 +193,28 @@ export class FilteredVacanciesComponent {
     });
 
     this.vacanciesFilter.experience = this.experience.value;
+    if (
+      !this.vacanciesFilter.experience?.min &&
+      !this.vacanciesFilter.experience?.max
+    ) {
+      this.vacanciesFilter.experience = null;
+    }
+
     this.vacanciesFilter.salary = this.salary.value;
+    if (
+      this.vacanciesFilter.salary?.currency === '' ||
+      (!this.vacanciesFilter.salary?.min && !this.vacanciesFilter.salary?.max)
+    ) {
+      this.vacanciesFilter.salary = null;
+    }
+
     this.vacanciesFilter.languages =
       this.getFormArrayControls('languages').value;
 
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
         this.vacanciesList = vacancies;
+        this.isFullLoaded = false;
       },
       error: (err) => console.error(err),
     });

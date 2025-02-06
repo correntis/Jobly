@@ -8,11 +8,17 @@ import { ResumesService } from '../../core/services/resumes.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
 import { EnvService } from '../../environments/environment';
 import { CompactVacancyComponent } from '../../shared/components/compact-vacancy/compact-vacancy.component';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-recommendations-page',
   standalone: true,
-  imports: [CommonModule, CompactVacancyComponent, MatButtonModule],
+  imports: [
+    CommonModule,
+    CompactVacancyComponent,
+    MatButtonModule,
+    HeaderComponent,
+  ],
   templateUrl: './recommendations-page.component.html',
 })
 export class RecommendationsPageComponent {
@@ -62,7 +68,7 @@ export class RecommendationsPageComponent {
         )
         .subscribe({
           next: (vacancies) => {
-            if (vacancies.length < this.pageSize) {
+            if (vacancies.length === 0) {
               this.isFullLoaded = true;
             }
 

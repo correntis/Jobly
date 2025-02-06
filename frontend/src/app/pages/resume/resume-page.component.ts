@@ -7,13 +7,14 @@ import { CompaniesService } from '../../core/services/companies.service';
 import HashService from '../../core/services/hash.service';
 import { UsersService } from '../../core/services/users.service';
 import { EnvService } from '../../environments/environment';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { InteractionsService } from './../../core/services/interactions.service';
 import { ResumesService } from './../../core/services/resumes.service';
 
 @Component({
   selector: 'app-resume-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './resume-page.component.html',
 })
 export class ResumePageComponent {

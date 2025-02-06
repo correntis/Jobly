@@ -1,4 +1,6 @@
-<div class="min-h-screen flex flex-col items-center justify-start">
+<app-header />
+
+<div class="min-h-screen flex flex-col items-center justify-start mt-3">
   <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
     <h1 class="text-center text-3xl mb-5">Personal information</h1>
     <form [formGroup]="userForm" (ngSubmit)="updateUser()" class="space-y-6">

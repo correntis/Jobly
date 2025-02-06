@@ -93,9 +93,7 @@
     </div>
 
     <div
-      *ngIf="
-        vacanciesList && vacanciesList.length % vacanciesFilter.pageSize === 0
-      "
+      *ngIf="vacanciesList && !isFullLoaded"
       class="flex justify-center my-5"
     >
       <button

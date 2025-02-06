@@ -26,6 +26,7 @@ import { UpdateUserRequest } from '../../../core/requests/users/updateUserReques
 import HashService from '../../../core/services/hash.service';
 import { ResumesService } from '../../../core/services/resumes.service';
 import { UsersService } from '../../../core/services/users.service';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { ResumeCertificationsFormComponent } from './components/resume-certifications-form/resume-certifications-form.component';
 import { ResumeEducationFormComponent } from './components/resume-education-form/resume-education-form.component';
 import { ResumeExperiencesFormComponent } from './components/resume-experiences-form/resume-experiences-form.component';
@@ -52,6 +53,7 @@ import { ResumeProjectsFormComponent } from './components/resume-projects-form/r
     ResumeEducationFormComponent,
     ResumeExperiencesFormComponent,
     ResumeProjectsFormComponent,
+    HeaderComponent,
   ],
   templateUrl: './user-account-page.component.html',
 })

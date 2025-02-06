@@ -14,13 +14,14 @@ import HashService from '../../core/services/hash.service';
 import { InteractionsService } from '../../core/services/interactions.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
 import { EnvService } from '../../environments/environment';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { InteractionType } from './../../core/enums/interactionType';
 import { CompaniesService } from './../../core/services/companies.service';
 
 @Component({
   selector: 'app-vacancy-page',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, HeaderComponent],
   templateUrl: './vacancy-page.component.html',
 })
 export class VacancyPageComponent {
@@ -32,6 +33,7 @@ export class VacancyPageComponent {
   InteractionType = InteractionType;
 
   alreadyApplied: boolean = false;
+  isUserCreator: boolean = false;
 
   constructor(
     private activatedRoutes: ActivatedRoute,
@@ -55,6 +57,19 @@ export class VacancyPageComponent {
         this.loadVacancy();
       }
     });
+  }
+
+  loadCurrentUser(): void {
+    if (this.envService.isCompany()) {
+      this.companiesService.getByUser(this.envService.getUserId()).subscribe({
+        next: (company) => {
+          if (this.company?.id == company.id) {
+            this.isUserCreator = true;
+          }
+        },
+        error: (err) => console.error(err),
+      });
+    }
   }
 
   loadVacancy(): void {
@@ -86,7 +101,10 @@ export class VacancyPageComponent {
 
   loadCompany(companyId: string) {
     this.companiesService.get(companyId).subscribe({
-      next: (company) => (this.company = company),
+      next: (company) => {
+        this.company = company;
+        this.loadCurrentUser();
+      },
       error: (err) => console.error(err),
     });
   }
@@ -119,6 +137,19 @@ export class VacancyPageComponent {
           },
         });
       }
+    }
+  }
+
+  archive() {
+    if (this.vacancy) {
+      this.vacanciesService.archive(this.vacancy.id).subscribe({
+        next: () => {
+          if (this.vacancy) {
+            this.vacancy.archived = true;
+          }
+        },
+        error: (err) => console.error(),
+      });
     }
   }
 

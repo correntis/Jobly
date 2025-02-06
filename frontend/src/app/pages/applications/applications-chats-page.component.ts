@@ -12,13 +12,19 @@ import { ApplicationsService } from '../../core/services/applications.service';
 import { ChatsService } from '../../core/services/chatsService';
 import { CompaniesService } from '../../core/services/companies.service';
 import HashService from '../../core/services/hash.service';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { CompactChatComponent } from './components/compact-chat/compact-chat.component';
 import { FullChatComponent } from './components/full-chat/full-chat.component';
 
 @Component({
   selector: 'app-applications-chats-page',
   standalone: true,
-  imports: [CommonModule, CompactChatComponent, FullChatComponent],
+  imports: [
+    CommonModule,
+    CompactChatComponent,
+    FullChatComponent,
+    HeaderComponent,
+  ],
   templateUrl: './applications-chats-page.component.html',
   styleUrl: './applications-chats-page.component.css',
 })

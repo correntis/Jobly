@@ -23,6 +23,7 @@ import { AddVacancyRequest } from '../../core/requests/vacancies/addVacancyReque
 import HashService from '../../core/services/hash.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
 import { DynamicFormArrayComponent } from '../../shared/components/dynamic-form-array/dynamic-form-array.component';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { VacancyExperienceFormComponent } from './components/vacancy-experience-form/vacancy-experience-form.component';
 import { VacancyLanguagesFormComponent } from './components/vacancy-languages-form/vacancy-languages-form.component';
 import { VacancySalaryFormComponent } from './components/vacancy-salary-form/vacancy-salary-form.component';
@@ -43,6 +44,7 @@ import { VacancySalaryFormComponent } from './components/vacancy-salary-form/vac
     VacancyLanguagesFormComponent,
     VacancyExperienceFormComponent,
     VacancySalaryFormComponent,
+    HeaderComponent,
   ],
   templateUrl: './vacancy-add-page.component.html',
 })

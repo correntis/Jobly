@@ -7,11 +7,12 @@ import { CompaniesService } from '../../core/services/companies.service';
 import HashService from '../../core/services/hash.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
 import { CompactVacancyComponent } from '../../shared/components/compact-vacancy/compact-vacancy.component';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-company-page',
   standalone: true,
-  imports: [CommonModule, CompactVacancyComponent],
+  imports: [CommonModule, CompactVacancyComponent, HeaderComponent],
   templateUrl: './company-page.component.html',
 })
 export class CompanyPageComponent implements OnInit {
@@ -54,7 +55,9 @@ export class CompanyPageComponent implements OnInit {
   loadVacancies() {
     if (this.companyId) {
       this.vacanciesService.getByCompany(this.companyId).subscribe({
-        next: (vacancies) => (this.vacanciesList = vacancies),
+        next: (vacancies) => {
+          this.vacanciesList = vacancies;
+        },
         error: (err) => console.error(err),
       });
     }

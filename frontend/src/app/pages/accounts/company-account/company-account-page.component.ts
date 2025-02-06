@@ -18,6 +18,7 @@ import { CompaniesService } from '../../../core/services/companies.service';
 import HashService from '../../../core/services/hash.service';
 import { UsersService } from '../../../core/services/users.service';
 import { ApiConfig } from '../../../environments/api.config';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-company-account-page',
@@ -30,6 +31,7 @@ import { ApiConfig } from '../../../environments/api.config';
     MatInputModule,
     MatButtonModule,
     FormsModule,
+    HeaderComponent,
   ],
   templateUrl: './company-account-page.component.html',
 })
