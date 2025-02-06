@@ -29,27 +29,27 @@ namespace VacanciesService.Presentation.Controllers
         }
 
         [HttpGet]
+        [Route("vacancies/{vacancyId}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
-        [Route("vacancies/{vacancyId}")]
         public async Task<ActionResult<List<VacancyInteraction>>> GetVacancyInteractions(Guid vacancyId, CancellationToken token)
         {
             return Ok(await _sender.Send(new GetVacancyInteractionsQuery(vacancyId), token));
         }
 
         [HttpGet]
+        [Route("users/{userId}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
-        [Route("users/{userId}")]
         public async Task<ActionResult<List<VacancyInteraction>>> GetUserInteractions(Guid userId, CancellationToken token)
         {
             return Ok(await _sender.Send(new GetUserInteractionsQuery(userId), token));
         }
 
         [HttpGet]
+        [Route("users/{userId}/vacancies/{vacancyId}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
-        [Route("users/{userId}/vacancies/{vacancyId}")]
         public async Task<ActionResult<VacancyInteraction>> GetUserForVacancyInteractions(Guid userId, Guid vacancyId, CancellationToken token)
         {
             var interaction = await _sender.Send(new GetUserForVacancyInteractionQuery(userId, vacancyId), token);

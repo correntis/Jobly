@@ -97,12 +97,16 @@ namespace UsersService.Presentation.Controllers.Http
         }
 
         [HttpGet("{id}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<ActionResult<Resume>> Get(string id, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetResumeQuery(id), cancellationToken));
         }
 
         [HttpGet("users/{userId}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<ActionResult<Resume>> GetByUser(Guid userId, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetResumeByUserQuery(userId), cancellationToken));
