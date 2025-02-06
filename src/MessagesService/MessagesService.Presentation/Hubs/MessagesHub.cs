@@ -2,11 +2,15 @@
 using MessagesService.Application.Messages.Commands.EditMessage;
 using MessagesService.Application.Messages.Commands.ReadMessage;
 using MessagesService.Application.Messages.Commands.SendMessage;
+using MessagesService.Core.Constants;
+using MessagesService.Presentation.Middleware.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace MessagesService.Presentation.Hubs
 {
+    [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+    [AuthorizeRole(Roles = BusinessRules.Roles.User)]
     public class MessagesHub : Hub
     {
         private readonly ILogger<MessagesHub> _logger;

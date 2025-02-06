@@ -44,6 +44,6 @@ app.UseSwaggerUI();
 app.UseAuthorization();
 app.MapControllers();
 
-app.MapPresentation();
+app.UsePresentation();
 
 app.Run();
