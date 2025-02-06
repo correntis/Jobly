@@ -197,8 +197,6 @@ export class UserAccountPageComponent implements OnInit {
       ...this.userForm.value,
     };
 
-    console.log(updateUserRequest);
-
     this.usersService.update(updateUserRequest).subscribe({
       error: (err) => console.error(err),
     });

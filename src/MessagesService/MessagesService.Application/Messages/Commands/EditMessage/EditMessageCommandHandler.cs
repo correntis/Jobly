@@ -10,7 +10,6 @@ namespace MessagesService.Application.Messages.Commands.EditMessage
     {
         private readonly ILogger<EditMessageCommandHandler> _logger;
         private readonly IMessagesRepository _messagesRepository;
-        private readonly IChatsRepository _chatsRepository;
         private readonly IMapper _mapper;
 
         public EditMessageCommandHandler(

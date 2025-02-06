@@ -103,7 +103,7 @@ export class ApplicationsChatsPageComponent {
           this.cdRef.detectChanges();
         },
         error: (error) => {
-          console.error('Error while requiesting applications:', error);
+          console.error(error);
         },
       });
     }
@@ -152,7 +152,7 @@ export class ApplicationsChatsPageComponent {
             this.isLoadingChats = false;
           },
           error: (err) => {
-            console.error('error loading chats ', err);
+            console.error(err);
             this.isLoadingChats = false;
           },
         });

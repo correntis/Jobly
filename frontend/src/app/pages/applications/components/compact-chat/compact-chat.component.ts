@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { ApplicationStatus } from '../../../../core/enums/applicationStatus';
 import { UserRoles } from '../../../../core/enums/userRoles';
 import Application from '../../../../core/models/application';
 import Chat from '../../../../core/models/chat';
@@ -71,12 +72,12 @@ export class CompactChatComponent {
   }
 
   get statusClass(): string {
-    switch (this.chat?.application?.status.toLowerCase()) {
-      case 'pending':
+    switch (this.chat?.application?.status) {
+      case ApplicationStatus.Unread:
         return 'bg-yellow-400';
-      case 'accepted':
+      case ApplicationStatus.Accepted:
         return 'bg-green-400';
-      case 'rejected':
+      case ApplicationStatus.Rejected:
         return 'bg-red-400';
       default:
         return 'bg-gray-400';

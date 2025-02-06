@@ -67,11 +67,11 @@ namespace MessagesService.Presentation.HostedServices
             return new SaveNotificationCommand(
                 resumeViewEvent.UserId,
                 content,
-                NotificationType.Registration,
+                NotificationType.ResumeView,
                 new Dictionary<string, string>
                 {
                     { nameof(ResumeViewEvent.UserId), resumeViewEvent.UserId.ToString() },
-                    { nameof(ResumeViewEvent.CompanyId), resumeViewEvent.UserId.ToString() },
+                    { nameof(ResumeViewEvent.CompanyId), resumeViewEvent.CompanyId.ToString() },
                 });
         }
     }

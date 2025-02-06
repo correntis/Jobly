@@ -11,12 +11,14 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
+import { ApplicationStatus } from '../../../../core/enums/applicationStatus';
 import { UserRoles } from '../../../../core/enums/userRoles';
 import { MessagesHub } from '../../../../core/hubs/messages.hub';
 import Chat from '../../../../core/models/chat';
 import Message from '../../../../core/models/message';
 import User from '../../../../core/models/user';
 import SendMessageRequest from '../../../../core/requests/messages/sendMessageRequest';
+import { ApplicationsService } from '../../../../core/services/applications.service';
 import HashService from '../../../../core/services/hash.service';
 import MessagesService from '../../../../core/services/messages.service';
 import { UsersService } from '../../../../core/services/users.service';
@@ -63,11 +65,14 @@ export class FullChatComponent {
   selectedMessage?: Message;
   selectedMessageIndex: number = -1;
 
+  ApplicationStatus = ApplicationStatus;
+
   private observer!: IntersectionObserver;
 
   constructor(
     private messagesService: MessagesService,
     private usersService: UsersService,
+    private applicationsService: ApplicationsService,
     private messagesHub: MessagesHub,
     private envService: EnvService,
     private cdRef: ChangeDetectorRef,
@@ -187,6 +192,24 @@ export class FullChatComponent {
       return this.chat?.userId;
     }
     return undefined;
+  }
+
+  updateStatus(status: string) {
+    if (this.chat?.application?.id) {
+      this.applicationsService
+        .update({
+          id: this.chat.application.id,
+          status,
+        })
+        .subscribe({
+          next: (id) => {
+            if (this.chat?.application?.status) {
+              this.chat.application.status = status;
+            }
+          },
+          error: (err) => console.error(err),
+        });
+    }
   }
 
   sendMessage(newContent: string) {

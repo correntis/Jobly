@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { UserRoles } from '../../../core/enums/userRoles';
 import HashService from '../../../core/services/hash.service';
 import { EnvService } from '../../../environments/environment';
+import { NotificationsMenuComponent } from '../notifications-menu/notifications-menu.component';
 
 type Route = {
   path: string;
@@ -14,7 +15,7 @@ type Route = {
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationsMenuComponent],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit {
@@ -33,7 +34,7 @@ export class HeaderComponent implements OnInit {
     const routes: Route[] = [
       {
         path: 'recommendations',
-        name: 'recommendations',
+        name: 'Recommendations',
         condition: this.isUser(),
       },
       {

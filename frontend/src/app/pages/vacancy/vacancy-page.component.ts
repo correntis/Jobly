@@ -65,7 +65,7 @@ export class VacancyPageComponent {
         this.loadCompany(this.vacancy.companyId);
       },
       error: (err) => {
-        console.error('Error fetching vacancy:', err);
+        console.error(err);
       },
     });
   }
@@ -131,8 +131,7 @@ export class VacancyPageComponent {
       this.interactionsService
         .add(this.envService.getUserId(), this.vacancy.id, interactionType)
         .subscribe({
-          next: (id) => {
-            console.log('interaction added');
+          next: () => {
             if (this.interaction) {
               this.interaction.type = interactionType;
             }

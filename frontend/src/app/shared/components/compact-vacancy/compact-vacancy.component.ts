@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,8 +11,8 @@ import Interaction from '../../../core/models/interaction';
 import Vacancy from '../../../core/models/vacancies/vacancy';
 import { CompaniesService } from '../../../core/services/companies.service';
 import HashService from '../../../core/services/hash.service';
-import { InteractionsService } from '../../../core/services/interactions.service';
 import { EnvService } from '../../../environments/environment';
+import { InteractionsService } from './../../../core/services/interactions.service';
 
 @Component({
   selector: 'app-compact-vacancy',
@@ -47,7 +47,11 @@ export class CompactVacancyComponent implements OnInit {
         .getByUserAndVacancy(this.envService.getUserId(), this.vacancy?.id)
         .subscribe({
           next: (intercation) => (this.interaction = intercation),
-          error: (err) => console.error(err),
+          error: (err: HttpErrorResponse) => {
+            if (err.status === HttpStatusCode.NotFound) {
+              this.interaction = undefined;
+            }
+          },
         });
     }
   }

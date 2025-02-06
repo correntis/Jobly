@@ -14,7 +14,9 @@ export class ApiConfig {
   static readonly vacancies = `${ApiConfig.baseHttpsPath}/vacancies`;
   static readonly chats = `${ApiConfig.baseHttpsPath}/chats`;
   static readonly messages = `${ApiConfig.baseHttpsPath}/messages`;
+  static readonly notifications = `${ApiConfig.baseHttpsPath}/notifications`;
 
   static readonly messagesHub = `${ApiConfig.baseHubsPath}/messages`;
   static readonly chatsHub = `${ApiConfig.baseHubsPath}/chats`;
+  static readonly notificationsHub = `${ApiConfig.baseHubsPath}/notifications`;
 }

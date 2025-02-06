@@ -26,10 +26,10 @@ namespace MessagesService.Presentation.Controllers
         }
 
         [HttpGet]
-        [Route("{recipientId}&pageIndex={pageIndex}&pageSize={pageSize}")]
-        public async Task<ActionResult<List<Notification>>> GetRecipientNotifications(Guid recipientId, int pageIndex, int pageSize, CancellationToken token)
+        [Route("{recipientId}/unreaded")]
+        public async Task<ActionResult<List<Notification>>> GetRecipientNotifications(Guid recipientId, CancellationToken token)
         {
-            return Ok(await _sender.Send(new GetRecipientNotificationsQuery(recipientId, pageIndex, pageSize), token));
+            return Ok(await _sender.Send(new GetRecipientUnreadedNotificationsQuery(recipientId), token));
         }
     }
 }

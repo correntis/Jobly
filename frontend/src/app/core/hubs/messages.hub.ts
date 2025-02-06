@@ -35,7 +35,7 @@ export class MessagesHub {
           observer.complete();
         })
         .catch((error) => {
-          console.error('Error connecting to messages hub', error);
+          console.error(error);
           observer.error(error);
         });
     });
@@ -45,7 +45,7 @@ export class MessagesHub {
     try {
       await this.hubConnection?.invoke('SendMessage', request);
     } catch (err) {
-      console.error('Error sending message ', err);
+      console.error(err);
     }
   }
 
@@ -56,7 +56,7 @@ export class MessagesHub {
         content,
       });
     } catch (err) {
-      console.log('Error editing message:', err);
+      console.error(err);
     }
   }
 
@@ -66,7 +66,7 @@ export class MessagesHub {
         messageId,
       });
     } catch (err) {
-      console.log('Error reading message:', err);
+      console.error(err);
     }
   }
 

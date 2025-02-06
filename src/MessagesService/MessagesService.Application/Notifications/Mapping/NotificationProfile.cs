@@ -13,6 +13,7 @@ namespace MessagesService.Application.Notifications.Mapping
             CreateMap<NotificationEntity, Notification>();
 
             CreateMap<SaveNotificationCommand, NotificationEntity>()
+                .ForMember(entity => entity.Type, mapper => mapper.MapFrom(command => (int)command.Type))
                 .ForMember(entity => entity.Status, mapper => mapper.MapFrom(_ => NotificationStatus.Sent))
                 .ForMember(entity => entity.CreatedAt, mapper => mapper.MapFrom(_ => DateTime.UtcNow));
         }

@@ -21,10 +21,36 @@
     *ngIf="isForCompany()"
     class="flex flex-col items-center justify-evenly bg-blue-700 w-[100%] py-2"
   >
-    <div>
-      <h2 class="text-3xl text-white">
-        {{ user?.firstName }} {{ user?.lastName }}
-      </h2>
+    <div class="flex items-center gap-5">
+      <div>
+        <h2 class="text-3xl text-white">
+          {{ user?.firstName }} {{ user?.lastName }}
+        </h2>
+      </div>
+
+      <div
+        *ngIf="chat?.application?.status === ApplicationStatus.Unread"
+        class="flex gap-2"
+      >
+        <div
+          (click)="updateStatus(ApplicationStatus.Rejected)"
+          class="hover:scale-95 hover:cursor-pointer"
+        >
+          <span
+            class="bg-red-800 text-white px-4 py-2 rounded-full text-sm font-semibold"
+            >Reject</span
+          >
+        </div>
+        <div
+          (click)="updateStatus(ApplicationStatus.Accepted)"
+          class="hover:scale-95 hover:cursor-pointer"
+        >
+          <span
+            class="bg-green-800 text-white px-4 py-2 rounded-full text-sm font-semibold"
+            >Accept</span
+          >
+        </div>
+      </div>
     </div>
     <div (click)="goToResume()">
       <span
