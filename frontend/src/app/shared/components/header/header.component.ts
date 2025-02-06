@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private envService: EnvService,
     private hashService: HashService,
-    private rotuer: Router,
+    private router: Router,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -81,6 +81,12 @@ export class HeaderComponent implements OnInit {
   }
 
   goToRoute(route: string) {
-    this.rotuer.navigate([route]);
+    this.redirectTo(route);
+  }
+
+  redirectTo(uri: string) {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([uri]);
+    });
   }
 }

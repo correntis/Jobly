@@ -6,6 +6,7 @@ import Vacancy from '../../core/models/vacancies/vacancy';
 import { CompaniesService } from '../../core/services/companies.service';
 import HashService from '../../core/services/hash.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
+import { ApiConfig } from '../../environments/api.config';
 import { CompactVacancyComponent } from '../../shared/components/compact-vacancy/compact-vacancy.component';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 
@@ -20,6 +21,8 @@ export class CompanyPageComponent implements OnInit {
 
   company?: Company;
   vacanciesList?: Vacancy[];
+
+  resources: string = ApiConfig.resources;
 
   constructor(
     private activatedRoutes: ActivatedRoute,

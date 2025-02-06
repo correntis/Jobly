@@ -3,7 +3,7 @@ export class ApiConfig {
   static readonly baseHttpPath = 'http://localhost';
   static readonly baseHubsPath = `${ApiConfig.baseHttpPath}/api/hubs`;
 
-  static readonly resources = `${ApiConfig.baseHttpsPath}/resources`;
+  static readonly resources = `${ApiConfig.baseHttpsPath}/resources/`;
   static readonly auth = `${ApiConfig.baseHttpsPath}/auth`;
   static readonly users = `${ApiConfig.baseHttpsPath}/users`;
   static readonly companies = `${ApiConfig.baseHttpsPath}/companies`;

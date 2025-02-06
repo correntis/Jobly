@@ -62,13 +62,16 @@ export class ApplicationsChatsPageComponent {
     this.activatedRoute.params.subscribe((params) => {
       this.requestsId = this.hashService.decrypt(params['userId']);
       this.forRole = this.hashService.decrypt(params['forRole']);
+
+      console.log('open user id', this.requestsId);
+      console.log('forRole', this.forRole);
     });
   }
 
   ngOnInit() {
     if (this.forRole === UserRoles.Company) {
       this.loadCompany();
-    } else {
+    } else if (this.forRole === UserRoles.User) {
       this.loadData();
     }
   }
