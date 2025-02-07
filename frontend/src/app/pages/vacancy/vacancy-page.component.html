@@ -193,6 +193,10 @@
         </div>
       </div>
 
+      <div *ngIf="alreadyApplied">
+        <h3 class="text-xl text-red-500 text-center">You already applied</h3>
+      </div>
+
       <div *ngIf="!isUserCreator && !vacancy.archived">
         <button
           mat-raised-button

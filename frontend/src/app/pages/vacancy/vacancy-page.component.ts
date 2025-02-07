@@ -34,6 +34,7 @@ export class VacancyPageComponent {
 
   alreadyApplied: boolean = false;
   isUserCreator: boolean = false;
+  isClickInteractionSent: boolean = false;
 
   constructor(
     private activatedRoutes: ActivatedRoute,
@@ -92,8 +93,11 @@ export class VacancyPageComponent {
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === HttpStatusCode.NotFound) {
-          this.postInteraction(InteractionType.Click);
-          this.loadInteraction(userId, vacancyId);
+          if (!this.isClickInteractionSent) {
+            this.isClickInteractionSent = true;
+            this.postInteraction(InteractionType.Click);
+            this.loadInteraction(userId, vacancyId);
+          }
         }
       },
     });
@@ -114,6 +118,11 @@ export class VacancyPageComponent {
       this.interactionsService
         .add(this.envService.getUserId(), this.vacancy.id, interactionType)
         .subscribe({
+          next: () => {
+            if (this.interaction?.type) {
+              this.interaction.type = interactionType;
+            }
+          },
           error: (err) => console.error(err),
         });
     }
@@ -165,6 +174,11 @@ export class VacancyPageComponent {
           next: () => {
             if (this.interaction) {
               this.interaction.type = interactionType;
+            } else if (this.vacancy?.id) {
+              this.loadInteraction(
+                this.envService.getUserId(),
+                this.vacancy.id
+              );
             }
           },
           error: (err) => console.error(err),

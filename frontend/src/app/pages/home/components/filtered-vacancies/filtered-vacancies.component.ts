@@ -211,10 +211,13 @@ export class FilteredVacanciesComponent {
     this.vacanciesFilter.languages =
       this.getFormArrayControls('languages').value;
 
+    this.vacanciesFilter.pageNumber = 1;
+
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
         this.vacanciesList = vacancies;
         this.isFullLoaded = false;
+        this.vacanciesFilter.pageNumber++;
       },
       error: (err) => console.error(err),
     });
