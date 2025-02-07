@@ -8,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
+if(builder.Environment.IsProduction())
+{
+    configuration
+    .AddJsonFile("appsettings.Container.json");
+}
+
 builder.Host.UseSerilog((context, configuration) =>
 {
     configuration.Enrich.FromLogContext()

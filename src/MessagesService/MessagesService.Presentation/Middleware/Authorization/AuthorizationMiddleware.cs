@@ -15,11 +15,6 @@ namespace MessagesService.Presentation.Middleware.Authorization
         {
             var endpoint = context.GetEndpoint();
 
-            if (endpoint.DisplayName.Contains("hubs/messages"))
-            {
-                Console.WriteLine();
-            }
-
             if (endpoint is not null)
             {
                 var authorizeAttributes = endpoint.Metadata.GetOrderedMetadata<AuthorizeRoleAttribute>();

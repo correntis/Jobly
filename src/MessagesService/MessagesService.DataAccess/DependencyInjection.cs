@@ -22,6 +22,8 @@ namespace MessagesService.DataAccess
             services.AddSingleton<ITemplatesRepository, TemplatesRepository>();
 
             AddGrpcClients(services, configuration);
+
+            SeedMongoDb(services);
         }
 
         internal static void AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
@@ -37,6 +39,16 @@ namespace MessagesService.DataAccess
                 {
                     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                 });
+        }
+
+        internal static void SeedMongoDb(IServiceCollection services)
+        {
+            using(var scope = services.BuildServiceProvider().CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<MongoContext>();
+
+                context.SeedTemplates();
+            }
         }
     }
 }

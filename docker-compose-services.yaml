@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  users-service:
+    container_name: users-service
+    build:
+      context: ./
+      dockerfile: ./src/UsersService/UsersService.API/Dockerfile
+    ports:
+      - "7001:7001"
+    volumes:
+      - ./nginx/certs/localhost.pfx:/app/certs/localhost.pfx:ro
+
+  vacancies-service:
+    container_name: vacancies-service
+    build:
+      context: ./
+      dockerfile: ./src/VacanciesService/VacanciesService.API/Dockerfile
+    ports:
+      - "7002:7002"
+    volumes:
+      - ./nginx/certs/localhost.pfx:/app/certs/localhost.pfx:ro
+      - ./src/VacanciesService/VacanciesService.API/vacancy_recomdations_model.zip:/app/vacancy_recomdations_model.zip:rw
+
+  messages-service:
+    container_name: messages-service
+    build:
+      context: ./
+      dockerfile: ./src/MessagesService/MessagesService.API/Dockerfile
+    ports:
+      - "7003:7003"
+      - "7004:7004"
+    volumes:
+      - ./nginx/certs/localhost.pfx:/app/certs/localhost.pfx:ro
+
+      
