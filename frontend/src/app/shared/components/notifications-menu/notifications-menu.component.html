@@ -1,0 +1,107 @@
+<div class="relative">
+  <button
+    (click)="toggleMenu()"
+    class="px-2 pt-2 rounded-full hover:bg-blue-400 focus:outline-none"
+  >
+    <mat-icon>notifications</mat-icon>
+    <span
+      *ngIf="unreadCount > 0"
+      class="absolute top-[-3px] right-[-6px] bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5"
+    >
+      {{ unreadCount }}
+    </span>
+  </button>
+
+  <div
+    *ngIf="isMenuOpen"
+    class="absolute right-[-350px] top-[43px] mt-2 w-96 bg-blue-900 border rounded-lg shadow-lg z-50"
+  >
+    <div class="flex items-center justify-between p-4 border-b border-gray-200">
+      <div class="">
+        <h3 class="text-lg font-semibold">Notifications</h3>
+      </div>
+
+      <div>
+        <button
+          (click)="toggleMenu()"
+          class="hover:bg-gray-300 hover:text-gray-800 h-8 w-8 rounded-full"
+        >
+          <mat-icon class="scale-105 mt-1">close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div
+      *ngIf="notifications.length === 0"
+      class="p-4 border-b border-gray-200"
+    >
+      <h4 class="text-lg font-semibold text-red-200">
+        You don't have unreaded notifications
+      </h4>
+    </div>
+
+    <div class="max-h-[500px] overflow-y-auto bg-blue-800">
+      <div
+        *ngFor="let notification of notifications"
+        class="p-4 hover:bg-gray-300 hover:text-gray-900 cursor-pointer"
+        (click)="markAsViewed(notification)"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p>{{ notification.createdAt | date : "dd.MM.YYYY HH:mm:ss" }}</p>
+
+            <p class="text-sm font-medium w-80">{{ notification.content }}</p>
+
+            <div [ngSwitch]="notification.type">
+              <div
+                *ngSwitchCase="NotificationType.ResumeView"
+                (click)="goToCompany(notification)"
+              >
+                <span
+                  class="text-sm underline cursor-pointer hover:text-[15px]"
+                >
+                  View company details
+                </span>
+              </div>
+
+              <div
+                *ngSwitchCase="NotificationType.LikedVacancyDeadline"
+                (click)="goToVacancy(notification)"
+              >
+                <span
+                  class="text-sm underline cursor-pointer hover:text-[15px]"
+                >
+                  View vacancy
+                </span>
+              </div>
+
+              <div
+                *ngSwitchCase="NotificationType.RecomendVacancy"
+                (click)="goToVacancy(notification)"
+              >
+                <span
+                  class="text-sm underline cursor-pointer hover:text-[15px]"
+                >
+                  View vacancy
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="notification.status === NotificationStatus.Sent"
+            class="w-2 h-2 bg-blue-500 rounded-full"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="notifications.length > 0" class="p-4 border-t border-gray-200">
+      <button
+        (click)="markAllAsViewed()"
+        class="text-sm text-gray-100 hover:underline"
+      >
+        Mark all as read
+      </button>
+    </div>
+  </div>
+</div>

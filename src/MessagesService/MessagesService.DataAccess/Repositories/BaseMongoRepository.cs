@@ -11,5 +11,12 @@ namespace MessagesService.DataAccess.Repositories
         {
             return Builders<TEntity>.Filter.Eq(field, value);
         }
+
+        protected FilterDefinition<TEntity> And(
+            FilterDefinition<TEntity> first,
+            FilterDefinition<TEntity> second)
+        {
+            return Builders<TEntity>.Filter.And(first, second);
+        }
     }
 }

@@ -115,49 +115,49 @@ namespace VacanciesService.Infrastructure.NoSQL.Repositories
                 return SpecificationBuilder.GetFilter(specification);
             }
 
-            if (filter.Requirements is not null)
+            if (filter.Requirements is not null && filter.Requirements.Count != 0)
             {
                 specification = specification.Or(
                     new ListContainsSpecification<VacancyDetailsEntity>(vd => vd.Requirements, filter.Requirements));
             }
 
-            if (filter.Skills is not null)
+            if (filter.Skills is not null && filter.Skills.Count != 0)
             {
                 specification = specification.Or(
                     new ListContainsSpecification<VacancyDetailsEntity>(vd => vd.Skills, filter.Skills));
             }
 
-            if (filter.Tags is not null)
+            if (filter.Tags is not null && filter.Tags.Count != 0)
             {
                 specification = specification.Or(
                     new ListContainsSpecification<VacancyDetailsEntity>(vd => vd.Tags, filter.Tags));
             }
 
-            if (filter.Responsibilities is not null)
+            if (filter.Responsibilities is not null && filter.Responsibilities.Count != 0)
             {
                 specification = specification.Or(
                     new ListContainsSpecification<VacancyDetailsEntity>(vd => vd.Responsibilities, filter.Responsibilities));
             }
 
-            if (filter.Benefitrs is not null)
+            if (filter.Benefits is not null && filter.Benefits.Count != 0)
             {
                 specification = specification.Or(
-                    new ListContainsSpecification<VacancyDetailsEntity>(vd => vd.Benefits, filter.Benefitrs));
+                    new ListContainsSpecification<VacancyDetailsEntity>(vd => vd.Benefits, filter.Benefits));
             }
 
-            if (filter.Education is not null)
+            if (filter.Education is not null && filter.Education.Count != 0)
             {
                 specification = specification.Or(
                     new ListContainsSpecification<VacancyDetailsEntity>(vd => vd.Education, filter.Education));
             }
 
-            if (filter.Technologies is not null)
+            if (filter.Technologies is not null && filter.Technologies.Count != 0)
             {
                 specification = specification.Or(
                     new ListContainsSpecification<VacancyDetailsEntity>(vd => vd.Technologies, filter.Technologies));
             }
 
-            if (filter.Languages is not null)
+            if (filter.Languages is not null && filter.Languages.Count != 0)
             {
                 specification = specification.Or(new VacancyLanguagesSpecification(filter.Languages));
             }

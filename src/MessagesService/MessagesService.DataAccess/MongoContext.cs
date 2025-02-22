@@ -42,6 +42,52 @@ namespace MessagesService.DataAccess
             CreateMessagesIndicies();
         }
 
+        public void SeedTemplates()
+        {
+            var templates = GetTemplates();
+            var amount = Templates.CountDocuments(FilterDefinition<TemplateEntity>.Empty);
+
+            if(amount == 0)
+            {
+                Templates.InsertManyAsync(templates);
+            }
+        }
+
+        private TemplateEntity[] GetTemplates()
+        {
+            return [
+                new TemplateEntity()
+                {
+                    NotificationEvent = "RegistrationEvent",
+                    NotificationType = 0,
+                    Template = "Dear {0}. Thank you for registration!",
+                },
+                new TemplateEntity()
+                {
+                   NotificationEvent = "ApplicationResponseEvent",
+                   NotificationType = 1,
+                   Template = "Dear user {0}. Your application status for vacancy {1} has been updated. Current status {2}",
+                },
+                new TemplateEntity()
+                {
+                   NotificationEvent = "LikedVacancyDeadlineEvent",
+                   NotificationType = 2,
+                   Template = "Your liked vacancy {0} is about to expires in {1} days",
+                },
+                new TemplateEntity()
+                {
+                   NotificationEvent = "RecomendVacancyEvent",
+                   NotificationType = 3,
+                   Template = "One new vacancy mathches your resume with {0}%. {1}",
+                },
+                new TemplateEntity()
+                {
+                   NotificationEvent = "ResumeViewEvent",
+                   NotificationType = 4,
+                   Template = "Your resume has beem viewed by company {0}",
+                },];
+        }
+
         private void CreateNotificationsIndicies()
         {
             if (Notifications is null)

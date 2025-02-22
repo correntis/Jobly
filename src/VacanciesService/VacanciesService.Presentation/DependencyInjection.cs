@@ -16,12 +16,19 @@ namespace VacanciesService.Presentation
             services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
 
             services.AddGrpc();
+
+            services.AddControllers(config =>
+            {
+                config.Filters.Add<StringToJsonActionFilter>();
+            });
         }
 
         public static void UsePresentation(this WebApplication app)
         {
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseMiddleware<AuthorizationMiddleware>();
+
+            app.MapControllers();
         }
     }
 }

@@ -33,6 +33,11 @@ namespace UsersService.Infrastructure.SQL.Repositories
             return await _context.Companies.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
+        public async Task<CompanyEntity> GetByUserAsync(Guid userId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Companies.FirstOrDefaultAsync(c => c.UserId == userId, cancellationToken);
+        }
+
         public async Task<CompanyEntity> GetWithIncludesAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Companies

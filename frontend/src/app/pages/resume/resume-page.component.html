@@ -1,0 +1,143 @@
+<app-header />
+
+<div class="container mx-auto p-6 bg-gray-200 max-w-[50%] min-h-screen">
+  <div class="text-center mb-8">
+    <h1 class="text-4xl font-bold text-gray-800">
+      {{ user?.firstName }} {{ user?.lastName }}
+    </h1>
+    <p class="text-gray-600">{{ user?.email }}</p>
+    <p class="text-gray-600">{{ user?.phoneNumber }}</p>
+  </div>
+
+  <div *ngIf="!resume">
+    <h3 class="text-2xl text-red-500 text-center font-bold">
+      User doesn't have a resume yet.
+    </h3>
+  </div>
+
+  <div *ngIf="resume" class="bg-white shadow-lg rounded-lg p-8">
+    <div class="mb-4">
+      <h2 class="text-3xl font-semibold text-gray-800">{{ resume.title }}</h2>
+      <p class="text-lg text-gray-600 mt-2 pl-2">
+        {{ resume.summary }}
+      </p>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="text-xl font-semibold text-gray-800 mb-2">Skills</h3>
+
+      <div class="flex flex-wrap gap-3 pl-5">
+        <span
+          *ngFor="let skill of resume.skills"
+          class="bg-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm"
+        >
+          {{ skill }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="text-xl font-semibold text-gray-800 mb-2">Tags</h3>
+
+      <div class="flex flex-wrap gap-3 pl-5">
+        <span
+          *ngFor="let tag of resume.tags"
+          class="bg-green-200 text-green-800 px-4 py-2 rounded-full text-sm"
+        >
+          {{ tag }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Job Experiences</h3>
+      <div *ngFor="let experience of resume.jobExperiences" class="mb-3 pl-5">
+        <h4 class="text-lg font-semibold text-gray-800">
+          {{ experience.jobTitle }} at {{ experience.companyName }}
+        </h4>
+        <p class="text-gray-600">
+          {{ experience.startDate | date }} -
+          {{ experience.endDate ? (experience.endDate | date) : "Present" }}
+        </p>
+        <ul class="list-disc list-inside text-gray-600 mt-1">
+          <li *ngFor="let responsibility of experience.responsibilities">
+            {{ responsibility }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Education</h3>
+      <div *ngFor="let education of resume.educations" class="mb-3 pl-5">
+        <h4 class="text-lg font-semibold text-gray-800">
+          <span class="italic font-bold">{{ education.institution }}</span
+          >: {{ education.degree }}
+        </h4>
+        <p class="text-gray-600">
+          {{ education.startDate | date }} -
+          {{ education.endDate ? (education.endDate | date) : "Present" }}
+        </p>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Certifications</h3>
+      <div
+        *ngFor="let certification of resume.certifications"
+        class="mb-3 pl-5"
+      >
+        <h4 class="text-lg font-semibold text-gray-800">
+          <span class="italic font-bold"> {{ certification.issuer }}</span
+          >: {{ certification.name }}
+        </h4>
+        <p class="text-gray-600">
+          Issued on {{ certification.issueDate | date }}
+        </p>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Projects</h3>
+      <div *ngFor="let project of resume.projects" class="mb-5 pl-5">
+        <div class="flex align-bottom items-end gap-3">
+          <h4 class="text-lg font-semibold text-gray-800">
+            {{ project.name }}
+          </h4>
+          <a
+            [href]="project.link"
+            target="_blank"
+            class="text-blue-500 hover:underline"
+          >
+            View Project
+          </a>
+        </div>
+        <p class="text-gray-600">{{ project.description }}</p>
+
+        <div class="flex flex-wrap gap-2 mt-2">
+          <span
+            *ngFor="let tech of project.technologies"
+            class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm"
+          >
+            {{ tech }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Languages</h3>
+      <div class="flex gap-5 pl-5">
+        <div
+          *ngFor="let language of resume.languages"
+          class="mb-3 bg-purple-200 px-6 py-2 rounded-full"
+        >
+          <h4 class="text-xl font-semibold text-gray-800">
+            {{ language.name }}
+          </h4>
+          <p class="text-gray-600 mt-[-5px]">{{ language.level }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

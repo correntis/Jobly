@@ -3,10 +3,11 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using UsersService.Domain.Abstractions.Repositories;
 using UsersService.Domain.Exceptions;
+using UsersService.Domain.Models;
 
 namespace UsersService.Application.Resumes.Commands.UpdateResume
 {
-    public class UpdateResumeCommandHandler : IRequestHandler<UpdateResumeCommand, string>
+    public class UpdateResumeCommandHandler : IRequestHandler<UpdateResumeCommand, Resume>
     {
         private readonly ILogger<UpdateResumeCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -22,7 +23,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateResume
             _mapper = mapper;
         }
 
-        public async Task<string> Handle(UpdateResumeCommand request, CancellationToken cancellationToken = default)
+        public async Task<Resume> Handle(UpdateResumeCommand request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start handling {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
@@ -37,7 +38,7 @@ namespace UsersService.Application.Resumes.Commands.UpdateResume
 
             _logger.LogInformation("Successfully handled {CommandName} for resume with ID {ResumeId}", request.GetType().Name, request.Id);
 
-            return resumeEntity.Id;
+            return _mapper.Map<Resume>(resumeEntity);
         }
     }
 }

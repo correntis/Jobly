@@ -1,0 +1,76 @@
+<section [formGroup]="languagesContainer" class="">
+  <div class="flex justify-between">
+    <h3 class="text-lg font-medium text-gray-800 mt-4">Languages</h3>
+    <button
+      mat-fab
+      color="accent"
+      type="button"
+      (click)="addLanguage()"
+      class="text-3xl transform scale-[0.55] align-middle"
+    >
+      <mat-icon matSuffix>add</mat-icon>
+    </button>
+  </div>
+
+  <div>
+    <ng-container formArrayName="languages">
+      <hr *ngIf="formArray.length > 0" class="border-t-1 border-blue-300" />
+
+      <ng-container
+        class="w-full"
+        *ngFor="let languageForm of formArray.controls; let i = index"
+      >
+        <div
+          [formGroupName]="i"
+          class="flex flex-row justify-evenly align-middle items-center"
+        >
+          <span class="text-xl">{{ i + 1 }}:</span>
+          <mat-form-field color="primary" class="w-[40%]" appearance="fill">
+            <mat-label>Name</mat-label>
+
+            <input
+              matInput
+              formControlName="name"
+              aria-describedby="languageNameError-{{ i }}"
+              required
+            />
+
+            <mat-error id="languageNameError-{{ i }}">
+              <ng-container
+                *ngIf="formArray.controls[i].get('name')?.hasError('required')"
+              >
+                Input smth or delete lang
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field color="primary" class="w-[40%]" appearance="fill">
+            <mat-label>Level</mat-label>
+
+            <input
+              matInput
+              formControlName="level"
+              aria-describedby="languageLevelError-{{ i }}"
+              required
+            />
+
+            <mat-error id="languageLevelError-{{ i }}">
+              <ng-container
+                *ngIf="formArray.controls[i].get('level')?.hasError('required')"
+              >
+                Input smth or delete lang
+              </ng-container>
+            </mat-error>
+          </mat-form-field>
+
+          <div
+            (click)="removeLanguage(i)"
+            class="hover:cursor-pointer hover:bg-red-400 rounded-xl flex justify-center p-3 mb-[22px]"
+          >
+            <mat-icon matSuffix> close</mat-icon>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</section>

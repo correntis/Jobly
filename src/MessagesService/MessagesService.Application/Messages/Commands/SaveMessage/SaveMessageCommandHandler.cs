@@ -34,7 +34,7 @@ namespace MessagesService.Application.Messages.Commands.SendMessage
                 request.ChatId,
                 request.SenderId);
 
-            var chatEntity = await _chatsRepository.GetOneBy(chat => chat.Id, request.ChatId, token);
+            var chatEntity = await _chatsRepository.GetOneByAsync(chat => chat.Id, request.ChatId, token);
 
             var messageEntity = _mapper.Map<MessageEntity>(request);
 

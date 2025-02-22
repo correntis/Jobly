@@ -29,7 +29,7 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Read
         public async Task<List<VacancyEntity>> GetAllIn(List<Guid> ids, CancellationToken token = default)
         {
             return await _vacanciesContext.Vacancies
-                .Where(v => ids.Contains(v.Id))
+                .Where(v => ids.Contains(v.Id) && !v.Archived)
                 .ToListAsync(token);
         }
 

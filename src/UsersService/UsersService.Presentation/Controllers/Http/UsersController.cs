@@ -22,6 +22,7 @@ namespace UsersService.Presentation.Controllers.Http
 
         [HttpPut]
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<ActionResult<Guid>> Update(UpdateUserCommand updateUserCommand, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(updateUserCommand, cancellationToken));
@@ -29,12 +30,15 @@ namespace UsersService.Presentation.Controllers.Http
 
         [HttpDelete("{id}")]
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<ActionResult<Guid>> Delete(Guid id, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new DeleteUserCommand(id), cancellationToken));
         }
 
         [HttpGet("{id}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         public async Task<ActionResult<User>> Get(Guid id, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetUserQuery(id), cancellationToken));

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using UsersService.Application.Companies.Commands.ViewResume;
 using UsersService.Application.Resumes.Commands.AddResume;
 using UsersService.Application.Resumes.Commands.DeleteResume;
 using UsersService.Application.Resumes.Commands.UpdateCertification;
@@ -31,7 +32,9 @@ namespace UsersService.Presentation.Controllers.Http
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<ActionResult<string>> Add(AddResumeCommand addResumeCommand, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(addResumeCommand, cancellationToken));
+            var resumeId = await _mediator.Send(addResumeCommand, cancellationToken);
+
+            return Ok(resumeId);
         }
 
         [HttpPut]
@@ -39,6 +42,16 @@ namespace UsersService.Presentation.Controllers.Http
         public async Task<ActionResult<string>> Update(UpdateResumeCommand updateResumeCommand, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(updateResumeCommand, cancellationToken));
+        }
+
+        [HttpPost]
+        [Route("views")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        public async Task<ActionResult<Guid>> ViewResume(ViewResumeCommand viewResumeCommand, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(viewResumeCommand, cancellationToken);
+
+            return Ok();
         }
 
         [HttpPut("certifications")]
@@ -84,12 +97,16 @@ namespace UsersService.Presentation.Controllers.Http
         }
 
         [HttpGet("{id}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<ActionResult<Resume>> Get(string id, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetResumeQuery(id), cancellationToken));
         }
 
         [HttpGet("users/{userId}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<ActionResult<Resume>> GetByUser(Guid userId, CancellationToken cancellationToken)
         {
             return Ok(await _mediator.Send(new GetResumeByUserQuery(userId), cancellationToken));

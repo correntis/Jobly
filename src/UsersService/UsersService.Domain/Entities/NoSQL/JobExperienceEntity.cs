@@ -1,6 +1,6 @@
-﻿namespace UsersService.Domain.Models
+﻿namespace UsersService.Domain.Entities.NoSQL
 {
-    public class JobExpirience
+    public class JobExperienceEntity
     {
         public string JobTitle { get; set; }
         public string CompanyName { get; set; }

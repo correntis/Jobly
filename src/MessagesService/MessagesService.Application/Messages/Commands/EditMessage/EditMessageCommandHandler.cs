@@ -10,7 +10,6 @@ namespace MessagesService.Application.Messages.Commands.EditMessage
     {
         private readonly ILogger<EditMessageCommandHandler> _logger;
         private readonly IMessagesRepository _messagesRepository;
-        private readonly IChatsRepository _chatsRepository;
         private readonly IMapper _mapper;
 
         public EditMessageCommandHandler(
@@ -32,13 +31,22 @@ namespace MessagesService.Application.Messages.Commands.EditMessage
 
             var messageEntity = await _messagesRepository.GetOneBy(msg => msg.Id, request.MessageId, token);
 
+            var editTime = DateTime.UtcNow;
+
             await _messagesRepository.SetByIdAsync(
                 request.MessageId,
                 msg => msg.Content,
                 request.Content,
                 token);
 
+            await _messagesRepository.SetByIdAsync(
+                request.MessageId,
+                msg => msg.EditedAt,
+                editTime,
+                token);
+
             messageEntity.Content = request.Content;
+            messageEntity.EditedAt = editTime;
 
             _logger.LogInformation(
                 "Succesfully handled command {CommandName} for message {MessageId}",

@@ -1,0 +1,68 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import Company from '../../core/models/company';
+import Vacancy from '../../core/models/vacancies/vacancy';
+import { CompaniesService } from '../../core/services/companies.service';
+import HashService from '../../core/services/hash.service';
+import { VacanciesService } from '../../core/services/vacancies.service';
+import { ApiConfig } from '../../environments/api.config';
+import { CompactVacancyComponent } from '../../shared/components/compact-vacancy/compact-vacancy.component';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+
+@Component({
+  selector: 'app-company-page',
+  standalone: true,
+  imports: [CommonModule, CompactVacancyComponent, HeaderComponent],
+  templateUrl: './company-page.component.html',
+})
+export class CompanyPageComponent implements OnInit {
+  companyId?: string;
+
+  company?: Company;
+  vacanciesList?: Vacancy[];
+
+  resources: string = ApiConfig.resources;
+
+  constructor(
+    private activatedRoutes: ActivatedRoute,
+    private hashService: HashService,
+    private companiesService: CompaniesService,
+    private vacanciesService: VacanciesService
+  ) {
+    this.loadRouteParams();
+  }
+
+  ngOnInit() {
+    this.loadCompany();
+    this.loadVacancies();
+  }
+
+  loadRouteParams(): void {
+    this.activatedRoutes.params.subscribe((params) => {
+      this.companyId = this.hashService.decrypt(params['companyId']);
+    });
+  }
+
+  loadCompany() {
+    if (this.companyId) {
+      this.companiesService.get(this.companyId).subscribe({
+        next: (company) => {
+          this.company = company;
+        },
+        error: (err) => console.error(err),
+      });
+    }
+  }
+
+  loadVacancies() {
+    if (this.companyId) {
+      this.vacanciesService.getByCompany(this.companyId).subscribe({
+        next: (vacancies) => {
+          this.vacanciesList = vacancies;
+        },
+        error: (err) => console.error(err),
+      });
+    }
+  }
+}

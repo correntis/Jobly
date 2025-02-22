@@ -73,7 +73,7 @@ namespace MessagesService.Presentation.HostedServices
             return new SaveNotificationCommand(
                 recomendEvent.UserId,
                 content,
-                NotificationType.ApplicationResponse,
+                NotificationType.RecomendVacancy,
                 new Dictionary<string, string>
                 {
                     { nameof(RecomendVacancyEvent.UserId), recomendEvent.UserId.ToString() },

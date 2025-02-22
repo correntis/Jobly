@@ -30,6 +30,18 @@ namespace MessagesService.DataAccess.Repositories
             await _context.Notifications.UpdateOneAsync(Eq(notif => notif.Id, id), update, cancellationToken: token);
         }
 
+        public async Task SetManyByIdsAsync<TValue>(
+            List<string> ids,
+            Expression<Func<NotificationEntity, TValue>> field,
+            TValue value,
+            CancellationToken token = default)
+        {
+            var filter = Builders<NotificationEntity>.Filter.In(notif => notif.Id, ids);
+            var update = Builders<NotificationEntity>.Update.Set(field, value);
+
+            await _context.Notifications.UpdateManyAsync(filter, update, cancellationToken: token);
+        }
+
         public async Task DeleteByAsync<TValue>(
             Expression<Func<NotificationEntity, TValue>> field,
             TValue value,
@@ -63,9 +75,21 @@ namespace MessagesService.DataAccess.Repositories
         {
             return await _context.Notifications
                 .Find(Eq(field, value))
-                .SortByDescending(notif => notif.CreatedAt)
+                .SortBy(notif => notif.CreatedAt)
                 .Skip((pageIndex - 1) * pageSize)
                 .Limit(pageSize)
+                .ToListAsync(token);
+        }
+
+        public async Task<List<NotificationEntity>> GetAllWithStatusBy<TValue>(
+            Expression<Func<NotificationEntity, TValue>> field,
+            TValue value,
+            int status,
+            CancellationToken token = default)
+        {
+            return await _context.Notifications
+                .Find(And(Eq(field, value), Eq(notif => notif.Status, status)))
+                .SortByDescending(notif => notif.CreatedAt)
                 .ToListAsync(token);
         }
     }

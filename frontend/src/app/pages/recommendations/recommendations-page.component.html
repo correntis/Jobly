@@ -1,0 +1,60 @@
+<app-header />
+
+<div>
+  <ng-container *ngIf="!resumeExists">
+    <div class="flex flex-col align-middle items-center justify-center mt-5">
+      <p class="text-red-900 text-xl font-bold">You don't have resume yet</p>
+      <p>Add resume in your personal account</p>
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-72 mt-2"
+        (click)="goToAccount()"
+      >
+        Go to account
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="resumeExists && vacanciesList?.length === 0">
+    <div class="flex flex-col align-middle items-center justify-center mt-5">
+      <p class="text-red-900 text-xl font-bold">
+        We don't have recommendations for you yet
+      </p>
+      <p>Try to input more information in your resume</p>
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-72 mt-2"
+        (click)="goToAccount()"
+      >
+        Fill resume
+      </button>
+    </div>
+  </ng-container>
+
+  <div class="flex flex-col items-center bg-[#e2e2e2]">
+    <h2 class="text-3xl font-bold font-arial text-center mt-5 mb-7">
+      Personal recommendations for resume
+    </h2>
+    <div class="vacancies-container flex flex-col w-[50vw]">
+      <ng-container *ngFor="let vacancy of vacanciesList; let i = index">
+        <app-compact-vacancy
+          class="mb-10"
+          [vacancy]="vacancy"
+        ></app-compact-vacancy>
+      </ng-container>
+    </div>
+  </div>
+
+  <div *ngIf="vacanciesList && !isFullLoaded" class="flex justify-center my-5">
+    <button
+      mat-raised-button
+      color="warn"
+      class="w-52 hover:scale-105 active:scale-90"
+      (click)="loadRecommendations()"
+    >
+      Load More
+    </button>
+  </div>
+</div>

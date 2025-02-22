@@ -1,0 +1,28 @@
+<header
+  class="flex justify-between items-center p-4 h-16 bg-blue-900 text-white sticky top-0 z-50"
+>
+  <div class="flex gap-10 items-center">
+    <div class="logo text-3xl font-semibold">
+      <a routerLink="/home">Jobly</a>
+    </div>
+
+    <div>
+      <app-notifications-menu />
+    </div>
+  </div>
+  <nav class="flex">
+    <div
+      (click)="goToRoute(route.path)"
+      *ngFor="let route of getHeaderLinksRoutes(); let i = index"
+      class="hover:cursor-pointer hover:scale-105 hover:text-[#cecece]"
+    >
+      <div *ngIf="route.condition" class="flex flex-row">
+        <p class="py-4">{{ route.name }}</p>
+        <div
+          *ngIf="i !== getHeaderLinksRoutes().length - 1"
+          class="w-[3px] bg-blue-500 rounded-xl mx-5"
+        ></div>
+      </div>
+    </div>
+  </nav>
+</header>

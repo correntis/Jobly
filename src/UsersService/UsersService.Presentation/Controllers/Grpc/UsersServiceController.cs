@@ -145,7 +145,7 @@ namespace UsersService.Presentation.Controllers.Grpc
                 Id = resume.Id,
                 UserId = resume.UserId.ToString(),
             };
-
+                
             resumeMessage.Skills.AddRange(resume.Skills);
             resumeMessage.Tags.AddRange(resume.Tags);
             resumeMessage.Languages.AddRange(

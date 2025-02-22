@@ -9,6 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
+if(builder.Environment.IsProduction())
+{
+    configuration
+    .AddJsonFile("appsettings.Container.json");
+}
+
 builder.Host.UseSerilog((context, configuration) =>
 {
     configuration.Enrich.FromLogContext()
@@ -25,7 +31,6 @@ services.AddInfrastructure(configuration, builder.Environment);
 
 services.AddGlobalBrokers(configuration);
 
-services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
@@ -34,9 +39,10 @@ var app = builder.Build();
 app.UseCors(options =>
 {
     options
-        .AllowAnyOrigin()
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
         .AllowAnyHeader()
-        .AllowAnyMethod();
+        .AllowCredentials();
 });
 
 app.UsePresentation();
@@ -47,8 +53,6 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();
 

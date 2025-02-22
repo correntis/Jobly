@@ -8,6 +8,7 @@ namespace UsersService.Domain.Abstractions.Repositories
         void Update(CompanyEntity companyEntity);
         void Remove(CompanyEntity companyEntity);
         Task<CompanyEntity> GetAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<CompanyEntity> GetByUserAsync(Guid userId, CancellationToken cancellationToken = default);
         Task<CompanyEntity> GetWithIncludesAsync(Guid id, CancellationToken cancellationToken = default);
         Task<bool> IsExists(Guid id, CancellationToken cancellationToken = default);
     }

@@ -2,7 +2,7 @@
 {
     public enum NotificationStatus
     {
-        Sent,
-        Viewed,
+        Sent = 0,
+        Viewed = 1,
     }
 }

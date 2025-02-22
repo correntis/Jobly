@@ -15,19 +15,28 @@ namespace VacanciesService.Infrastructure.NoSQL.Specifications
         {
             var filter = Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Experience);
 
-            if (experienceLevelFilter.Min is not null && experienceLevelFilter.Max is not null)
+            if(experienceLevelFilter.Min is not null || experienceLevelFilter.Max is not null)
             {
-                filter &= Builders<VacancyDetailsEntity>.Filter.And(
-                    Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Experience.Min, experienceLevelFilter.Max),
-                    Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Experience.Max, experienceLevelFilter.Min));
-            }
-            else if (experienceLevelFilter.Min is not null)
-            {
-                filter &= Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Experience.Max, experienceLevelFilter.Min);
-            }
-            else if (experienceLevelFilter.Max is not null)
-            {
-                filter &= Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Experience.Min, experienceLevelFilter.Max);
+                var minFilter = Builders<VacancyDetailsEntity>.Filter.Or(
+                    Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Experience.Min, false),
+                    Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Experience.Min, experienceLevelFilter.Min));
+
+                var maxFilter = Builders<VacancyDetailsEntity>.Filter.Or(
+                    Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Experience.Max, false),
+                    Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Experience.Max, experienceLevelFilter.Max));
+
+                if(experienceLevelFilter.Min is not null && experienceLevelFilter.Max is not null)
+                {
+                    filter &= Builders<VacancyDetailsEntity>.Filter.And(minFilter, maxFilter);
+                }
+                else if(experienceLevelFilter.Min is not null)
+                {
+                    filter &= minFilter;
+                }
+                else if(experienceLevelFilter.Max is not null)
+                {
+                    filter &= maxFilter;
+                }
             }
 
             return filter;

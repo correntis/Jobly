@@ -137,6 +137,10 @@ namespace VacanciesService.Infrastructure.API.Services
                     "BYN": {
                       "code": "BYN",
                       "value": 3.2700648341
+                    },
+                    "RUB": {
+                      "code": "RUB",
+                      "value": 99.348
                     }
                 }
             }

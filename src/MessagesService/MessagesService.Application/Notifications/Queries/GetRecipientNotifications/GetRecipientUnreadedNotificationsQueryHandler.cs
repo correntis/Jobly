@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
 using MediatR;
+using MessagesService.Core.Enums;
 using MessagesService.Core.Models;
 using MessagesService.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace MessagesService.Application.Notifications.Queries.GetRecipientNotifications
 {
-    public class GetRecipientNotificationsQueryHandler : IRequestHandler<GetRecipientNotificationsQuery, List<Notification>>
+    public class GetRecipientUnreadedNotificationsQueryHandler : IRequestHandler<GetRecipientUnreadedNotificationsQuery, List<Notification>>
     {
-        private readonly ILogger<GetRecipientNotificationsQueryHandler> _logger;
+        private readonly ILogger<GetRecipientUnreadedNotificationsQueryHandler> _logger;
         private readonly INotificationsRepository _notificationsRepository;
         private readonly IMapper _mapper;
 
-        public GetRecipientNotificationsQueryHandler(
-            ILogger<GetRecipientNotificationsQueryHandler> logger,
+        public GetRecipientUnreadedNotificationsQueryHandler(
+            ILogger<GetRecipientUnreadedNotificationsQueryHandler> logger,
             INotificationsRepository notificationsRepository,
             IMapper mapper)
         {
@@ -22,18 +23,17 @@ namespace MessagesService.Application.Notifications.Queries.GetRecipientNotifica
             _mapper = mapper;
         }
 
-        public async Task<List<Notification>> Handle(GetRecipientNotificationsQuery request, CancellationToken token)
+        public async Task<List<Notification>> Handle(GetRecipientUnreadedNotificationsQuery request, CancellationToken token)
         {
             _logger.LogInformation(
                 "Start handling command {CommandName} for recipient {RecipientId}",
                 request.GetType().Name,
                 request.RecipientId);
 
-            var notificationsEntities = await _notificationsRepository.GetPageBy(
+            var notificationsEntities = await _notificationsRepository.GetAllWithStatusBy(
                 notif => notif.RecipientId,
                 request.RecipientId,
-                request.PageIndex,
-                request.PageSize,
+                (int)NotificationStatus.Sent,
                 token);
 
             _logger.LogInformation(

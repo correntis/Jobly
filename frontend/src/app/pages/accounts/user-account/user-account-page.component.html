@@ -1,0 +1,272 @@
+<app-header />
+
+<div class="min-h-screen flex flex-col items-center justify-start mt-3">
+  <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
+    <h1 class="text-center text-3xl mb-5">Personal information</h1>
+    <form [formGroup]="userForm" (ngSubmit)="updateUser()" class="space-y-6">
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input
+          matInput
+          formControlName="firstName"
+          type="text"
+          placeholder="New first name"
+          required
+        />
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input
+          matInput
+          formControlName="lastName"
+          type="text"
+          placeholder="New last name"
+          required
+        />
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Phone</mat-label>
+        <input
+          matInput
+          formControlName="phoneNumber"
+          type="tel"
+          pattern="^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4,5}$"
+          placeholder="New phone"
+          aria-describedby="phoneError"
+        />
+        <mat-icon matSuffix>phone</mat-icon>
+
+        <mat-error id="phoneError">
+          <ng-container *ngIf="userForm.get('phone')?.hasError('pattern')">
+            Invalid phone
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full py-2 rounded-lg hover:bg-blue-600"
+        type="submit"
+      >
+        Change
+      </button>
+    </form>
+  </div>
+
+  <div class="w-full max-w-3xl mt-5 bg-[#e3e3e4] rounded-lg shadow-md p-8">
+    <h1 class="text-center text-3xl mb-2">Resume</h1>
+    <h3
+      *ngIf="isNewResume"
+      class="text-wrap px-10 pb-3 text-red-400 flex flex-col"
+    >
+      <span class="text-xl">You don't have resume yet. </span>
+      <span> Please fill out form and click submit to add resume!</span>
+    </h3>
+
+    <div
+      *ngIf="!isNewResume"
+      class="flex flex-col items-center justify-evenly w-[100%] pb-2"
+    >
+      <div (click)="goToResume()">
+        <span
+          class="text-blue-800 underline cursor-pointer hover:text-[15px] hover:text-blue-500"
+        >
+          View on resume page
+        </span>
+      </div>
+    </div>
+
+    <!-- Описание резюме -->
+    <section class="p-6 bg-gray-100 rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold text-gray-700 mb-4">Resume Description</h2>
+
+      <form
+        [formGroup]="resumeDescriptionForm"
+        (ngSubmit)="onDesctiptionSubmit()"
+      >
+        <mat-form-field class="w-full" appearance="fill">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            formControlName="title"
+            type="text"
+            placeholder="Resume Title"
+          />
+          <mat-icon matSuffix>work</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="fill">
+          <mat-label>Summary</mat-label>
+          <textarea
+            matInput
+            formControlName="summary"
+            placeholder="Resume Summary"
+          ></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+        </mat-form-field>
+
+        <!-- skills -->
+
+        <ng-container formArrayName="skills">
+          <div class="flex justify-between">
+            <h3 class="text-lg font-medium text-gray-800 mt-4">Skills</h3>
+            <button
+              mat-fab
+              color="accent"
+              type="button"
+              (click)="addSkill()"
+              class="text-3xl transform scale-[0.55] align-middle"
+            >
+              <mat-icon matSuffix>add</mat-icon>
+            </button>
+          </div>
+
+          <hr *ngIf="skills.length > 0" class="border-t-1 border-blue-300" />
+
+          <ng-container
+            class="w-full"
+            *ngFor="let skillsForm of skills.controls; let i = index"
+          >
+            <div [formGroupName]="i">
+              <mat-form-field color="primary" class="w-full" appearance="fill">
+                <mat-label>Skill {{ i + 1 }}</mat-label>
+
+                <input
+                  matInput
+                  formControlName="name"
+                  aria-describedby="skillError-{{ i }}"
+                  required
+                />
+
+                <mat-icon
+                  matSuffix
+                  class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+                  (click)="removeSkill(i)"
+                >
+                  close</mat-icon
+                >
+
+                <mat-error id="skillError-{{ i }}">
+                  <ng-container
+                    *ngIf="skills.controls[i].get('name')?.hasError('required')"
+                  >
+                    Input smth or delete
+                  </ng-container>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!-- tags -->
+        <hr class="border-t-2 border-blue-500" />
+        <ng-container formArrayName="tags">
+          <div class="flex justify-between">
+            <h3 class="text-lg font-medium text-gray-800 mt-4">Tags</h3>
+            <button
+              mat-fab
+              color="accent"
+              type="button"
+              (click)="addTag()"
+              class="text-3xl transform scale-[0.55] align-middle"
+            >
+              <mat-icon matSuffix>add</mat-icon>
+            </button>
+          </div>
+
+          <ng-container
+            class="w-full"
+            *ngFor="let tagsForm of tags.controls; let i = index"
+          >
+            <div [formGroupName]="i">
+              <mat-form-field class="w-full" appearance="fill">
+                <mat-label>Tag {{ i + 1 }}</mat-label>
+
+                <input
+                  matInput
+                  formControlName="name"
+                  aria-describedby="tagError-{{ i }}"
+                  required
+                />
+
+                <mat-icon
+                  matSuffix
+                  class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
+                  (click)="removeTag(i)"
+                >
+                  close</mat-icon
+                >
+
+                <mat-error id="tagError-{{ i }}">
+                  <ng-container
+                    *ngIf="tags.controls[i].get('name')?.hasError('required')"
+                  >
+                    Input smth or delete
+                  </ng-container>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <button
+          *ngIf="isNewResume"
+          mat-raised-button
+          color="primary"
+          type="submit"
+        >
+          Add Resume
+        </button>
+
+        <button
+          *ngIf="!isNewResume"
+          mat-raised-button
+          color="primary"
+          type="submit"
+        >
+          Save Description
+        </button>
+      </form>
+    </section>
+
+    <!-- languages -->
+    <app-resume-language-form
+      *ngIf="!isNewResume"
+      [resumeLanguages]="resume?.languages"
+      [resumeId]="resume?.id"
+    />
+
+    <!-- certifications -->
+    <app-resume-certifications-form
+      *ngIf="!isNewResume"
+      [resumeCertifications]="resume?.certifications"
+      [resumeId]="resume?.id"
+    />
+
+    <!-- education -->
+    <app-resume-education-form
+      *ngIf="!isNewResume"
+      [resumeEducations]="resume?.educations"
+      [resumeId]="resume?.id"
+    />
+
+    <!-- projects -->
+    <app-resume-projects-form
+      *ngIf="!isNewResume"
+      [resumeProjects]="resume?.projects"
+      [resumeId]="resume?.id"
+    />
+
+    <!-- jobExperience -->
+    <app-resume-experiences-form
+      *ngIf="!isNewResume"
+      [resumeJobExperiences]="resume?.jobExperiences"
+      [resumeId]="resume?.id"
+    />
+  </div>
+</div>

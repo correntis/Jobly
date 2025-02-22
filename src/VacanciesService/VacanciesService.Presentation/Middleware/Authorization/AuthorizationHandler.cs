@@ -31,7 +31,7 @@ namespace VacanciesService.Presentation.Middleware.Authorization
                 return false;
             }
 
-            context.Request.Cookies.TryGetValue(BusinessRules.Token.AccessTokenName, out string refreshToken);
+            context.Request.Cookies.TryGetValue(BusinessRules.Token.RefreshTokenName, out string refreshToken);
 
             var tokenValidationResult =
                 await _authService.ValidateTokenAsync(accessToken, refreshToken, roles, context.RequestAborted);
@@ -61,6 +61,8 @@ namespace VacanciesService.Presentation.Middleware.Authorization
             var cookieOptions = new CookieOptions()
             {
                 Expires = DateTime.UtcNow.AddDays(BusinessRules.Token.AccessTokenExpiresDays),
+                SameSite = SameSiteMode.None,
+                Secure = true,
             };
 
             context.Response.Cookies.Append(BusinessRules.Token.AccessTokenName, accessToken, cookieOptions);

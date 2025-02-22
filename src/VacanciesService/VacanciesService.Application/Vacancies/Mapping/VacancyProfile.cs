@@ -16,8 +16,7 @@ namespace VacanciesService.Application.Vacancies.Mapping
 
             CreateMap<VacancyInteractionEntity, VacancyInteraction>();
             CreateMap<Language, LanguageFilter>();
-            CreateMap<Resume, VacancyDetailsFilter>()
-                .ForMember(f => f.Languages, m => m.MapFrom(r => 1 == 1 ? null : r.Skills));
+            CreateMap<Resume, VacancyDetailsFilter>();
         }
     }
 }

@@ -1,29 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
+﻿using MessagesService.Core.Constants;
+using MessagesService.Presentation.Middleware.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MessagesService.Presentation.Hubs
 {
+    [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+    [AuthorizeRole(Roles = BusinessRules.Roles.User)]
     public class NotificationsHub : Hub
     {
-        private readonly ILogger<NotificationsHub> _logger;
-
-        public NotificationsHub(ILogger<NotificationsHub> logger)
-        {
-            _logger = logger;
-        }
-
-        public override Task OnConnectedAsync()
-        {
-            _logger.LogInformation("[SignalR] [Connection] Notifications userId = {userId}", Context.UserIdentifier);
-
-            return base.OnConnectedAsync();
-        }
-
-        public override Task OnDisconnectedAsync(Exception exception)
-        {
-            _logger.LogInformation("[SignalR] [Disconnect] Notifications exception {@Exception}", exception);
-
-            return base.OnDisconnectedAsync(exception);
-        }
     }
 }

@@ -1,0 +1,25 @@
+.chat-container {
+  --sb-track-color: #ffffff;
+  --sb-thumb-color: #222c50;
+  --sb-size: 10px;
+}
+
+.chat-container::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 50px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 50px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .chat-container {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}

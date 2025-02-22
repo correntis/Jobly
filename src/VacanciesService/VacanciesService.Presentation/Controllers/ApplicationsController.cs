@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VacanciesService.Application.Applications.Commands.AddApplication;
 using VacanciesService.Application.Applications.Commands.UpdateApplication;
+using VacanciesService.Application.Applications.Queries.GetApplicationsByIds;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByUser;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByVacancy;
 using VacanciesService.Domain.Constants;
@@ -35,19 +36,30 @@ namespace VacanciesService.Presentation.Controllers
         }
 
         [HttpGet]
-        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         [Route("users/{userId}&pageNumber={pageNumber}&pageSize={pageSize}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<IActionResult> GetByUser(Guid userId, int pageNumber, int pageSize, CancellationToken token)
         {
             return Ok(await _sender.Send(new GetApplicationsPageByUserQuery(userId, pageNumber, pageSize), token));
         }
 
         [HttpGet]
-        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
         [Route("vacancies/{vacancyId}&pageNumber={pageNumber}&pageSize={pageSize}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<IActionResult> GetByVacancy(Guid vacancyId, int pageNumber, int pageSize, CancellationToken token)
         {
             return Ok(await _sender.Send(new GetApplicationsPageByVacancyQuery(vacancyId, pageNumber, pageSize), token));
+        }
+
+        [HttpPost]
+        [Route("ids")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        public async Task<IActionResult> GetByIds([FromBody] List<Guid> applicationsIds, CancellationToken token)
+        {
+            return Ok(await _sender.Send(new GetApplicationsByIdsQuery(applicationsIds), token));
         }
     }
 }

@@ -8,5 +8,7 @@ namespace VacanciesService.Domain.Abstractions.Repositories.Applications
         Task<List<ApplicationEntity>> GetAllByVacancyAsync(Guid vacancyId, CancellationToken token = default);
         Task<List<ApplicationEntity>> GetPageByUserIncludeVacancy(Guid userId, int pageNumber, int pageSize, CancellationToken token = default);
         Task<List<ApplicationEntity>> GetPageByVacancyIncludeVacancy(Guid vacancyId, int pageNumber, int pageSize, CancellationToken token = default);
+        Task<List<ApplicationEntity>> GetByIdsIncludeVacancy(List<Guid> ids, CancellationToken token = default);
+        Task<bool> ExistForUserAndVacancy(Guid userId, Guid vacancyId, CancellationToken token = default);
     }
 }

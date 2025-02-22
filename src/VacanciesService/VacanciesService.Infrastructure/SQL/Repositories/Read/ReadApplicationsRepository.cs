@@ -57,5 +57,20 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Read
                 .Take(pageSize)
                 .ToListAsync(token);
         }
+
+        public async Task<List<ApplicationEntity>> GetByIdsIncludeVacancy(List<Guid> ids, CancellationToken token = default)
+        {
+            return await _vacanciesContext.Applications
+                .Include(a => a.Vacancy)
+                .Where(a => ids.Contains(a.Id))
+                .ToListAsync(token);
+        }
+
+        public async Task<bool> ExistForUserAndVacancy(Guid userId, Guid vacancyId, CancellationToken token = default)
+        {
+            return await _vacanciesContext.Applications
+               .Where(a => a.UserId == userId && a.Vacancy.Id == vacancyId)
+               .AnyAsync(token);
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
         private readonly ILogger<AddApplicationCommandHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IReadVacanciesRepository _readVacanciesRepository;
+        private readonly IReadApplicationsRepository _readApplicationsRepository;
         private readonly IWriteApplicationsRepository _writeApplicationsRepository;
         private readonly IUsersService _usersService;
         private readonly IBrokerProcuder _brokerProcuder;
@@ -26,6 +27,7 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
             IMapper mapper,
             IReadVacanciesRepository readVacanciesRepository,
             IWriteApplicationsRepository writeApplicationsRepository,
+            IReadApplicationsRepository readApplicationsRepository,
             IUsersService usersService,
             IBrokerProcuder brokerProcuder)
         {
@@ -33,6 +35,7 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
             _mapper = mapper;
             _readVacanciesRepository = readVacanciesRepository;
             _writeApplicationsRepository = writeApplicationsRepository;
+            _readApplicationsRepository = readApplicationsRepository;
             _usersService = usersService;
             _brokerProcuder = brokerProcuder;
         }
@@ -48,6 +51,8 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
             await CheckUserExistence(request.UserId, token);
 
             var vacancyEntity = await GetVacancyEntity(request.VacancyId, token);
+
+            await CheckApplicationExistence(request.UserId, request.VacancyId, token);
 
             _writeApplicationsRepository.AttachVacancy(vacancyEntity);
 
@@ -94,6 +99,17 @@ namespace VacanciesService.Application.Applications.Commands.AddApplication
             await _readVacanciesRepository.LoadApplications(vacancyEntity, token);
 
             return vacancyEntity;
+        }
+
+        private async Task CheckApplicationExistence(Guid userId, Guid vacancyId, CancellationToken token)
+        {
+            var applicationExists = await _readApplicationsRepository.ExistForUserAndVacancy(userId, vacancyId, token);
+
+            if(applicationExists)
+            {
+                throw new EntityAlreadyExistException(
+                    $"Application for user with id {userId} and vacancy with id {vacancyId} already exist");
+            }
         }
 
         private async Task ProduceApplicationEventAsync(ApplicationEntity applicationEntity, CancellationToken token)

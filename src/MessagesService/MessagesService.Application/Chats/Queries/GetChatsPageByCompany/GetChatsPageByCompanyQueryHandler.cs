@@ -29,7 +29,7 @@ namespace MessagesService.Application.Chats.Queries.GetChatsPageByCompany
              request.GetType().Name,
              request.CompanyId);
 
-            var chatsEntities = await _chatsRepository.GetPageBy(
+            var chatsEntities = await _chatsRepository.GetPageByAsync(
                 chat => chat.CompanyId,
                 request.CompanyId,
                 request.PageIndex,

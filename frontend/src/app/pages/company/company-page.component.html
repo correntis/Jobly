@@ -1,0 +1,81 @@
+<app-header />
+
+<div class="flex flex-row gap-4">
+  <div
+    *ngIf="company"
+    class="company-container w-[30vw] min-w[100vh] p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-lg h-full sticky top-[65px]"
+  >
+    <div class="text-center">
+      <img
+        *ngIf="company.logoPath"
+        [src]="resources + company.logoPath"
+        [alt]="company.name"
+        class="mx-auto w-32 h-32 object-cover rounded-full shadow-md border-[2px] border-[#e2e8f0] border-solid"
+      />
+      <h1 class="mt-4 text-2xl font-bold text-gray-800">{{ company.name }}</h1>
+      <p class="text-gray-600 italic">{{ company.type }}</p>
+    </div>
+
+    <div class="mt-6 space-y-4">
+      <h2 class="text-xl font-semibold text-gray-800">About</h2>
+      <p class="text-gray-700">{{ company.description }}</p>
+
+      <h2 class="text-xl font-semibold text-gray-800">Contact Information</h2>
+      <ul class="space-y-2 text-gray-700">
+        <li><strong>Email:</strong> {{ company.email }}</li>
+        <li><strong>Phone:</strong> {{ company.phone }}</li>
+        <li>
+          <strong>Website:</strong>
+          <a
+            [href]="company.webSite"
+            class="text-blue-600 underline hover:text-blue-800"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ company.webSite }}
+          </a>
+        </li>
+      </ul>
+
+      <h2 class="text-xl font-semibold text-gray-800">Location</h2>
+      <p class="text-gray-700"><strong>City:</strong> {{ company.city }}</p>
+      <p class="text-gray-700">
+        <strong>Address:</strong> {{ company.address }}
+      </p>
+
+      <h2 class="text-xl font-semibold text-gray-800">
+        Additional Information
+      </h2>
+      <p class="text-gray-700">
+        <strong>Founded on:</strong>
+        {{ company.createdAt | date : "mediumDate" }}
+      </p>
+    </div>
+  </div>
+
+  <div class="w-full">
+    <div class="flex flex-col items-center bg-[#e2e2e2]">
+      <h2 class="text-3xl font-arial text-center py-5">
+        <i> {{ company?.name }} </i> vacancies
+      </h2>
+      <div *ngIf="!vacanciesList" class="text-xl text-red-500">
+        Company doesn't have any vacancies yet
+      </div>
+      <div
+        *ngIf="vacanciesList"
+        class="vacancies-container flex flex-col w-[50vw]"
+      >
+        <ng-container *ngFor="let vacancy of vacanciesList; let i = index">
+          <app-compact-vacancy
+            class="mb-10"
+            [vacancy]="vacancy"
+          ></app-compact-vacancy>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!company" class="text-center py-10">
+  <p class="text-gray-600">Loading company details...</p>
+</div>

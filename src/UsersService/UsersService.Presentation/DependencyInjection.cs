@@ -16,6 +16,11 @@ namespace UsersService.Presentation
             services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
 
             services.AddGrpc();
+
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<StringToJsonActionFilter>();
+            });
         }
 
         public static void UsePresentation(this WebApplication app)
@@ -23,8 +28,10 @@ namespace UsersService.Presentation
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseMiddleware<AuthorizationMiddleware>();
 
-            app.MapGrpcService<Controllers.Grpc.AuthController>();
-            app.MapGrpcService<Controllers.Grpc.UsersServiceController>();
+            app.MapGrpcService<Controllers.Grpc.AuthController>(); 
+            app.MapGrpcService<Controllers.Grpc.UsersServiceController>(); 
+
+            app.MapControllers(); 
         }
     }
 }

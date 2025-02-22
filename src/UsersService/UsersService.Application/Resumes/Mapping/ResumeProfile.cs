@@ -16,7 +16,7 @@ namespace UsersService.Application.Resumes.Mapping
 
             CreateMap<CertificationEntity, Certification>().ReverseMap();
             CreateMap<EducationEntity, Education>().ReverseMap();
-            CreateMap<JobExpirienceEntity, JobExpirience>().ReverseMap();
+            CreateMap<JobExperienceEntity, JobExperience>().ReverseMap();
             CreateMap<LanguageEntity, Language>().ReverseMap();
             CreateMap<ProjectEntity, Project>().ReverseMap();
         }

@@ -1,7 +1,9 @@
 ﻿using Jobly.Brokers;
+using MessagesService.Presentation.Abstractions;
 using MessagesService.Presentation.HostedServices;
 using MessagesService.Presentation.Hubs;
 using MessagesService.Presentation.Hubs.Providers;
+using MessagesService.Presentation.Middleware.Authorization;
 using MessagesService.Presentation.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
@@ -14,7 +16,15 @@ namespace MessagesService.Presentation
     {
         public static void AddPresentation(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSignalR();
+            services.AddScoped<AuthorizationMiddleware>();
+            services.AddScoped<IAuthorizationHandler, AuthorizationHandler>();
+            services.AddGrpc();
+
+            services.AddSignalR()
+                .AddHubOptions<MessagesHub>(options =>
+                {
+                    options.EnableDetailedErrors = true;
+                });
 
             services.AddSingleton<NotificationsService>();
             services.AddSingleton<ChatsService>();
@@ -26,8 +36,10 @@ namespace MessagesService.Presentation
             services.AddHostedServices();
         }
 
-        public static void MapPresentation(this WebApplication app)
+        public static void UsePresentation(this WebApplication app)
         {
+            app.UseMiddleware<AuthorizationMiddleware>();
+
             app.MapHub<MessagesHub>("hubs/messages");
             app.MapHub<NotificationsHub>("hubs/notifications");
             app.MapHub<ChatsHub>("hubs/chats");

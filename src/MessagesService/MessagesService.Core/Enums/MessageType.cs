@@ -2,7 +2,7 @@
 {
     public enum MessageType
     {
-        User,
-        Creation,
+        User = 0,
+        Creation = 1,
     }
 }
