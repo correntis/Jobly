@@ -1,6 +1,6 @@
 <section class="p-6 bg-gray-100 rounded-lg shadow-md mt-3">
   <div class="flex justify-between">
-    <h2 class="text-2xl font-bold text-gray-700 mb-4">Projects</h2>
+    <h2 class="text-2xl font-bold text-gray-700 mb-4">Проекты</h2>
     <button
       mat-fab
       color="accent"
@@ -24,7 +24,7 @@
           <div [formGroupName]="i">
             <span class="text-2xl font-bold">{{ i + 1 }}:</span>
             <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Name</mat-label>
+              <mat-label>Название</mat-label>
 
               <input
                 matInput
@@ -37,13 +37,13 @@
                 <ng-container
                   *ngIf="projects.controls[i].get('name')?.hasError('required')"
                 >
-                  Input smth or delete proj
+                  Введите или удалите проект
                 </ng-container>
               </mat-error>
             </mat-form-field>
 
             <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Description</mat-label>
+              <mat-label>Описание</mat-label>
 
               <input
                 matInput
@@ -60,13 +60,13 @@
                       ?.hasError('required')
                   "
                 >
-                  Input smth or delete proj
+                  Введите или удалите проект
                 </ng-container>
               </mat-error>
             </mat-form-field>
 
             <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Link</mat-label>
+              <mat-label>Ссылка</mat-label>
 
               <input
                 matInput
@@ -79,7 +79,7 @@
                 <ng-container
                   *ngIf="projects.controls[i].get('link')?.hasError('required')"
                 >
-                  Input smth or delete proj
+                  Введите или удалите проект
                 </ng-container>
               </mat-error>
             </mat-form-field>
@@ -87,7 +87,7 @@
             <!-- Technologies -->
             <div formArrayName="technologies" class="p-2 bg-gray-50 rounded-md">
               <div class="flex justify-between">
-                <h3 class="text-lg font-medium">Technologies</h3>
+                <h3 class="text-lg font-medium">Технологии</h3>
 
                 <button
                   mat-fab
@@ -108,7 +108,7 @@
                 class="flex space-x-2 items-center mt-2"
               >
                 <mat-form-field appearance="fill" class="flex-1">
-                  <mat-label>Technology {{ j + 1 }}</mat-label>
+                  <mat-label>Технология {{ j + 1 }}</mat-label>
                   <input
                     matInput
                     [formControlName]="j"
@@ -120,7 +120,7 @@
                     <ng-container
                       *ngIf="getTechnologies(i).at(j)?.hasError('required')"
                     >
-                      Input smth or delete proj
+                      Введите или удалите проект
                     </ng-container>
                   </mat-error>
                 </mat-form-field>
@@ -147,7 +147,7 @@
     </ng-container>
 
     <button mat-raised-button color="primary" type="submit">
-      Save Projects
+      Сохранить проекты
     </button>
   </form>
 </section>

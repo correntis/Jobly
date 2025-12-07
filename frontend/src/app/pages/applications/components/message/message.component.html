@@ -17,10 +17,10 @@
       <p class="text-left max-w-[400px]">{{ message?.content }}</p>
 
       <span class="text-xs text-gray-500"
-        >{{ message?.editedAt ? "Edited," : "" }}
+        >{{ message?.editedAt ? "Изменено," : "" }}
       </span>
       <span class="text-xs text-gray-500"
-        >{{ message?.isRead ? "Read," : "Unread," }}
+        >{{ message?.isRead ? "Прочитано," : "Не прочитано," }}
       </span>
       <span class="text-xs text-gray-500">
         {{ message?.sentAt | date : "HH:mm:ss" }}
@@ -39,7 +39,7 @@
 
       <div class="flex flex-row justify-center">
         <div>
-          <span class="text-sm text-gray-500">Auto-generated</span>
+          <span class="text-sm text-gray-500">Автоматическое сообщение</span>
         </div>
         <div>
           <span class="text-sm text-gray-500 ml-5">{{

@@ -4,7 +4,7 @@
     class="w-full max-w-xl bg-white rounded-lg shadow-md p-8"
   >
     <h2 class="text-2xl font-bold text-gray-800 text-center">
-      Create an Account
+      Создать аккаунт
     </h2>
     <form
       [formGroup]="registrationForm"
@@ -12,12 +12,12 @@
       class="space-y-6"
     >
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>First Name</mat-label>
+        <mat-label>Имя</mat-label>
         <input
           matInput
           formControlName="firstName"
           type="text"
-          placeholder="Enter your first name"
+          placeholder="Введите ваше имя"
           required
           aria-describedby="firstNameError"
         />
@@ -29,18 +29,18 @@
           <ng-container
             *ngIf="registrationForm.get('firstName')?.hasError('required')"
           >
-            First name is required.
+            Имя обязательно.
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Last Name</mat-label>
+        <mat-label>Фамилия</mat-label>
         <input
           matInput
           formControlName="lastName"
           type="text"
-          placeholder="Enter your last name"
+          placeholder="Введите вашу фамилию"
           required
           aria-describedby="lastNameError"
         />
@@ -52,7 +52,7 @@
           <ng-container
             *ngIf="registrationForm.get('lastName')?.hasError('required')"
           >
-            Last name is required.
+            Фамилия обязательна.
           </ng-container>
         </mat-error>
       </mat-form-field>
@@ -63,7 +63,7 @@
           matInput
           formControlName="email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="Введите ваш email"
           required
           aria-describedby="emailError"
         />
@@ -75,29 +75,29 @@
           <ng-container
             *ngIf="registrationForm.get('email')?.hasError('required')"
           >
-            Email is required.
+            Email обязателен.
           </ng-container>
           <ng-container
             *ngIf="registrationForm.get('email')?.hasError('email')"
           >
-            Invalid email format.
+            Неверный формат email.
           </ng-container>
 
           <ng-container
             *ngIf="registrationForm.get('email')?.hasError('existingEmail')"
           >
-            User with email already exist.
+            Пользователь с таким email уже существует.
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Password</mat-label>
+        <mat-label>Пароль</mat-label>
         <input
           matInput
           formControlName="password"
           [type]="hidePassword ? 'password' : 'text'"
-          placeholder="Enter your password"
+          placeholder="Введите ваш пароль"
           required
           minlength="6"
           pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!%&])[A-Za-z\d!%&]{6,}$"
@@ -113,29 +113,28 @@
           <ng-container
             *ngIf="registrationForm.get('password')?.hasError('required')"
           >
-            Password is required.
+            Пароль обязателен.
           </ng-container>
           <ng-container
             *ngIf="registrationForm.get('password')?.hasError('minlength')"
           >
-            Minimum 6 characters required.
+            Минимум 6 символов.
           </ng-container>
           <ng-container
             *ngIf="registrationForm.get('password')?.hasError('pattern')"
           >
-            Password must contain one uppercase letter, number, and one special
-            char (!%&).
+            Пароль должен содержать заглавную букву, цифру и спецсимвол (!%&).
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Confirm Password</mat-label>
+        <mat-label>Подтвердите пароль</mat-label>
         <input
           matInput
           formControlName="confirmPassword"
           [type]="hideConfirmPassword ? 'password' : 'text'"
-          placeholder="Confirm your password"
+          placeholder="Подтвердите ваш пароль"
           required
         />
         <mat-icon matSuffix (click)="toggleConfirmPasswordVisibility()">
@@ -144,19 +143,19 @@
         <mat-error
           *ngIf="registrationForm.get('confirmPassword')?.hasError('mustMatch')"
         >
-          Passwords must match.
+          Пароли должны совпадать.
         </mat-error>
         <mat-error
           *ngIf="registrationForm.get('confirmPassword')?.hasError('required')"
         >
-          Confirm Password is required.
+          Подтверждение пароля обязательно.
         </mat-error>
       </mat-form-field>
 
       <div class="w-full">
         <label id="example-radio-group-label" class="block mb-2 font-medium">
-          Please choose the role that best describes your purpose in using our
-          platform:
+          Выберите роль, которая лучше всего описывает цель использования
+          платформы:
         </label>
         <mat-radio-group
           aria-labelledby="example-radio-group-label"
@@ -174,7 +173,7 @@
           <mat-error
             *ngIf="registrationForm.get('choosedRole')?.hasError('required')"
           >
-            Role is required.
+            Выбор роли обязателен.
           </mat-error>
         </mat-radio-group>
       </div>
@@ -185,7 +184,7 @@
         class="w-full py-2 rounded-lg hover:bg-blue-600"
         type="submit"
       >
-        Register
+        Зарегистрироваться
       </button>
     </form>
   </div>
@@ -196,16 +195,16 @@
     class="w-full max-w-xl bg-white rounded-lg shadow-md p-8"
   >
     <h2 class="text-2xl font-bold text-gray-800 text-center">
-      Create an Company
+      Создать компанию
     </h2>
     <form [formGroup]="companyForm" (ngSubmit)="register()" class="space-y-6">
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Company Name</mat-label>
+        <mat-label>Название компании</mat-label>
         <input
           matInput
           formControlName="companyName"
           type="text"
-          placeholder="Enter company name"
+          placeholder="Введите название компании"
           required
           aria-describedby="companyNameError"
         />
@@ -217,18 +216,18 @@
           <ng-container
             *ngIf="companyForm.get('companyName')?.hasError('required')"
           >
-            Company name is required.
+            Название компании обязательно.
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Company Type</mat-label>
+        <mat-label>Тип компании</mat-label>
         <input
           matInput
           formControlName="companyType"
           type="text"
-          placeholder="Enter company type"
+          placeholder="Введите тип компании"
           required
           aria-describedby="companyTypeError"
         />
@@ -240,18 +239,18 @@
           <ng-container
             *ngIf="companyForm.get('companyType')?.hasError('required')"
           >
-            Company type is required.
+            Тип компании обязателен.
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Company Email</mat-label>
+        <mat-label>Email компании</mat-label>
         <input
           matInput
           formControlName="companyEmail"
           type="email"
-          placeholder="Enter company email"
+          placeholder="Введите email компании"
           email
           aria-describedby="companyEmailError"
         />
@@ -263,19 +262,19 @@
           <ng-container
             *ngIf="companyForm.get('companyEmail')?.hasError('email')"
           >
-            Company email is invaldid.
+            Неверный email компании.
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Company Phone</mat-label>
+        <mat-label>Телефон компании</mat-label>
         <input
           matInput
           formControlName="companyPhone"
           type="tel"
           pattern="/^\d{10}$/"
-          placeholder="Enter company phone"
+          placeholder="Введите телефон компании"
           aria-describedby="companyPhoneError"
         />
         <mat-icon matSuffix>phone</mat-icon>
@@ -286,39 +285,39 @@
           <ng-container
             *ngIf="companyForm.get('companyPhone')?.hasError('pattern')"
           >
-            Company phone is invaldid.
+            Неверный телефон компании.
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Company City</mat-label>
+        <mat-label>Город компании</mat-label>
         <input
           matInput
           formControlName="companyCity"
           type="text"
-          placeholder="Enter company city"
+          placeholder="Введите город компании"
         />
         <mat-icon matSuffix>city</mat-icon>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Company Description</mat-label>
+        <mat-label>Описание компании</mat-label>
         <textarea
           matInput
           formControlName="companyDescription"
           type="text"
-          placeholder="Enter company description"
+          placeholder="Введите описание компании"
         ></textarea>
         <mat-icon matSuffix>description</mat-icon>
       </mat-form-field>
 
       <div class="w-full">
-        <label class="mat-label">Company Image</label>
+        <label class="mat-label">Логотип компании</label>
         <input
           type="file"
           (change)="onFileSelect($event)"
-          placeholder="Choose company image"
+          placeholder="Выберите логотип компании"
           class="custom-file-input"
         />
       </div>
@@ -331,7 +330,7 @@
           type="button"
           (click)="backToFirstStep()"
         >
-          Back
+          Назад
         </button>
         <button
           mat-raised-button
@@ -339,7 +338,7 @@
           class="py-2 w-full rounded-lg hover:bg-blue-600"
           type="submit"
         >
-          Complete registration
+          Завершить регистрацию
         </button>
       </div>
     </form>

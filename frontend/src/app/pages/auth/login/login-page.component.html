@@ -1,6 +1,6 @@
 <div class="min-h-screen flex items-center justify-center bg-red-100">
   <div class="w-full max-w-xl bg-white rounded-lg shadow-md p-8">
-    <h2 class="text-2xl font-bold text-gray-800 text-center">Login</h2>
+    <h2 class="text-2xl font-bold text-gray-800 text-center">Вход</h2>
     <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-6">
       <mat-form-field class="w-full" appearance="fill">
         <mat-label>Email</mat-label>
@@ -8,34 +8,34 @@
           matInput
           formControlName="email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="Введите ваш email"
           required
           aria-describedby="emailError"
         />
         <mat-icon matSuffix>email</mat-icon>
         <mat-error id="emailError" *ngIf="loginForm.get('email')?.errors">
           <ng-container *ngIf="loginForm.get('email')?.hasError('required')">
-            Email is required.
+            Email обязателен.
           </ng-container>
           <ng-container *ngIf="loginForm.get('email')?.hasError('email')">
-            Invalid email format.
+            Неверный формат email.
           </ng-container>
 
           <ng-container
             *ngIf="loginForm.get('email')?.hasError('emailNotFound')"
           >
-            User with email doesn't exist.
+            Пользователь с таким email не найден.
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Password</mat-label>
+        <mat-label>Пароль</mat-label>
         <input
           matInput
           formControlName="password"
           [type]="hidePassword ? 'password' : 'text'"
-          placeholder="Enter your password"
+          placeholder="Введите ваш пароль"
           required
           minlength="6"
           pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!%&])[A-Za-z\d!%&]{6,}$"
@@ -46,22 +46,21 @@
         </mat-icon>
         <mat-error id="passwordError" *ngIf="loginForm.get('password')?.errors">
           <ng-container *ngIf="loginForm.get('password')?.hasError('required')">
-            Password is required.
+            Пароль обязателен.
           </ng-container>
           <ng-container
             *ngIf="loginForm.get('password')?.hasError('minlength')"
           >
-            Minimum 6 characters required.
+            Минимум 6 символов.
           </ng-container>
           <ng-container *ngIf="loginForm.get('password')?.hasError('pattern')">
-            Password must contain one uppercase letter, number, and one special
-            char (!%&).
+            Пароль должен содержать заглавную букву, цифру и спецсимвол (!%&).
           </ng-container>
 
           <ng-container
             *ngIf="loginForm.get('password')?.hasError('invalidPassword')"
           >
-            Password for user is invalid
+            Неверный пароль
           </ng-container>
         </mat-error>
       </mat-form-field>
@@ -72,7 +71,7 @@
         class="w-full py-2 rounded-lg hover:bg-blue-600"
         type="submit"
       >
-        Login
+        Войти
       </button>
     </form>
   </div>

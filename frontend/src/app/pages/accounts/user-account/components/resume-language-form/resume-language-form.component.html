@@ -1,6 +1,6 @@
 <section class="p-6 bg-gray-100 rounded-lg shadow-md mt-3">
   <div class="flex justify-between">
-    <h2 class="text-2xl font-bold text-gray-700 mb-4">Languages</h2>
+    <h2 class="text-2xl font-bold text-gray-700 mb-4">Языки</h2>
     <button
       mat-fab
       color="accent"
@@ -26,7 +26,7 @@
         >
           <span class="text-xl">{{ i + 1 }}:</span>
           <mat-form-field color="primary" class="w-[40%]" appearance="fill">
-            <mat-label>Name</mat-label>
+            <mat-label>Название</mat-label>
 
             <input
               matInput
@@ -39,13 +39,13 @@
               <ng-container
                 *ngIf="languages.controls[i].get('name')?.hasError('required')"
               >
-                Input smth or delete lang
+                Введите или удалите язык
               </ng-container>
             </mat-error>
           </mat-form-field>
 
           <mat-form-field color="primary" class="w-[40%]" appearance="fill">
-            <mat-label>Level</mat-label>
+            <mat-label>Уровень</mat-label>
 
             <input
               matInput
@@ -58,7 +58,7 @@
               <ng-container
                 *ngIf="languages.controls[i].get('level')?.hasError('required')"
               >
-                Input smth or delete lang
+                Введите или удалите язык
               </ng-container>
             </mat-error>
           </mat-form-field>
@@ -74,7 +74,7 @@
     </ng-container>
 
     <button mat-raised-button color="primary" type="submit">
-      Save Languages
+      Сохранить языки
     </button>
   </form>
 </section>

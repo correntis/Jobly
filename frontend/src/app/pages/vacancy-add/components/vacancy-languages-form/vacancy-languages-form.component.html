@@ -1,6 +1,6 @@
 <section [formGroup]="languagesContainer" class="">
   <div class="flex justify-between">
-    <h3 class="text-lg font-medium text-gray-800 mt-4">Languages</h3>
+    <h3 class="text-lg font-medium text-gray-800 mt-4">Языки</h3>
     <button
       mat-fab
       color="accent"
@@ -26,7 +26,7 @@
         >
           <span class="text-xl">{{ i + 1 }}:</span>
           <mat-form-field color="primary" class="w-[40%]" appearance="fill">
-            <mat-label>Name</mat-label>
+            <mat-label>Название</mat-label>
 
             <input
               matInput
@@ -39,13 +39,13 @@
               <ng-container
                 *ngIf="formArray.controls[i].get('name')?.hasError('required')"
               >
-                Input smth or delete lang
+                Введите или удалите язык
               </ng-container>
             </mat-error>
           </mat-form-field>
 
           <mat-form-field color="primary" class="w-[40%]" appearance="fill">
-            <mat-label>Level</mat-label>
+            <mat-label>Уровень</mat-label>
 
             <input
               matInput
@@ -58,7 +58,7 @@
               <ng-container
                 *ngIf="formArray.controls[i].get('level')?.hasError('required')"
               >
-                Input smth or delete lang
+                Введите или удалите язык
               </ng-container>
             </mat-error>
           </mat-form-field>

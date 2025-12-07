@@ -60,11 +60,11 @@ export class RegistrationPageComponent {
   choosedRole: Role | null = null;
   appRoles: Role[] = [
     {
-      text: '🚀 I’m seeking exciting career opportunities.',
+      text: '🚀 Я ищу интересные карьерные возможности.',
       roleName: UserRoles.User,
     },
     {
-      text: '🏢 I’m looking to hire exceptional talent for my company.',
+      text: '🏢 Я ищу талантливых сотрудников для своей компании.',
       roleName: UserRoles.Company,
     },
   ];

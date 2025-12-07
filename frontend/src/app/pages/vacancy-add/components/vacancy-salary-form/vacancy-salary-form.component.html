@@ -1,6 +1,6 @@
 <section class="">
   <div class="flex justify-between">
-    <h3 class="text-lg font-medium text-gray-800 mt-4">Salary</h3>
+    <h3 class="text-lg font-medium text-gray-800 mt-4">Зарплата</h3>
     <button
       mat-fab
       [color]="buttonColor"
@@ -19,14 +19,14 @@
   >
     <mat-error id="salaryGroupError">
       <ng-container *ngIf="salaryForm.hasError('minGreaterThanMax')">
-        Min greater then or equal max
+        Минимум больше или равен максимуму
       </ng-container>
     </mat-error>
 
     <app-currency-select formControlName="currency" [control]="currency" />
 
     <mat-form-field color="primary" class="w-full" appearance="fill">
-      <mat-label>Min</mat-label>
+      <mat-label>Минимум</mat-label>
 
       <input
         matInput
@@ -37,13 +37,13 @@
 
       <mat-error id="minError">
         <ng-container *ngIf="salaryForm.get('min')?.hasError('negative')">
-          Must be positive
+          Должно быть положительным
         </ng-container>
       </mat-error>
     </mat-form-field>
 
     <mat-form-field color="primary" class="w-full" appearance="fill">
-      <mat-label>Max</mat-label>
+      <mat-label>Максимум</mat-label>
 
       <input
         matInput
@@ -54,7 +54,7 @@
 
       <mat-error id="maxError">
         <ng-container *ngIf="salaryForm.get('max')?.hasError('negative')">
-          Must be positive
+          Должно быть положительным
         </ng-container>
       </mat-error>
     </mat-form-field>

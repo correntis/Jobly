@@ -4,7 +4,7 @@
   <div class="bg-gray-200">
     <div class="min-h-screen flex flex-col items-center justify-start">
       <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
-        <h1 class="text-center text-3xl mb-5">Main information</h1>
+        <h1 class="text-center text-3xl mb-5">Основная информация</h1>
         <form
           [formGroup]="vacancyForm"
           (ngSubmit)="postVacancy()"
@@ -12,12 +12,12 @@
         >
           <!-- title -->
           <mat-form-field class="w-full" appearance="fill">
-            <mat-label>Title</mat-label>
+            <mat-label>Название</mat-label>
             <input
               matInput
               formControlName="title"
               type="text"
-              placeholder="Input title"
+              placeholder="Введите название"
               aria-describedby="titleError"
               required
             />
@@ -27,19 +27,19 @@
               <ng-container
                 *ngIf="vacancyForm.get('title')?.hasError('required')"
               >
-                Required
+                Обязательно
               </ng-container>
             </mat-error>
           </mat-form-field>
 
           <!-- type -->
           <mat-form-field class="w-full" appearance="fill">
-            <mat-label>Employment type </mat-label>
+            <mat-label>Тип занятости</mat-label>
             <input
               matInput
               formControlName="employmentType"
               type="text"
-              placeholder="Input employment type"
+              placeholder="Введите тип занятости"
               required
               aria-describedby="employmentTypeError"
             />
@@ -49,14 +49,14 @@
               <ng-container
                 *ngIf="vacancyForm.get('employmentType')?.hasError('required')"
               >
-                Required
+                Обязательно
               </ng-container>
             </mat-error>
           </mat-form-field>
 
           <!-- deadline -->
           <mat-form-field color="primary" class="w-full" appearance="fill">
-            <mat-label>Deadline At</mat-label>
+            <mat-label>Дедлайн</mat-label>
 
             <input
               matInput
@@ -72,8 +72,8 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #deadlineAtDate>
               <mat-datepicker-actions>
-                <button mat-button matDatepickerCancel>Cancel</button>
-                <button mat-raised-button matDatepickerApply>Apply</button>
+                <button mat-button matDatepickerCancel>Отмена</button>
+                <button mat-raised-button matDatepickerApply>Применить</button>
               </mat-datepicker-actions>
             </mat-datepicker>
 
@@ -81,7 +81,7 @@
               <ng-container
                 *ngIf="vacancyForm.get('deadlineAt')?.hasError('required')"
               >
-                Pick date
+                Выберите дату
               </ng-container>
             </mat-error>
           </mat-form-field>
@@ -90,50 +90,50 @@
 
           <app-dynamic-form-array
             formArrayName="requirements"
-            label="Requirements"
-            placeholder="Requirement"
+            label="Требования"
+            placeholder="Требование"
             [formArray]="requirements"
           ></app-dynamic-form-array>
 
           <app-dynamic-form-array
             formArrayName="skills"
-            label="Skills"
-            placeholder="Skill"
+            label="Навыки"
+            placeholder="Навык"
             [formArray]="skills"
           ></app-dynamic-form-array>
 
           <app-dynamic-form-array
             formArrayName="tags"
-            label="Tags"
-            placeholder="Tag"
+            label="Теги"
+            placeholder="Тег"
             [formArray]="tags"
           ></app-dynamic-form-array>
 
           <app-dynamic-form-array
             formArrayName="responsibilities"
-            label="Responsibilities"
-            placeholder="Responsibility"
+            label="Обязанности"
+            placeholder="Обязанность"
             [formArray]="responsibilities"
           ></app-dynamic-form-array>
 
           <app-dynamic-form-array
             formArrayName="benefits"
-            label="Benefits"
-            placeholder="Benefit"
+            label="Преимущества"
+            placeholder="Преимущество"
             [formArray]="benefits"
           ></app-dynamic-form-array>
 
           <app-dynamic-form-array
             formArrayName="education"
-            label="Education"
-            placeholder="Education"
+            label="Образование"
+            placeholder="Образование"
             [formArray]="education"
           ></app-dynamic-form-array>
 
           <app-dynamic-form-array
             formArrayName="technologies"
-            label="Technologies"
-            placeholder="Technology"
+            label="Технологии"
+            placeholder="Технология"
             [formArray]="technologies"
           ></app-dynamic-form-array>
 
@@ -155,7 +155,7 @@
             type="submit"
             class="w-full"
           >
-            Post Vacancy
+            Опубликовать вакансию
           </button>
         </form>
       </div>

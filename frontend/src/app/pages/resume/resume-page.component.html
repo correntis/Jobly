@@ -11,7 +11,7 @@
 
   <div *ngIf="!resume">
     <h3 class="text-2xl text-red-500 text-center font-bold">
-      User doesn't have a resume yet.
+      У пользователя пока нет резюме.
     </h3>
   </div>
 
@@ -24,7 +24,7 @@
     </div>
 
     <div class="mb-4">
-      <h3 class="text-xl font-semibold text-gray-800 mb-2">Skills</h3>
+      <h3 class="text-xl font-semibold text-gray-800 mb-2">Навыки</h3>
 
       <div class="flex flex-wrap gap-3 pl-5">
         <span
@@ -37,7 +37,7 @@
     </div>
 
     <div class="mb-4">
-      <h3 class="text-xl font-semibold text-gray-800 mb-2">Tags</h3>
+      <h3 class="text-xl font-semibold text-gray-800 mb-2">Теги</h3>
 
       <div class="flex flex-wrap gap-3 pl-5">
         <span
@@ -50,14 +50,14 @@
     </div>
 
     <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Job Experiences</h3>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Опыт работы</h3>
       <div *ngFor="let experience of resume.jobExperiences" class="mb-3 pl-5">
         <h4 class="text-lg font-semibold text-gray-800">
-          {{ experience.jobTitle }} at {{ experience.companyName }}
+          {{ experience.jobTitle }} в {{ experience.companyName }}
         </h4>
         <p class="text-gray-600">
           {{ experience.startDate | date }} -
-          {{ experience.endDate ? (experience.endDate | date) : "Present" }}
+          {{ experience.endDate ? (experience.endDate | date) : "По настоящее время" }}
         </p>
         <ul class="list-disc list-inside text-gray-600 mt-1">
           <li *ngFor="let responsibility of experience.responsibilities">
@@ -68,7 +68,7 @@
     </div>
 
     <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Education</h3>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Образование</h3>
       <div *ngFor="let education of resume.educations" class="mb-3 pl-5">
         <h4 class="text-lg font-semibold text-gray-800">
           <span class="italic font-bold">{{ education.institution }}</span
@@ -76,13 +76,13 @@
         </h4>
         <p class="text-gray-600">
           {{ education.startDate | date }} -
-          {{ education.endDate ? (education.endDate | date) : "Present" }}
+          {{ education.endDate ? (education.endDate | date) : "По настоящее время" }}
         </p>
       </div>
     </div>
 
     <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Certifications</h3>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Сертификаты</h3>
       <div
         *ngFor="let certification of resume.certifications"
         class="mb-3 pl-5"
@@ -92,13 +92,13 @@
           >: {{ certification.name }}
         </h4>
         <p class="text-gray-600">
-          Issued on {{ certification.issueDate | date }}
+          Выдан {{ certification.issueDate | date }}
         </p>
       </div>
     </div>
 
     <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Projects</h3>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Проекты</h3>
       <div *ngFor="let project of resume.projects" class="mb-5 pl-5">
         <div class="flex align-bottom items-end gap-3">
           <h4 class="text-lg font-semibold text-gray-800">
@@ -109,7 +109,7 @@
             target="_blank"
             class="text-blue-500 hover:underline"
           >
-            View Project
+            Смотреть проект
           </a>
         </div>
         <p class="text-gray-600">{{ project.description }}</p>
@@ -126,7 +126,7 @@
     </div>
 
     <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Languages</h3>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Языки</h3>
       <div class="flex gap-5 pl-5">
         <div
           *ngFor="let language of resume.languages"

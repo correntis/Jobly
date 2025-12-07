@@ -1,5 +1,5 @@
 <mat-form-field color="primary" class="w-full" appearance="fill">
-  <mat-label>Currency</mat-label>
+  <mat-label>Валюта</mat-label>
 
   <mat-select [formControl]="control" aria-describedby="currencyError">
     <mat-option *ngFor="let currency of currencies" [value]="currency.code">
@@ -10,6 +10,6 @@
   </mat-select>
 
   <mat-error id="currencyError">
-    <ng-container *ngIf="control.hasError('required')"> Required </ng-container>
+    <ng-container *ngIf="control.hasError('required')"> Обязательно </ng-container>
   </mat-error>
 </mat-form-field>

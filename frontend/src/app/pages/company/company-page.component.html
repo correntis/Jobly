@@ -17,15 +17,15 @@
     </div>
 
     <div class="mt-6 space-y-4">
-      <h2 class="text-xl font-semibold text-gray-800">About</h2>
+      <h2 class="text-xl font-semibold text-gray-800">О компании</h2>
       <p class="text-gray-700">{{ company.description }}</p>
 
-      <h2 class="text-xl font-semibold text-gray-800">Contact Information</h2>
+      <h2 class="text-xl font-semibold text-gray-800">Контактная информация</h2>
       <ul class="space-y-2 text-gray-700">
         <li><strong>Email:</strong> {{ company.email }}</li>
-        <li><strong>Phone:</strong> {{ company.phone }}</li>
+        <li><strong>Телефон:</strong> {{ company.phone }}</li>
         <li>
-          <strong>Website:</strong>
+          <strong>Сайт:</strong>
           <a
             [href]="company.webSite"
             class="text-blue-600 underline hover:text-blue-800"
@@ -37,17 +37,17 @@
         </li>
       </ul>
 
-      <h2 class="text-xl font-semibold text-gray-800">Location</h2>
-      <p class="text-gray-700"><strong>City:</strong> {{ company.city }}</p>
+      <h2 class="text-xl font-semibold text-gray-800">Местоположение</h2>
+      <p class="text-gray-700"><strong>Город:</strong> {{ company.city }}</p>
       <p class="text-gray-700">
-        <strong>Address:</strong> {{ company.address }}
+        <strong>Адрес:</strong> {{ company.address }}
       </p>
 
       <h2 class="text-xl font-semibold text-gray-800">
-        Additional Information
+        Дополнительная информация
       </h2>
       <p class="text-gray-700">
-        <strong>Founded on:</strong>
+        <strong>Дата основания:</strong>
         {{ company.createdAt | date : "mediumDate" }}
       </p>
     </div>
@@ -56,10 +56,10 @@
   <div class="w-full">
     <div class="flex flex-col items-center bg-[#e2e2e2]">
       <h2 class="text-3xl font-arial text-center py-5">
-        <i> {{ company?.name }} </i> vacancies
+        Вакансии компании <i> {{ company?.name }} </i>
       </h2>
       <div *ngIf="!vacanciesList" class="text-xl text-red-500">
-        Company doesn't have any vacancies yet
+        У компании пока нет вакансий
       </div>
       <div
         *ngIf="vacanciesList"
@@ -77,5 +77,5 @@
 </div>
 
 <div *ngIf="!company" class="text-center py-10">
-  <p class="text-gray-600">Loading company details...</p>
+  <p class="text-gray-600">Загрузка информации о компании...</p>
 </div>

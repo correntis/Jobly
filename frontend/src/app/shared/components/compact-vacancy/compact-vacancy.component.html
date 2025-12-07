@@ -6,7 +6,7 @@
   <div class="flex-1 flex flex-col gap-2">
     <div class="flex justify-between">
       <div *ngIf="vacancy?.archived">
-        <h3 class="tetx-xl font-bold text-red-500">Archived</h3>
+        <h3 class="tetx-xl font-bold text-red-500">В архиве</h3>
       </div>
       <div class="flex justify-end gap-2">
         <div
@@ -48,40 +48,40 @@
         "
       >
         <p class="text-lg text-gray-700">
-          <span>Experience </span>
-          <span *ngIf="vacancy?.vacancyDetails?.experience?.min">from </span>
+          <span>Опыт </span>
+          <span *ngIf="vacancy?.vacancyDetails?.experience?.min">от </span>
           <span
             class="font-bold"
             *ngIf="vacancy?.vacancyDetails?.experience?.min"
             >{{ vacancy?.vacancyDetails?.experience?.min }}
           </span>
 
-          <span *ngIf="vacancy?.vacancyDetails?.experience?.max">to </span>
+          <span *ngIf="vacancy?.vacancyDetails?.experience?.max">до </span>
           <span
             class="font-bold"
             *ngIf="vacancy?.vacancyDetails?.experience?.max"
             >{{ vacancy?.vacancyDetails?.experience?.max }}
           </span>
-          <span> years </span>
+          <span> лет </span>
         </p>
       </div>
     </div>
 
     <div class="text-sm text-gray-600">
       <p class="text-[17px] mb-1">
-        Type:
+        Тип:
         <span class="text-[18px] text-gray-800">
           {{ vacancy?.employmentType }}
         </span>
       </p>
       <p class="text-[17px] mb-1">
-        Created at
+        Создано
         <span class="text-[18px] text-gray-800">{{
           vacancy?.createdAt | date : "longDate"
         }}</span>
       </p>
       <p class="text-[17px] mb-1">
-        Deadline at
+        Дедлайн
         <span class="text-[18px] text-gray-800">{{
           vacancy?.deadlineAt | date : "longDate"
         }}</span>
@@ -89,7 +89,7 @@
     </div>
 
     <div class="skills-container">
-      <h4 class="text-sm font-medium text-gray-700">Skills</h4>
+      <h4 class="text-sm font-medium text-gray-700">Навыки</h4>
       <div class="flex flex-wrap gap-1 mt-1">
         <span
           *ngFor="let skill of vacancy?.vacancyDetails?.skills"
@@ -101,7 +101,7 @@
     </div>
 
     <div *ngIf="vacancy?.vacancyDetails?.technologies?.length" class="mt-2">
-      <h4 class="text-sm font-medium text-gray-700">Technologies</h4>
+      <h4 class="text-sm font-medium text-gray-700">Технологии</h4>
       <div class="flex flex-wrap gap-1 mt-1 overflow-hidden max-h-12">
         <span
           *ngFor="let tech of vacancy?.vacancyDetails?.technologies"
@@ -119,9 +119,9 @@
       "
       class="mt-2"
     >
-      <h4 class="text-sm font-medium text-gray-700">Salary</h4>
+      <h4 class="text-sm font-medium text-gray-700">Зарплата</h4>
       <p>
-        <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.min">From</span>
+        <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.min">От</span>
         <span
           *ngIf="vacancy?.vacancyDetails?.salary?.original?.min != null"
           class="font-semibold text-xl text-gray-900"
@@ -134,8 +134,8 @@
         <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.max != null">
           {{
             vacancy?.vacancyDetails?.salary?.original?.max != null
-              ? " to "
-              : "To "
+              ? " до "
+              : "До "
           }}
         </span>
 
@@ -160,9 +160,9 @@
       "
       class="mt-2"
     >
-      <h4 class="text-sm font-medium text-gray-700">Salary</h4>
+      <h4 class="text-sm font-medium text-gray-700">Зарплата</h4>
       <p>
-        <span *ngIf="vacancy?.vacancyDetails?.salary?.min != null">From</span>
+        <span *ngIf="vacancy?.vacancyDetails?.salary?.min != null">От</span>
         <span
           *ngIf="vacancy?.vacancyDetails?.salary?.min != null"
           class="font-semibold text-xl text-gray-900"
@@ -171,7 +171,7 @@
         </span>
 
         <span *ngIf="vacancy?.vacancyDetails?.salary?.max != null">
-          {{ vacancy?.vacancyDetails?.salary?.min != null ? " to " : "To " }}
+          {{ vacancy?.vacancyDetails?.salary?.min != null ? " до " : "До " }}
         </span>
 
         <span
@@ -195,7 +195,7 @@
       (click)="redirectToVacancyPage()"
       class="bg-blue-500 text-white font-medium w-full py-2 px-4 rounded-md hover:bg-blue-600 transition hover:scale-105"
     >
-      View Details
+      Подробнее
     </button>
   </div>
 </mat-card>

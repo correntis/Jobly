@@ -4,7 +4,7 @@
     #formInput
     type="text"
     [(ngModel)]="newInput"
-    [placeholder]="placeHolder ? placeHolder : 'Input message...'"
+    [placeholder]="placeHolder ? placeHolder : 'Введите сообщение...'"
     class="flex-grow p-2 border-[3px] border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500"
     (keyup.enter)="onSubmit()"
   />
@@ -12,6 +12,6 @@
     (click)="onSubmit()"
     class="px-10 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition"
   >
-    {{ buttonText ? buttonText : "Send" }}
+    {{ buttonText ? buttonText : "Отправить" }}
   </button>
 </div>

@@ -5,13 +5,13 @@
     class="relative flex h-[93vh] flex-col items-center justify-start px-[10px] py-2 bg-blue-600"
   >
     <h2 *ngIf="isForUser()" class="text-3xl font-semibold text-white mb-2">
-      Your Applications
+      Ваши отклики
     </h2>
     <h2 *ngIf="isForCompany()" class="text-3xl font-semibold text-white mb-2">
-      Vacancies Applicants
+      Кандидаты на вакансии
     </h2>
     <h3 class="text-xl text-red-300" *ngIf="chats.length === 0">
-      No chats found
+      Чаты не найдены
     </h3>
     <div class="h-1 w-full bg-blue-500 rounded-lg mb-5"></div>
     <div

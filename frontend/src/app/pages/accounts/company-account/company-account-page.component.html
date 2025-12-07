@@ -8,7 +8,7 @@
       color="primary"
       (click)="goToVacancyFormPage()"
     >
-      <span class="text-base">Post vacancy</span>
+      <span class="text-base">Опубликовать вакансию</span>
     </button>
   </div>
 
@@ -16,12 +16,12 @@
     <span
       class="text-blue-800 underline cursor-pointer hover:text-[15px] hover:text-blue-500"
     >
-      View company details
+      Посмотреть информацию о компании
     </span>
   </div>
 
   <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
-    <h1 class="text-center text-3xl mb-5">Company information</h1>
+    <h1 class="text-center text-3xl mb-5">Информация о компании</h1>
 
     <form
       [formGroup]="companyForm"
@@ -29,45 +29,45 @@
       class="space-y-6"
     >
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Name</mat-label>
+        <mat-label>Название</mat-label>
         <input
           matInput
           formControlName="name"
           type="text"
-          placeholder="Type name"
+          placeholder="Введите название"
         />
         <mat-icon matSuffix>person</mat-icon>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Description</mat-label>
+        <mat-label>Описание</mat-label>
         <textarea
           matInput
           formControlName="description"
           type="text"
-          placeholder="Type description"
+          placeholder="Введите описание"
         ></textarea>
         <mat-icon matSuffix>person</mat-icon>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>City</mat-label>
+        <mat-label>Город</mat-label>
         <input
           matInput
           formControlName="city"
           type="text"
-          placeholder="Type city"
+          placeholder="Введите город"
         />
         <mat-icon matSuffix>city</mat-icon>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Address</mat-label>
+        <mat-label>Адрес</mat-label>
         <input
           matInput
           formControlName="address"
           type="text"
-          placeholder="Type address"
+          placeholder="Введите адрес"
         />
         <mat-icon matSuffix>address</mat-icon>
       </mat-form-field>
@@ -79,48 +79,48 @@
           formControlName="email"
           type="email"
           email
-          placeholder="Type email"
+          placeholder="Введите email"
         />
         <mat-icon matSuffix>address</mat-icon>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Phone</mat-label>
+        <mat-label>Телефон</mat-label>
         <input
           matInput
           formControlName="phone"
           type="tel"
           pattern="^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4,5}$"
-          placeholder="New phone"
+          placeholder="Новый телефон"
           aria-describedby="phoneError"
         />
         <mat-icon matSuffix>phone</mat-icon>
 
         <mat-error id="phoneError">
           <ng-container *ngIf="companyForm.get('phone')?.hasError('pattern')">
-            Invalid phone
+            Неверный телефон
           </ng-container>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Web Site</mat-label>
+        <mat-label>Веб-сайт</mat-label>
         <input
           matInput
           formControlName="webSite"
           type="text"
-          placeholder="Type web site"
+          placeholder="Введите веб-сайт"
         />
         <mat-icon matSuffix>web</mat-icon>
       </mat-form-field>
 
       <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Type</mat-label>
+        <mat-label>Тип</mat-label>
         <input
           matInput
           formControlName="type"
           type="text"
-          placeholder="Type company type"
+          placeholder="Введите тип компании"
         />
         <mat-icon matSuffix>type</mat-icon>
       </mat-form-field>
@@ -132,7 +132,7 @@
           type="button"
           (click)="fileInput.click()"
         >
-          Choose File
+          Выбрать файл
         </button>
         <input
           #fileInput
@@ -144,7 +144,7 @@
         <div *ngIf="!image" class="mt-4">
           <img
             [src]="imageSrc"
-            alt="Selected Image"
+            alt="Выбранное изображение"
             class="max-w-xs rounded shadow"
           />
         </div>
@@ -152,7 +152,7 @@
         <div *ngIf="imageLocalUrl" class="mt-4">
           <img
             [src]="imageLocalUrl"
-            alt="Selected Image"
+            alt="Выбранное изображение"
             class="max-w-xs rounded shadow"
           />
         </div>
@@ -164,7 +164,7 @@
         class="w-full py-2 rounded-lg hover:bg-blue-600"
         type="submit"
       >
-        Change
+        Сохранить
       </button>
     </form>
   </div>

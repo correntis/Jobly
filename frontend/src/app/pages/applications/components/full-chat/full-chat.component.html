@@ -14,7 +14,7 @@
         <span
           class="text-blue-300 underline cursor-pointer hover:text-[15px] hover:text-blue-100"
         >
-          View company details
+          Подробнее о компании
         </span>
       </div>
 
@@ -22,7 +22,7 @@
         <span
           class="text-blue-300 underline cursor-pointer hover:text-[15px] hover:text-blue-100"
         >
-          View vacancy
+          Смотреть вакансию
         </span>
       </div>
     </div>
@@ -49,7 +49,7 @@
         >
           <span
             class="bg-red-800 text-white px-4 py-2 rounded-full text-sm font-semibold"
-            >Reject</span
+            >Отклонить</span
           >
         </div>
         <div
@@ -58,7 +58,7 @@
         >
           <span
             class="bg-green-800 text-white px-4 py-2 rounded-full text-sm font-semibold"
-            >Accept</span
+            >Принять</span
           >
         </div>
       </div>
@@ -67,7 +67,7 @@
       <span
         class="text-blue-300 underline cursor-pointer hover:text-[15px] hover:text-blue-100"
       >
-        View Resume
+        Смотреть резюме
       </span>
     </div>
   </div>
@@ -110,15 +110,15 @@
       <app-simple-input-form
         *ngIf="!isEditing"
         (submit)="sendMessage($event)"
-        placeHolder="Input message..."
-        buttonText="Send"
+        placeHolder="Введите сообщение..."
+        buttonText="Отправить"
       />
 
       <div *ngIf="isEditing">
         <div class="flex flex-row mb-2">
           <div class="w-full rounded-lg bg-blue-300 px-5 pt-3 pb-5">
             <p class="text-base leading-none font-semibold">
-              Message:
+              Сообщение:
               <span class="text-sm font-light">
                 {{ selectedMessage?.content }}
               </span>
@@ -135,8 +135,8 @@
         <app-simple-input-form
           (submit)="submitEditMessage($event)"
           [input]="selectedMessage?.content || ''"
-          placeHolder="Edit message..."
-          buttonText="Edit"
+          placeHolder="Редактировать сообщение..."
+          buttonText="Изменить"
         />
       </div>
     </div>

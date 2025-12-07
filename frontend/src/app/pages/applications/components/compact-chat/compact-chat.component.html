@@ -7,9 +7,9 @@
       {{ chat?.application?.vacancy?.title }}
     </h2>
     <p class="text-sm text-gray-600">
-      Employment Type: {{ chat?.application?.vacancy?.employmentType }}
+      Тип занятости: {{ chat?.application?.vacancy?.employmentType }}
     </p>
-    <p class="text-sm text-gray-600">Company: {{ company?.name }}</p>
+    <p class="text-sm text-gray-600">Компания: {{ company?.name }}</p>
   </div>
 
   <div *ngIf="isForCompany()" class="vacancy-info">
@@ -17,7 +17,7 @@
       {{ user?.firstName }} {{ user?.lastName }}
     </h2>
     <p class="text-sm text-gray-600">
-      Vacancy: {{ chat?.application?.vacancy?.title }}
+      Вакансия: {{ chat?.application?.vacancy?.title }}
     </p>
   </div>
 

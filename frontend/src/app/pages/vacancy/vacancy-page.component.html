@@ -63,7 +63,7 @@
 
       <div *ngIf="vacancy.archived">
         <h2 class="text-xl font-bold text-red-500 text-center">
-          Vacancy archived
+          Вакансия в архиве
         </h2>
       </div>
 
@@ -82,7 +82,7 @@
           >
             <p class="text-xl">
               <span *ngIf="vacancy.vacancyDetails?.salary?.original?.min">
-                From
+                От
               </span>
               <span
                 *ngIf="vacancy.vacancyDetails.salary.original.min"
@@ -93,7 +93,7 @@
                 }}
               </span>
               <span *ngIf="vacancy.vacancyDetails?.salary?.original?.max">
-                to
+                до
               </span>
               <span class="font-semibold text-2xl text-green-700">
                 {{
@@ -114,14 +114,14 @@
             class="salary-details"
           >
             <p class="text-xl">
-              <span *ngIf="vacancy.vacancyDetails?.salary?.min"> From </span>
+              <span *ngIf="vacancy.vacancyDetails?.salary?.min"> От </span>
               <span
                 *ngIf="vacancy.vacancyDetails.salary.min"
                 class="font-semibold text-2xl text-green-700"
               >
                 {{ vacancy.vacancyDetails.salary.min | number : "1.0-2" }}
               </span>
-              <span *ngIf="vacancy.vacancyDetails?.salary?.max"> to </span>
+              <span *ngIf="vacancy.vacancyDetails?.salary?.max"> до </span>
               <span class="font-semibold text-2xl text-green-700">
                 {{ vacancy.vacancyDetails.salary.max | number : "1.0-2" }}
               </span>
@@ -134,41 +134,41 @@
           <div *ngIf="vacancy.vacancyDetails?.experience">
             <div *ngIf="vacancy.vacancyDetails.experience" class="mb-4">
               <p class="text-xl text-gray-700">
-                <span>Experience </span>
-                <span *ngIf="vacancy.vacancyDetails.experience.min">from </span>
+                <span>Опыт </span>
+                <span *ngIf="vacancy.vacancyDetails.experience.min">от </span>
                 <span
                   class="font-bold"
                   *ngIf="vacancy.vacancyDetails.experience.min"
                   >{{ vacancy.vacancyDetails.experience.min }}
                 </span>
 
-                <span *ngIf="vacancy.vacancyDetails.experience.max">to </span>
+                <span *ngIf="vacancy.vacancyDetails.experience.max">до </span>
                 <span
                   class="font-bold"
                   *ngIf="vacancy.vacancyDetails.experience.max"
                   >{{ vacancy.vacancyDetails.experience.max }}
                 </span>
-                <span> years </span>
+                <span> лет </span>
               </p>
             </div>
           </div>
         </div>
 
         <p class="text-[20px] leading-normal">
-          Type: {{ vacancy.employmentType }}
+          Тип занятости: {{ vacancy.employmentType }}
         </p>
         <p class="text-[20px] leading-normal">
-          Posted at {{ vacancy.createdAt | date : "longDate" }}
+          Опубликовано {{ vacancy.createdAt | date : "longDate" }}
         </p>
         <p class="text-[20px] leading-normal">
-          Deadline at {{ vacancy.deadlineAt | date : "longDate" }}
+          Дедлайн {{ vacancy.deadlineAt | date : "longDate" }}
         </p>
       </div>
 
       <div *ngIf="vacancy.vacancyDetails">
         <!-- Skills -->
         <div *ngIf="vacancy.vacancyDetails.skills?.length" class="mb-4">
-          <h2 class="text-xl font-semibold">Skills</h2>
+          <h2 class="text-xl font-semibold">Навыки</h2>
           <div class="flex flex-wrap gap-2">
             <span
               *ngFor="let skill of vacancy.vacancyDetails.skills"
@@ -181,7 +181,7 @@
 
         <!-- Technologies -->
         <div *ngIf="vacancy.vacancyDetails.technologies?.length" class="mb-4">
-          <h2 class="text-xl font-semibold">Technologies</h2>
+          <h2 class="text-xl font-semibold">Технологии</h2>
           <div class="flex flex-wrap gap-2">
             <span
               *ngFor="let technology of vacancy.vacancyDetails.technologies"
@@ -194,7 +194,7 @@
       </div>
 
       <div *ngIf="alreadyApplied">
-        <h3 class="text-xl text-red-500 text-center">You already applied</h3>
+        <h3 class="text-xl text-red-500 text-center">Вы уже откликнулись</h3>
       </div>
 
       <div *ngIf="!isUserCreator && !vacancy.archived">
@@ -204,7 +204,7 @@
           class="w-full"
           (click)="apply()"
         >
-          Apply Now
+          Откликнуться
         </button>
       </div>
 
@@ -215,7 +215,7 @@
           class="w-full"
           (click)="archive()"
         >
-          Archive
+          В архив
         </button>
       </div>
     </div>
@@ -224,7 +224,7 @@
       <ng-container *ngIf="vacancy && vacancy.vacancyDetails">
         <!-- Languages -->
         <div *ngIf="vacancy.vacancyDetails.languages?.length" class="mb-4">
-          <h2 class="text-xl font-semibold">Languages</h2>
+          <h2 class="text-xl font-semibold">Языки</h2>
           <ul class="list-disc pl-5">
             <li *ngFor="let language of vacancy.vacancyDetails.languages">
               {{ language.name }} - {{ language.level }}
@@ -264,7 +264,7 @@
         (click)="goToCompany(company.id)"
         class="w-full mt-2 mb-5"
       >
-        View Details
+        Подробнее о компании
       </button>
     </div>
   </div>
