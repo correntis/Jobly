@@ -1,0 +1,16 @@
+{
+  "name": "jobly-seed",
+  "version": "1.0.0",
+  "description": "Скрипт для сида базы данных Jobly",
+  "main": "seed.js",
+  "type": "module",
+  "scripts": {
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "node-fetch": "^3.3.2",
+    "form-data": "^4.0.0"
+  }
+}
+

@@ -129,21 +129,3 @@ services:
   #     - "5601:5601"
   #   depends_on:
   #     - jobly-elastic
-  
-  # users-migrations:
-  #   container_name: users-migrations
-  #   build:
-  #     context: ./
-  #     dockerfile: ./src/UsersService/UsersService.API/Dockerfile.migrations
-  #   environment:
-  #     SA_PASSWORD: "LZpb8R9Ozsrab6Vaez6L2oNsP1z79o2v"
-  #   depends_on:
-  #     - jobly-sqlserver
-  #   command: |
-  #     sh -c "
-  #     until /opt/mssql-tools/bin/sqlcmd -S jobly-sqlserver -U SA -P \"$SA_PASSWORD\" -Q 'SELECT 1' &>/dev/null; do
-  #     echo 'Waiting for SQL Server to start...';
-  #     sleep 5;
-  #     done;
-  #     echo 'SQL Server is up - running migrations';
-  #     dotnet ef database update -s ./src/UsersService/UsersService.API/UsersService.API.csproj -p ./src/UsersService/UsersService.Infrastructure/UsersService.Infrastructure.csproj;"

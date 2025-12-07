@@ -24,7 +24,6 @@ export class AppendUserIdGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean | UrlTree {
     const userId: string = this.envSevrice.getUserId();
-
     if (userId) {
       if (state.url.indexOf(userId) === -1) {
         var hashedUserId = this.hashService.encrypt(userId);

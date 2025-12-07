@@ -3,6 +3,7 @@ using Jobly.Brokers;
 using Serilog;
 using UsersService.Application;
 using UsersService.Infrastructure;
+using UsersService.Infrastructure.SQL;
 using UsersService.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,7 @@ var configuration = builder.Configuration;
 if(builder.Environment.IsProduction())
 {
     configuration
-    .AddJsonFile("appsettings.Container.json");
+        .AddJsonFile("appsettings.Container.json");
 }
 
 builder.Host.UseSerilog((context, configuration) =>

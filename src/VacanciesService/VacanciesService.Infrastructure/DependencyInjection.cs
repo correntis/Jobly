@@ -83,6 +83,7 @@ namespace VacanciesService.Infrastructure
         public static void UseInfrastructure(this WebApplication app)
         {
             app.UseHangfireDashboard();
+            app.MigrateDbContext<VacanciesWriteContext>();
         }
 
         internal static void AddGrpcClients(this IServiceCollection services, IConfiguration configuration)

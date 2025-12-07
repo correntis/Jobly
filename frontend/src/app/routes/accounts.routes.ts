@@ -27,7 +27,7 @@ export const accountRoutes: Route[] = [
   {
     path: 'account/company/:userId',
     component: CompanyAccountPageComponent,
-    canActivate: [AuthGuard, UserRoleGuard],
+    canActivate: [AuthGuard, CompanyRoleGuard],
   },
   {
     path: 'account/company/:companyId/vacancy',

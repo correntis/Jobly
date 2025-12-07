@@ -24,9 +24,9 @@ namespace UsersService.Infrastructure
 
             services.AddDbContext<UsersDbContext>(options =>
             {
-               options.UseSqlServer(configuration.GetConnectionString("UsersDatabaseSqlServer"));
+                options.UseSqlServer(configuration.GetConnectionString("UsersDatabaseSqlServer"));
 
-               InitializeSqlServerDatabaseAsync(configuration);
+                InitializeSqlServerDatabaseAsync(configuration);
             });
 
             services.AddIdentityCore<UserEntity>()
@@ -52,6 +52,7 @@ namespace UsersService.Infrastructure
         public static void UseInfrastructure(this WebApplication app)
         {
             app.UseHangfireDashboard();
+            app.MigrateDbContext<UsersDbContext>();
         }
 
         private static void InitializeSqlServerDatabaseAsync(IConfiguration configuration)
