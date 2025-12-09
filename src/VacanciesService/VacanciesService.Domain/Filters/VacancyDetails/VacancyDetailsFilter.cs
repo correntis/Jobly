@@ -2,6 +2,7 @@
 {
     public class VacancyDetailsFilter
     {
+        public string Title { get; set; } = null;
         public List<string> Requirements { get; set; } = null;
         public List<string> Skills { get; set; } = null;
         public List<string> Tags { get; set; } = null;

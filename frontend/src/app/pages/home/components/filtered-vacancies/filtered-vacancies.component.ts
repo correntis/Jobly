@@ -115,16 +115,11 @@ export class FilteredVacanciesComponent {
   searchVacancies(): void {
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
-        const wasFirstLoad = !this.vacanciesList || this.vacanciesList.length === 0;
-        
-        // If returned empty array, no more data available
         if (vacancies.length === 0) {
           this.isFullLoaded = true;
-        } else if (!wasFirstLoad && vacancies.length < this.vacanciesFilter.pageSize) {
-          // If this is not the first load and we got less than pageSize, it's the last page
+        } else if (vacancies.length < this.vacanciesFilter.pageSize) {
           this.isFullLoaded = true;
         } else {
-          // Otherwise, there might be more data
           this.isFullLoaded = false;
         }
 
@@ -222,7 +217,13 @@ export class FilteredVacanciesComponent {
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
         this.vacanciesList = vacancies;
-        this.isFullLoaded = false;
+        
+        if (vacancies.length < this.vacanciesFilter.pageSize) {
+          this.isFullLoaded = true;
+        } else {
+          this.isFullLoaded = false;
+        }
+        
         this.vacanciesFilter.pageNumber++;
       },
       error: (err) => console.error(err),
