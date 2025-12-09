@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import Vacancy from '../../core/models/vacancies/vacancy';
 import { ResumesService } from '../../core/services/resumes.service';
@@ -17,6 +18,7 @@ import { HeaderComponent } from '../../shared/components/header/header.component
     CommonModule,
     CompactVacancyComponent,
     MatButtonModule,
+    MatIconModule,
     HeaderComponent,
   ],
   templateUrl: './recommendations-page.component.html',
@@ -68,8 +70,17 @@ export class RecommendationsPageComponent {
         )
         .subscribe({
           next: (vacancies) => {
+            const wasFirstLoad = !this.vacanciesList || this.vacanciesList.length === 0;
+            
+            // If returned empty array, no more data available
             if (vacancies.length === 0) {
               this.isFullLoaded = true;
+            } else if (!wasFirstLoad && vacancies.length < this.pageSize) {
+              // If this is not the first load and we got less than pageSize, it's the last page
+              this.isFullLoaded = true;
+            } else {
+              // Otherwise, there might be more data
+              this.isFullLoaded = false;
             }
 
             if (this.vacanciesList) {

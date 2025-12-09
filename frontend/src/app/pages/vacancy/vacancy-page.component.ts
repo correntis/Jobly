@@ -217,4 +217,15 @@ export class VacancyPageComponent {
       'education',
     ];
   }
+
+  getCategoryTitle(category: string): string {
+    const titles: { [key: string]: string } = {
+      requirements: 'Требования',
+      tags: 'Теги',
+      responsibilities: 'Обязанности',
+      benefits: 'Преимущества',
+      education: 'Образование',
+    };
+    return titles[category] || category;
+  }
 }

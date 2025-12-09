@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { UserRoles } from '../../../core/enums/userRoles';
 import HashService from '../../../core/services/hash.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { EnvService } from '../../../environments/environment';
 import { NotificationsMenuComponent } from '../notifications-menu/notifications-menu.component';
 
@@ -15,15 +17,18 @@ type Route = {
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, NotificationsMenuComponent],
+  imports: [CommonModule, RouterModule, MatIconModule, NotificationsMenuComponent],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit {
+  isMobileMenuOpen = false;
+
   constructor(
     private envService: EnvService,
     private hashService: HashService,
     private router: Router,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit() {
@@ -80,6 +85,10 @@ export class HeaderComponent implements OnInit {
     return this.envService.isCompany();
   }
 
+  isActiveRoute(route: string): boolean {
+    return this.router.url.includes(route.split('/')[0]);
+  }
+
   goToRoute(route: string) {
     this.redirectTo(route);
   }
@@ -88,5 +97,17 @@ export class HeaderComponent implements OnInit {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate([uri]);
     });
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+
+  isDarkTheme(): boolean {
+    return this.themeService.isDark();
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 }

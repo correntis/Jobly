@@ -1,17 +1,17 @@
-<div
-  class="absolute z-50 left-0 w-24 top-[0px] border bg-white border-gray-200 shadow-lg"
->
+<div class="absolute left-0 top-0 z-50 glass-card overflow-hidden min-w-[120px]">
   <button
-    class="block w-full px-4 py-2 text-left bg-blue-600 hover:bg-blue-800 text-white font-semibold text-sm focus:scale-95"
+    class="w-full px-4 py-3 text-left text-sm font-medium text-[var(--text-primary)] hover:bg-primary-500/10 flex items-center gap-2 transition-colors"
     (click)="onEditClick()"
   >
+    <mat-icon class="text-lg">edit</mat-icon>
     Изменить
   </button>
 
   <button
-    class="block w-full px-4 py-2 text-left bg-blue-600 hover:bg-blue-800 text-white font-semibold text-sm focus:scale-95"
+    class="w-full px-4 py-3 text-left text-sm font-medium text-[var(--text-primary)] hover:bg-primary-500/10 flex items-center gap-2 transition-colors"
     (click)="onCopyClick()"
   >
+    <mat-icon class="text-lg">content_copy</mat-icon>
     Копировать
   </button>
 </div>

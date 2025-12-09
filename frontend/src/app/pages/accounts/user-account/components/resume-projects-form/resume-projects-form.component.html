@@ -1,153 +1,80 @@
-<section class="p-6 bg-gray-100 rounded-lg shadow-md mt-3">
-  <div class="flex justify-between">
-    <h2 class="text-2xl font-bold text-gray-700 mb-4">Проекты</h2>
-    <button
-      mat-fab
-      color="accent"
-      type="button"
-      (click)="addProject()"
-      class="text-3xl transform scale-[0.55] align-middle"
-    >
-      <mat-icon matSuffix>add</mat-icon>
+<div class="glass-card p-6 mb-6">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="section-title mb-0 flex items-center gap-2">
+      <mat-icon class="text-accent-500">rocket_launch</mat-icon>
+      Проекты
+    </h2>
+    <button type="button" (click)="addProject()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+      <mat-icon class="text-sm">add</mat-icon> Добавить
     </button>
   </div>
 
   <form [formGroup]="projectsForm" (ngSubmit)="saveProjects()">
-    <ng-container formArrayName="projects">
-      <hr *ngIf="projects.length > 0" class="border-t-1 border-blue-300" />
-
-      <ng-container
-        class="w-full"
-        *ngFor="let projectForm of projects.controls; let i = index"
+    <div formArrayName="projects" class="space-y-4">
+      <div
+        *ngFor="let proj of projects.controls; let i = index"
+        [formGroupName]="i"
+        class="glass-card-subtle p-4"
       >
-        <div class="flex flex-row align-middle">
-          <div [formGroupName]="i">
-            <span class="text-2xl font-bold">{{ i + 1 }}:</span>
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Название</mat-label>
+        <div class="flex items-start justify-between mb-3">
+          <span class="text-sm font-semibold text-[var(--text-primary)]">Проект {{ i + 1 }}</span>
+          <button
+            type="button"
+            (click)="removeProject(i)"
+            class="text-[var(--text-muted)] hover:text-error-500 transition-colors"
+          >
+            <mat-icon class="text-lg">close</mat-icon>
+          </button>
+        </div>
 
-              <input
-                matInput
-                formControlName="name"
-                aria-describedby="projectNameError-{{ i }}"
-                required
-              />
+        <div class="space-y-3">
+          <input
+            formControlName="name"
+            class="glass-input text-sm py-2"
+            placeholder="Название"
+          />
+          <textarea
+            formControlName="description"
+            class="glass-textarea text-sm py-2"
+            placeholder="Описание"
+            rows="2"
+          ></textarea>
+          <input
+            formControlName="link"
+            class="glass-input text-sm py-2"
+            placeholder="Ссылка"
+          />
 
-              <mat-error id="projectNameError-{{ i }}">
-                <ng-container
-                  *ngIf="projects.controls[i].get('name')?.hasError('required')"
-                >
-                  Введите или удалите проект
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Описание</mat-label>
-
-              <input
-                matInput
-                formControlName="description"
-                aria-describedby="projectDescError-{{ i }}"
-                required
-              />
-
-              <mat-error id="projectDescError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    projects.controls[i]
-                      .get('description')
-                      ?.hasError('required')
-                  "
-                >
-                  Введите или удалите проект
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Ссылка</mat-label>
-
-              <input
-                matInput
-                formControlName="link"
-                aria-describedby="projectLinkError-{{ i }}"
-                required
-              />
-
-              <mat-error id="projectLinkError-{{ i }}">
-                <ng-container
-                  *ngIf="projects.controls[i].get('link')?.hasError('required')"
-                >
-                  Введите или удалите проект
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Technologies -->
-            <div formArrayName="technologies" class="p-2 bg-gray-50 rounded-md">
-              <div class="flex justify-between">
-                <h3 class="text-lg font-medium">Технологии</h3>
-
-                <button
-                  mat-fab
-                  color="accent"
-                  type="button"
-                  (click)="addTechnology(i)"
-                  class="text-3xl transform scale-[0.55] align-middle"
-                >
-                  <mat-icon matSuffix>add</mat-icon>
-                </button>
-              </div>
-
+          <!-- Technologies -->
+          <div formArrayName="technologies" class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs text-[var(--text-muted)]">Технологии</label>
+              <button type="button" (click)="addTechnology(i)" class="text-xs text-[var(--accent-primary)] hover:underline">
+                + Добавить
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-2">
               <div
-                *ngFor="
-                  let techControl of getTechnologies(i).controls;
-                  let j = index
-                "
-                class="flex space-x-2 items-center mt-2"
+                *ngFor="let tech of getTechnologies(i).controls; let j = index"
+                class="flex items-center gap-1 glass-card px-2 py-1 rounded-lg"
               >
-                <mat-form-field appearance="fill" class="flex-1">
-                  <mat-label>Технология {{ j + 1 }}</mat-label>
-                  <input
-                    matInput
-                    [formControlName]="j"
-                    required
-                    aria-describedby="projectTechError-{{ i }}:{{ j }}"
-                  />
-
-                  <mat-error id="projectTechError-{{ i }}:{{ j }}">
-                    <ng-container
-                      *ngIf="getTechnologies(i).at(j)?.hasError('required')"
-                    >
-                      Введите или удалите проект
-                    </ng-container>
-                  </mat-error>
-                </mat-form-field>
-                <button
-                  mat-icon-button
-                  color="warn"
-                  type="button"
-                  (click)="removeTechnology(i, j)"
-                >
-                  <mat-icon>close</mat-icon>
+                <input
+                  [formControlName]="j"
+                  class="bg-transparent border-none outline-none text-xs w-20 text-[var(--text-primary)]"
+                  placeholder="Тех."
+                />
+                <button type="button" (click)="removeTechnology(i, j)" class="text-[var(--text-muted)] hover:text-error-500">
+                  <mat-icon class="text-xs">close</mat-icon>
                 </button>
               </div>
             </div>
           </div>
-
-          <div
-            (click)="removeProject(i)"
-            class="hover:cursor-pointer hover:bg-red-400 rounded-xl flex align-middle items-center justify-center p-3 mb-[22px]"
-          >
-            <mat-icon matSuffix> close</mat-icon>
-          </div>
         </div>
-      </ng-container>
-    </ng-container>
+      </div>
+    </div>
 
-    <button mat-raised-button color="primary" type="submit">
-      Сохранить проекты
+    <button *ngIf="projects.length > 0" type="submit" class="glass-btn py-3 px-6 mt-4">
+      Сохранить
     </button>
   </form>
-</section>
+</div>

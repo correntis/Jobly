@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import Resume from '../../core/models/resumes/resume';
 import User from '../../core/models/user';
 import { CompaniesService } from '../../core/services/companies.service';
@@ -14,7 +15,7 @@ import { ResumesService } from './../../core/services/resumes.service';
 @Component({
   selector: 'app-resume-page',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, MatIconModule],
   templateUrl: './resume-page.component.html',
 })
 export class ResumePageComponent {

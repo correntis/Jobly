@@ -103,19 +103,27 @@ export class CompactChatComponent {
     yesterday.setDate(today.getDate() - 1);
 
     if (date.toDateString() === today.toDateString()) {
-      return date.toLocaleTimeString([], {
+      return date.toLocaleTimeString('ru', {
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit',
       });
     } else if (date.toDateString() === yesterday.toDateString()) {
-      return date.toLocaleDateString('en', {
-        day: 'numeric',
-        month: 'long',
-      });
+      return 'Вчера';
     } else {
-      return date.toLocaleDateString('en');
+      return date.toLocaleDateString('ru', {
+        day: 'numeric',
+        month: 'short',
+      });
     }
+  }
+
+  getStatusText(status: string | undefined): string {
+    const statusMap: { [key: string]: string } = {
+      'Unread': 'Новый',
+      'Accepted': 'Принят',
+      'Rejected': 'Отклонён',
+    };
+    return statusMap[status || ''] || status || '';
   }
 
   isForUser() {

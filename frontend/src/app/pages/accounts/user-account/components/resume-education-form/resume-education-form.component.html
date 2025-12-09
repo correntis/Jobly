@@ -1,153 +1,67 @@
-<section class="p-6 bg-gray-100 rounded-lg shadow-md mt-3">
-  <div class="flex justify-between">
-    <h2 class="text-2xl font-bold text-gray-700 mb-4">Образование</h2>
-    <button
-      mat-fab
-      color="accent"
-      type="button"
-      (click)="addEducation()"
-      class="text-3xl transform scale-[0.55] align-middle"
-    >
-      <mat-icon matSuffix>add</mat-icon>
+<div class="glass-card p-6 mb-6">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="section-title mb-0 flex items-center gap-2">
+      <mat-icon class="text-accent-500">school</mat-icon>
+      Образование
+    </h2>
+    <button type="button" (click)="addEducation()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+      <mat-icon class="text-sm">add</mat-icon> Добавить
     </button>
   </div>
 
   <form [formGroup]="educationForm" (ngSubmit)="saveEducations()">
-    <ng-container formArrayName="educations">
-      <hr *ngIf="educations.length > 0" class="border-t-1 border-blue-300" />
-
-      <ng-container
-        class="w-full"
-        *ngFor="let educationForm of educations.controls; let i = index"
+    <div formArrayName="educations" class="space-y-4">
+      <div
+        *ngFor="let edu of educations.controls; let i = index"
+        [formGroupName]="i"
+        class="glass-card-subtle p-4"
       >
-        <div class="flex flex-row align-middle">
-          <div [formGroupName]="i">
-            <span class="text-2xl font-bold">{{ i + 1 }}:</span>
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Учебное заведение</mat-label>
-
-              <input
-                matInput
-                formControlName="institution"
-                aria-describedby="educationInstError-{{ i }}"
-                required
-              />
-
-              <mat-error id="educationInstError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    educations.controls[i]
-                      .get('institution')
-                      ?.hasError('required')
-                  "
-                >
-                  Введите или удалите образование
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Степень</mat-label>
-
-              <input
-                matInput
-                formControlName="degree"
-                aria-describedby="educationDegreeError-{{ i }}"
-                required
-              />
-
-              <mat-error id="educationDegreeError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    educations.controls[i].get('degree')?.hasError('required')
-                  "
-                >
-                  Введите или удалите образование
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Дата начала</mat-label>
-
-              <input
-                matInput
-                [matDatepicker]="educationStartDate"
-                formControlName="startDate"
-                aria-describedby="educationStartDateError-{{ i }}"
-                required
-                readonly
-              />
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="educationStartDate"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #educationStartDate>
-                <mat-datepicker-actions>
-                  <button mat-button matDatepickerCancel>Отмена</button>
-                  <button mat-raised-button matDatepickerApply>Применить</button>
-                </mat-datepicker-actions>
-              </mat-datepicker>
-
-              <mat-error id="educationStartDateError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    educations.controls[i]
-                      .get('startDate')
-                      ?.hasError('required')
-                  "
-                >
-                  Выберите дату или удалите образование
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Дата окончания</mat-label>
-
-              <input
-                matInput
-                [matDatepicker]="educationEndDate"
-                formControlName="endDate"
-                aria-describedby="educationEndDateError-{{ i }}"
-                required
-                readonly
-              />
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="educationEndDate"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #educationEndDate>
-                <mat-datepicker-actions>
-                  <button mat-button matDatepickerCancel>Отмена</button>
-                  <button mat-raised-button matDatepickerApply>Применить</button>
-                </mat-datepicker-actions>
-              </mat-datepicker>
-
-              <mat-error id="educationEndDateError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    educations.controls[i].get('endDate')?.hasError('required')
-                  "
-                >
-                  Выберите дату или удалите образование
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div
+        <div class="flex items-start justify-between mb-3">
+          <span class="text-sm font-semibold text-[var(--text-primary)]">Образование {{ i + 1 }}</span>
+          <button
+            type="button"
             (click)="removeEducation(i)"
-            class="hover:cursor-pointer hover:bg-red-400 rounded-xl flex align-middle items-center justify-center p-3 mb-[22px]"
+            class="text-[var(--text-muted)] hover:text-error-500 transition-colors"
           >
-            <mat-icon matSuffix> close</mat-icon>
+            <mat-icon class="text-lg">close</mat-icon>
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <input
+            formControlName="institution"
+            class="glass-input text-sm py-2"
+            placeholder="Учебное заведение"
+          />
+          <input
+            formControlName="degree"
+            class="glass-input text-sm py-2"
+            placeholder="Степень / Специальность"
+          />
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="text-xs text-[var(--text-muted)]">Начало</label>
+              <input
+                type="date"
+                formControlName="startDate"
+                class="glass-input text-sm py-2"
+              />
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs text-[var(--text-muted)]">Окончание</label>
+              <input
+                type="date"
+                formControlName="endDate"
+                class="glass-input text-sm py-2"
+              />
+            </div>
           </div>
         </div>
-      </ng-container>
-    </ng-container>
+      </div>
+    </div>
 
-    <button mat-raised-button color="primary" type="submit">
-      Сохранить образование
+    <button *ngIf="educations.length > 0" type="submit" class="glass-btn py-3 px-6 mt-4">
+      Сохранить
     </button>
   </form>
-</section>
+</div>

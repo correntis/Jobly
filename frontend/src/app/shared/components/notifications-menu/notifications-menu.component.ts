@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { NotificationStatus } from '../../../core/enums/notificationStatus';
@@ -16,16 +16,19 @@ import { EnvService } from '../../../environments/environment';
   imports: [CommonModule, MatIconModule],
   templateUrl: './notifications-menu.component.html',
 })
-export class NotificationsMenuComponent {
+export class NotificationsMenuComponent implements AfterViewInit {
   notifications: Notification[] = [];
   pageIndex = 1;
   pageSize = 15;
 
   isMenuOpen: boolean = false;
   unreadCount: number = 0;
+  menuLeft: string = '0px';
 
   NotificationStatus = NotificationStatus;
   NotificationType = NotificationType;
+
+  @ViewChild('buttonRef', { static: false }) buttonRef!: ElementRef;
 
   constructor(
     private notificationsService: NotificationsService,
@@ -36,6 +39,10 @@ export class NotificationsMenuComponent {
     private elementRef: ElementRef
   ) {}
 
+  ngAfterViewInit() {
+    this.updateMenuPosition();
+  }
+
   ngOnInit() {
     this.loadNotifications();
     this.loadConnections();
@@ -45,6 +52,13 @@ export class NotificationsMenuComponent {
   onDocumentClick(event: MouseEvent): void {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isMenuOpen = false;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(): void {
+    if (this.isMenuOpen) {
+      this.updateMenuPosition();
     }
   }
 
@@ -81,6 +95,25 @@ export class NotificationsMenuComponent {
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    if (this.isMenuOpen) {
+      setTimeout(() => this.updateMenuPosition(), 0);
+    }
+  }
+
+  updateMenuPosition(): void {
+    if (this.buttonRef?.nativeElement) {
+      const buttonRect = this.buttonRef.nativeElement.getBoundingClientRect();
+      const menuWidth = 384; // w-96 = 384px
+      const leftPosition = buttonRect.left;
+      const rightSpace = window.innerWidth - buttonRect.left;
+      
+      // Если меню не помещается справа, сдвигаем влево
+      if (rightSpace < menuWidth) {
+        this.menuLeft = `${leftPosition - (menuWidth - rightSpace)}px`;
+      } else {
+        this.menuLeft = `${leftPosition}px`;
+      }
+    }
   }
 
   viewNotifications(ids: string[]) {

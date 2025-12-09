@@ -1,104 +1,115 @@
-<div class="relative">
+<div class="relative z-[100]">
+  <!-- Notification Button -->
   <button
+    #buttonRef
     (click)="toggleMenu()"
-    class="px-2 pt-2 rounded-full hover:bg-blue-400 focus:outline-none"
+    class="relative w-10 h-10 rounded-xl glass-card-subtle flex items-center justify-center transition-all hover:scale-105 overflow-visible"
   >
-    <mat-icon>notifications</mat-icon>
+    <mat-icon class="text-[var(--text-primary)]">notifications</mat-icon>
     <span
       *ngIf="unreadCount > 0"
-      class="absolute top-[-3px] right-[-6px] bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5"
+      class="absolute -top-0.5 -right-0.5 min-w-5 h-5 px-1.5 bg-error-500 text-white text-xs font-bold rounded-full flex items-center justify-center z-10 leading-none"
     >
-      {{ unreadCount }}
+      {{ unreadCount > 99 ? '99+' : unreadCount }}
     </span>
   </button>
 
+  <!-- Dropdown Menu -->
   <div
     *ngIf="isMenuOpen"
-    class="absolute right-[-350px] top-[43px] mt-2 w-96 bg-blue-900 border rounded-lg shadow-lg z-50"
+    class="fixed top-20 w-96 overflow-hidden z-[200] rounded-2xl border-2 backdrop-blur-xl"
+    [style.left]="menuLeft"
+    [style.max-height]="'calc(100vh - 6rem)'"
+    [style.background]="'var(--bg-secondary)'"
+    [style.opacity]="'0.98'"
+    [style.border-color]="'var(--border-color)'"
+    [style.box-shadow]="'0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.1)'"
   >
-    <div class="flex items-center justify-between p-4 border-b border-gray-200">
-      <div class="">
-        <h3 class="text-lg font-semibold">Уведомления</h3>
-      </div>
-
-      <div>
-        <button
-          (click)="toggleMenu()"
-          class="hover:bg-gray-300 hover:text-gray-800 h-8 w-8 rounded-full"
-        >
-          <mat-icon class="scale-105 mt-1">close</mat-icon>
-        </button>
-      </div>
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
+      <h3 class="text-lg font-semibold text-[var(--text-primary)]">Уведомления</h3>
+      <button
+        (click)="toggleMenu()"
+        class="w-8 h-8 rounded-lg hover:bg-[var(--bg-tertiary)] flex items-center justify-center transition-colors"
+      >
+        <mat-icon class="text-[var(--text-muted)]">close</mat-icon>
+      </button>
     </div>
 
-    <div
-      *ngIf="notifications.length === 0"
-      class="p-4 border-b border-gray-200"
-    >
-      <h4 class="text-lg font-semibold text-red-200">
-        У вас нет непрочитанных уведомлений
-      </h4>
+    <!-- Empty State -->
+    <div *ngIf="notifications.length === 0" class="p-8 text-center">
+      <mat-icon class="text-4xl text-[var(--text-muted)] mb-2">notifications_off</mat-icon>
+      <p class="text-[var(--text-secondary)]">Нет новых уведомлений</p>
     </div>
 
-    <div class="max-h-[500px] overflow-y-auto bg-blue-800">
+    <!-- Notifications List -->
+    <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
       <div
         *ngFor="let notification of notifications"
-        class="p-4 hover:bg-gray-300 hover:text-gray-900 cursor-pointer"
+        class="p-4 border-b border-[var(--border-color)] hover:bg-[var(--bg-tertiary)]/50 cursor-pointer transition-colors"
         (click)="markAsViewed(notification)"
       >
-        <div class="flex items-center justify-between">
-          <div>
-            <p>{{ notification.createdAt | date : "dd.MM.YYYY HH:mm:ss" }}</p>
+        <div class="flex items-start gap-3">
+          <!-- Icon based on type -->
+          <div 
+            class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+            [ngClass]="{
+              'bg-primary-500/20': notification.type === NotificationType.ResumeView,
+              'bg-warning-500/20': notification.type === NotificationType.LikedVacancyDeadline,
+              'bg-accent-500/20': notification.type === NotificationType.RecomendVacancy
+            }"
+          >
+            <mat-icon 
+              [ngClass]="{
+                'text-primary-500': notification.type === NotificationType.ResumeView,
+                'text-warning-500': notification.type === NotificationType.LikedVacancyDeadline,
+                'text-accent-500': notification.type === NotificationType.RecomendVacancy
+              }"
+            >
+              {{ notification.type === NotificationType.ResumeView ? 'visibility' : 
+                 notification.type === NotificationType.LikedVacancyDeadline ? 'schedule' : 'recommend' }}
+            </mat-icon>
+          </div>
 
-            <p class="text-sm font-medium w-80">{{ notification.content }}</p>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-[var(--text-primary)] line-clamp-2">{{ notification.content }}</p>
+            <p class="text-xs text-[var(--text-muted)] mt-1">
+              {{ notification.createdAt | date:'d MMM, HH:mm' }}
+            </p>
 
-            <div [ngSwitch]="notification.type">
-              <div
-                *ngSwitchCase="NotificationType.ResumeView"
-                (click)="goToCompany(notification)"
+            <!-- Action Links -->
+            <div class="mt-2">
+              <button
+                *ngIf="notification.type === NotificationType.ResumeView"
+                (click)="goToCompany(notification); $event.stopPropagation()"
+                class="text-xs text-accent-500 hover:underline"
               >
-                <span
-                  class="text-sm underline cursor-pointer hover:text-[15px]"
-                >
-                  Подробнее о компании
-                </span>
-              </div>
-
-              <div
-                *ngSwitchCase="NotificationType.LikedVacancyDeadline"
-                (click)="goToVacancy(notification)"
+                Посмотреть компанию →
+              </button>
+              <button
+                *ngIf="notification.type === NotificationType.LikedVacancyDeadline || notification.type === NotificationType.RecomendVacancy"
+                (click)="goToVacancy(notification); $event.stopPropagation()"
+                class="text-xs text-accent-500 hover:underline"
               >
-                <span
-                  class="text-sm underline cursor-pointer hover:text-[15px]"
-                >
-                  Смотреть вакансию
-                </span>
-              </div>
-
-              <div
-                *ngSwitchCase="NotificationType.RecomendVacancy"
-                (click)="goToVacancy(notification)"
-              >
-                <span
-                  class="text-sm underline cursor-pointer hover:text-[15px]"
-                >
-                  Смотреть вакансию
-                </span>
-              </div>
+                Посмотреть вакансию →
+              </button>
             </div>
           </div>
+
+          <!-- Unread Indicator -->
           <div
             *ngIf="notification.status === NotificationStatus.Sent"
-            class="w-2 h-2 bg-blue-500 rounded-full"
+            class="w-2 h-2 rounded-full bg-primary-500 flex-shrink-0 mt-2"
           ></div>
         </div>
       </div>
     </div>
 
-    <div *ngIf="notifications.length > 0" class="p-4 border-t border-gray-200">
+    <!-- Footer -->
+    <div *ngIf="notifications.length > 0" class="p-3 border-t border-[var(--border-color)]">
       <button
         (click)="markAllAsViewed()"
-        class="text-sm text-gray-100 hover:underline"
+        class="w-full text-sm text-accent-500 hover:text-accent-600 font-medium"
       >
         Отметить все как прочитанные
       </button>

@@ -1,272 +1,190 @@
 <app-header />
 
-<div class="min-h-screen flex flex-col items-center justify-start mt-3">
-  <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
-    <h1 class="text-center text-3xl mb-5">Личная информация</h1>
-    <form [formGroup]="userForm" (ngSubmit)="updateUser()" class="space-y-6">
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Имя</mat-label>
-        <input
-          matInput
-          formControlName="firstName"
-          type="text"
-          placeholder="Новое имя"
-          required
-        />
-        <mat-icon matSuffix>person</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Фамилия</mat-label>
-        <input
-          matInput
-          formControlName="lastName"
-          type="text"
-          placeholder="Новая фамилия"
-          required
-        />
-        <mat-icon matSuffix>person</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Телефон</mat-label>
-        <input
-          matInput
-          formControlName="phoneNumber"
-          type="tel"
-          pattern="^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4,5}$"
-          placeholder="Новый телефон"
-          aria-describedby="phoneError"
-        />
-        <mat-icon matSuffix>phone</mat-icon>
-
-        <mat-error id="phoneError">
-          <ng-container *ngIf="userForm.get('phone')?.hasError('pattern')">
-            Неверный телефон
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <button
-        mat-raised-button
-        color="primary"
-        class="w-full py-2 rounded-lg hover:bg-blue-600"
-        type="submit"
-      >
-        Сохранить
-      </button>
-    </form>
-  </div>
-
-  <div class="w-full max-w-3xl mt-5 bg-[#e3e3e4] rounded-lg shadow-md p-8">
-    <h1 class="text-center text-3xl mb-2">Резюме</h1>
-    <h3
-      *ngIf="isNewResume"
-      class="text-wrap px-10 pb-3 text-red-400 flex flex-col"
-    >
-      <span class="text-xl">У вас пока нет резюме. </span>
-      <span> Пожалуйста, заполните форму и нажмите «Добавить резюме»!</span>
-    </h3>
-
-    <div
-      *ngIf="!isNewResume"
-      class="flex flex-col items-center justify-evenly w-[100%] pb-2"
-    >
-      <div (click)="goToResume()">
-        <span
-          class="text-blue-800 underline cursor-pointer hover:text-[15px] hover:text-blue-500"
-        >
-          Посмотреть на странице резюме
-        </span>
-      </div>
+<div class="p-6">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Page Title -->
+    <div class="mb-8">
+      <h1 class="page-title">Личный кабинет</h1>
+      <p class="text-[var(--text-secondary)]">Управляйте своим профилем и резюме</p>
     </div>
 
-    <!-- Описание резюме -->
-    <section class="p-6 bg-gray-100 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-gray-700 mb-4">Описание резюме</h2>
+    <!-- Personal Info Card -->
+    <div class="glass-card p-6 mb-6">
+      <h2 class="section-title flex items-center gap-2">
+        <mat-icon class="text-accent-500">person</mat-icon>
+        Личная информация
+      </h2>
+      
+      <form [formGroup]="userForm" (ngSubmit)="updateUser()" class="space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Имя</label>
+            <input
+              type="text"
+              formControlName="firstName"
+              class="glass-input"
+              placeholder="Ваше имя"
+            />
+          </div>
+          
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Фамилия</label>
+            <input
+              type="text"
+              formControlName="lastName"
+              class="glass-input"
+              placeholder="Ваша фамилия"
+            />
+          </div>
+        </div>
 
-      <form
-        [formGroup]="resumeDescriptionForm"
-        (ngSubmit)="onDesctiptionSubmit()"
-      >
-        <mat-form-field class="w-full" appearance="fill">
-          <mat-label>Заголовок</mat-label>
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Телефон</label>
           <input
-            matInput
-            formControlName="title"
-            type="text"
-            placeholder="Заголовок резюме"
+            type="tel"
+            formControlName="phoneNumber"
+            class="glass-input"
+            placeholder="+7 999 123 45 67"
           />
-          <mat-icon matSuffix>work</mat-icon>
-        </mat-form-field>
+        </div>
 
-        <mat-form-field class="w-full" appearance="fill">
-          <mat-label>Краткое описание</mat-label>
-          <textarea
-            matInput
-            formControlName="summary"
-            placeholder="Краткое описание резюме"
-          ></textarea>
-          <mat-icon matSuffix>description</mat-icon>
-        </mat-form-field>
-
-        <!-- skills -->
-
-        <ng-container formArrayName="skills">
-          <div class="flex justify-between">
-            <h3 class="text-lg font-medium text-gray-800 mt-4">Навыки</h3>
-            <button
-              mat-fab
-              color="accent"
-              type="button"
-              (click)="addSkill()"
-              class="text-3xl transform scale-[0.55] align-middle"
-            >
-              <mat-icon matSuffix>add</mat-icon>
-            </button>
-          </div>
-
-          <hr *ngIf="skills.length > 0" class="border-t-1 border-blue-300" />
-
-          <ng-container
-            class="w-full"
-            *ngFor="let skillsForm of skills.controls; let i = index"
-          >
-            <div [formGroupName]="i">
-              <mat-form-field color="primary" class="w-full" appearance="fill">
-                <mat-label>Навык {{ i + 1 }}</mat-label>
-
-                <input
-                  matInput
-                  formControlName="name"
-                  aria-describedby="skillError-{{ i }}"
-                  required
-                />
-
-                <mat-icon
-                  matSuffix
-                  class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
-                  (click)="removeSkill(i)"
-                >
-                  close</mat-icon
-                >
-
-                <mat-error id="skillError-{{ i }}">
-                  <ng-container
-                    *ngIf="skills.controls[i].get('name')?.hasError('required')"
-                  >
-                    Введите значение или удалите
-                  </ng-container>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </ng-container>
-        </ng-container>
-
-        <!-- tags -->
-        <hr class="border-t-2 border-blue-500" />
-        <ng-container formArrayName="tags">
-          <div class="flex justify-between">
-            <h3 class="text-lg font-medium text-gray-800 mt-4">Теги</h3>
-            <button
-              mat-fab
-              color="accent"
-              type="button"
-              (click)="addTag()"
-              class="text-3xl transform scale-[0.55] align-middle"
-            >
-              <mat-icon matSuffix>add</mat-icon>
-            </button>
-          </div>
-
-          <ng-container
-            class="w-full"
-            *ngFor="let tagsForm of tags.controls; let i = index"
-          >
-            <div [formGroupName]="i">
-              <mat-form-field class="w-full" appearance="fill">
-                <mat-label>Тег {{ i + 1 }}</mat-label>
-
-                <input
-                  matInput
-                  formControlName="name"
-                  aria-describedby="tagError-{{ i }}"
-                  required
-                />
-
-                <mat-icon
-                  matSuffix
-                  class="hover:cursor-pointer hover:bg-red-400 rounded-xl"
-                  (click)="removeTag(i)"
-                >
-                  close</mat-icon
-                >
-
-                <mat-error id="tagError-{{ i }}">
-                  <ng-container
-                    *ngIf="tags.controls[i].get('name')?.hasError('required')"
-                  >
-                    Введите значение или удалите
-                  </ng-container>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </ng-container>
-        </ng-container>
-
-        <button
-          *ngIf="isNewResume"
-          mat-raised-button
-          color="primary"
-          type="submit"
-        >
-          Добавить резюме
-        </button>
-
-        <button
-          *ngIf="!isNewResume"
-          mat-raised-button
-          color="primary"
-          type="submit"
-        >
-          Сохранить описание
+        <button type="submit" class="glass-btn py-3 px-6">
+          Сохранить
         </button>
       </form>
-    </section>
+    </div>
 
-    <!-- languages -->
-    <app-resume-language-form
-      *ngIf="!isNewResume"
-      [resumeLanguages]="resume?.languages"
-      [resumeId]="resume?.id"
-    />
+    <!-- Resume Section -->
+    <div class="glass-card p-6 mb-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="section-title mb-0 flex items-center gap-2">
+          <mat-icon class="text-accent-500">description</mat-icon>
+          Резюме
+        </h2>
+        <button *ngIf="!isNewResume" (click)="goToResume()" class="glass-btn-secondary py-2 px-4 text-sm">
+          <mat-icon class="text-sm mr-1">visibility</mat-icon>
+          Посмотреть
+        </button>
+      </div>
 
-    <!-- certifications -->
-    <app-resume-certifications-form
-      *ngIf="!isNewResume"
-      [resumeCertifications]="resume?.certifications"
-      [resumeId]="resume?.id"
-    />
+      <!-- No Resume Alert -->
+      <div *ngIf="isNewResume" class="glass-card-subtle p-4 border-l-4 border-warning-500 mb-6">
+        <div class="flex items-start gap-3">
+          <mat-icon class="text-warning-500 flex-shrink-0">info</mat-icon>
+          <div>
+            <h3 class="font-semibold text-[var(--text-primary)]">У вас пока нет резюме</h3>
+            <p class="text-sm text-[var(--text-secondary)] mt-1">Заполните форму ниже, чтобы создать резюме</p>
+          </div>
+        </div>
+      </div>
 
-    <!-- education -->
-    <app-resume-education-form
-      *ngIf="!isNewResume"
-      [resumeEducations]="resume?.educations"
-      [resumeId]="resume?.id"
-    />
+      <!-- Resume Description Form -->
+      <form [formGroup]="resumeDescriptionForm" (ngSubmit)="onDesctiptionSubmit()" class="space-y-4">
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Заголовок</label>
+          <input
+            type="text"
+            formControlName="title"
+            class="glass-input"
+            placeholder="Например: Frontend Developer"
+          />
+        </div>
 
-    <!-- projects -->
-    <app-resume-projects-form
-      *ngIf="!isNewResume"
-      [resumeProjects]="resume?.projects"
-      [resumeId]="resume?.id"
-    />
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Описание</label>
+          <textarea
+            formControlName="summary"
+            class="glass-textarea"
+            placeholder="Расскажите о себе..."
+            rows="4"
+          ></textarea>
+        </div>
 
-    <!-- jobExperience -->
-    <app-resume-experiences-form
-      *ngIf="!isNewResume"
-      [resumeJobExperiences]="resume?.jobExperiences"
-      [resumeId]="resume?.id"
-    />
+        <!-- Skills -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Навыки</label>
+            <button type="button" (click)="addSkill()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+              <mat-icon class="text-sm">add</mat-icon> Добавить
+            </button>
+          </div>
+          <div formArrayName="skills" class="flex flex-wrap gap-2">
+            <div 
+              *ngFor="let skill of skills.controls; let i = index"
+              [formGroupName]="i"
+              class="flex items-center gap-2 glass-card-subtle px-3 py-2 rounded-xl"
+            >
+              <input
+                formControlName="name"
+                class="bg-transparent border-none outline-none text-sm w-24 text-[var(--text-primary)]"
+                placeholder="Навык"
+              />
+              <button type="button" (click)="removeSkill(i)" class="text-[var(--text-muted)] hover:text-error-500">
+                <mat-icon class="text-sm">close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Теги</label>
+            <button type="button" (click)="addTag()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+              <mat-icon class="text-sm">add</mat-icon> Добавить
+            </button>
+          </div>
+          <div formArrayName="tags" class="flex flex-wrap gap-2">
+            <div 
+              *ngFor="let tag of tags.controls; let i = index"
+              [formGroupName]="i"
+              class="flex items-center gap-2 glass-card-subtle px-3 py-2 rounded-xl"
+            >
+              <input
+                formControlName="name"
+                class="bg-transparent border-none outline-none text-sm w-24 text-[var(--text-primary)]"
+                placeholder="Тег"
+              />
+              <button type="button" (click)="removeTag(i)" class="text-[var(--text-muted)] hover:text-error-500">
+                <mat-icon class="text-sm">close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="glass-btn py-3 px-6">
+          {{ isNewResume ? 'Создать резюме' : 'Сохранить' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Additional Resume Sections (only if resume exists) -->
+    <ng-container *ngIf="!isNewResume">
+      <app-resume-language-form
+        [resumeLanguages]="resume?.languages"
+        [resumeId]="resume?.id"
+      />
+
+      <app-resume-certifications-form
+        [resumeCertifications]="resume?.certifications"
+        [resumeId]="resume?.id"
+      />
+
+      <app-resume-education-form
+        [resumeEducations]="resume?.educations"
+        [resumeId]="resume?.id"
+      />
+
+      <app-resume-projects-form
+        [resumeProjects]="resume?.projects"
+        [resumeId]="resume?.id"
+      />
+
+      <app-resume-experiences-form
+        [resumeJobExperiences]="resume?.jobExperiences"
+        [resumeId]="resume?.id"
+      />
+    </ng-container>
   </div>
 </div>

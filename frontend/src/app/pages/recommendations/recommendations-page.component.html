@@ -1,60 +1,58 @@
 <app-header />
 
-<div>
-  <ng-container *ngIf="!resumeExists">
-    <div class="flex flex-col align-middle items-center justify-center mt-5">
-      <p class="text-red-900 text-xl font-bold">У вас пока нет резюме</p>
-      <p>Добавьте резюме в личном кабинете</p>
-      <button
-        mat-raised-button
-        color="primary"
-        class="w-72 mt-2"
-        (click)="goToAccount()"
-      >
-        Перейти в кабинет
+<div class="p-6">
+  <div class="max-w-6xl mx-auto">
+    <!-- Page Title -->
+    <div class="mb-8">
+      <h1 class="page-title">Рекомендации</h1>
+      <p class="text-[var(--text-secondary)]">Вакансии, подобранные специально для вас</p>
+    </div>
+
+    <!-- No Resume Alert -->
+    <div *ngIf="!resumeExists" class="glass-card p-12 text-center max-w-lg mx-auto">
+      <div class="w-20 h-20 rounded-2xl bg-warning-500/20 flex items-center justify-center mx-auto mb-4">
+        <mat-icon class="text-4xl text-warning-500">description</mat-icon>
+      </div>
+      <h2 class="text-2xl font-bold text-[var(--text-primary)] mb-2 font-display">У вас пока нет резюме</h2>
+      <p class="text-[var(--text-secondary)] mb-6">
+        Создайте резюме, чтобы получать персональные рекомендации вакансий
+      </p>
+      <button (click)="goToAccount()" class="glass-btn py-3 px-8">
+        <mat-icon class="mr-2">add</mat-icon>
+        Создать резюме
       </button>
     </div>
-  </ng-container>
 
-  <ng-container *ngIf="resumeExists && vacanciesList?.length === 0">
-    <div class="flex flex-col align-middle items-center justify-center mt-5">
-      <p class="text-red-900 text-xl font-bold">
-        У нас пока нет рекомендаций для вас
+    <!-- No Recommendations -->
+    <div *ngIf="resumeExists && vacanciesList?.length === 0" class="glass-card p-12 text-center max-w-lg mx-auto">
+      <div class="w-20 h-20 rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center mx-auto mb-4">
+        <mat-icon class="text-4xl text-[var(--text-muted)]">search_off</mat-icon>
+      </div>
+      <h2 class="text-2xl font-bold text-[var(--text-primary)] mb-2 font-display">Рекомендаций пока нет</h2>
+      <p class="text-[var(--text-secondary)] mb-6">
+        Добавьте больше информации в резюме, чтобы мы могли подобрать подходящие вакансии
       </p>
-      <p>Попробуйте добавить больше информации в резюме</p>
-      <button
-        mat-raised-button
-        color="primary"
-        class="w-72 mt-2"
-        (click)="goToAccount()"
-      >
+      <button (click)="goToAccount()" class="glass-btn py-3 px-8">
+        <mat-icon class="mr-2">edit</mat-icon>
         Заполнить резюме
       </button>
     </div>
-  </ng-container>
 
-  <div class="flex flex-col items-center bg-[#e2e2e2]">
-    <h2 class="text-3xl font-bold font-arial text-center mt-5 mb-7">
-      Персональные рекомендации по вашему резюме
-    </h2>
-    <div class="vacancies-container flex flex-col w-[50vw]">
-      <ng-container *ngFor="let vacancy of vacanciesList; let i = index">
-        <app-compact-vacancy
-          class="mb-10"
-          [vacancy]="vacancy"
-        ></app-compact-vacancy>
-      </ng-container>
+    <!-- Vacancies Grid -->
+    <div *ngIf="resumeExists && vacanciesList && vacanciesList.length > 0">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ng-container *ngFor="let vacancy of vacanciesList">
+          <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>
+        </ng-container>
+      </div>
+
+      <!-- Load More -->
+      <div *ngIf="vacanciesList && vacanciesList.length > 0 && !isFullLoaded" class="flex justify-center mt-8">
+        <button (click)="loadRecommendations()" class="glass-btn-secondary px-8 py-3 flex items-center gap-2">
+          <mat-icon>refresh</mat-icon>
+          Загрузить ещё
+        </button>
+      </div>
     </div>
-  </div>
-
-  <div *ngIf="vacanciesList && !isFullLoaded" class="flex justify-center my-5">
-    <button
-      mat-raised-button
-      color="warn"
-      class="w-52 hover:scale-105 active:scale-90"
-      (click)="loadRecommendations()"
-    >
-      Загрузить ещё
-    </button>
   </div>
 </div>

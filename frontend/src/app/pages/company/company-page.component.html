@@ -1,81 +1,122 @@
 <app-header />
 
-<div class="flex flex-row gap-4">
-  <div
-    *ngIf="company"
-    class="company-container w-[30vw] min-w[100vh] p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-lg h-full sticky top-[65px]"
-  >
-    <div class="text-center">
-      <img
-        *ngIf="company.logoPath"
-        [src]="resources + company.logoPath"
-        [alt]="company.name"
-        class="mx-auto w-32 h-32 object-cover rounded-full shadow-md border-[2px] border-[#e2e8f0] border-solid"
-      />
-      <h1 class="mt-4 text-2xl font-bold text-gray-800">{{ company.name }}</h1>
-      <p class="text-gray-600 italic">{{ company.type }}</p>
+<div class="p-6">
+  <div class="max-w-7xl mx-auto">
+    <div *ngIf="company" class="grid lg:grid-cols-3 gap-6">
+      
+      <!-- Company Info Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="glass-card p-6 lg:sticky lg:top-24">
+          <!-- Logo -->
+          <div class="text-center mb-6">
+            <div *ngIf="company.logoPath; else defaultLogo" class="mx-auto">
+              <img
+                [src]="resources + company.logoPath"
+                [alt]="company.name"
+                class="w-24 h-24 rounded-2xl object-cover mx-auto shadow-lg"
+              />
+            </div>
+            <ng-template #defaultLogo>
+              <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center mx-auto shadow-lg">
+                <span class="text-white font-bold text-4xl font-display">{{ company.name?.charAt(0) }}</span>
+              </div>
+            </ng-template>
+            
+            <h1 class="text-2xl font-bold text-[var(--text-primary)] mt-4 font-display">{{ company.name }}</h1>
+            <p *ngIf="company.type" class="text-[var(--text-secondary)] italic">{{ company.type }}</p>
+          </div>
+
+          <div class="glass-divider"></div>
+
+          <!-- About -->
+          <div *ngIf="company.description" class="mb-6">
+            <h2 class="text-sm font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-2">
+              <mat-icon class="text-accent-500 text-lg">info</mat-icon>
+              О компании
+            </h2>
+            <p class="text-sm text-[var(--text-secondary)] leading-relaxed">{{ company.description }}</p>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="mb-6">
+            <h2 class="text-sm font-semibold text-[var(--text-primary)] mb-3 flex items-center gap-2">
+              <mat-icon class="text-accent-500 text-lg">contacts</mat-icon>
+              Контакты
+            </h2>
+            <div class="space-y-2">
+              <div *ngIf="company.email" class="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
+                <mat-icon class="text-lg text-[var(--text-muted)]">email</mat-icon>
+                <span>{{ company.email }}</span>
+              </div>
+              <div *ngIf="company.phone" class="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
+                <mat-icon class="text-lg text-[var(--text-muted)]">phone</mat-icon>
+                <span>{{ company.phone }}</span>
+              </div>
+              <div *ngIf="company.webSite" class="flex items-center gap-3 text-sm">
+                <mat-icon class="text-lg text-[var(--text-muted)]">language</mat-icon>
+                <a
+                  [href]="company.webSite"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-accent-500 hover:underline"
+                >
+                  {{ company.webSite }}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div *ngIf="company.city || company.address" class="mb-6">
+            <h2 class="text-sm font-semibold text-[var(--text-primary)] mb-3 flex items-center gap-2">
+              <mat-icon class="text-accent-500 text-lg">location_on</mat-icon>
+              Местоположение
+            </h2>
+            <div class="space-y-1 text-sm text-[var(--text-secondary)]">
+              <p *ngIf="company.city">{{ company.city }}</p>
+              <p *ngIf="company.address">{{ company.address }}</p>
+            </div>
+          </div>
+
+          <!-- Founded -->
+          <div *ngIf="company.createdAt" class="text-xs text-[var(--text-muted)]">
+            <mat-icon class="text-xs align-middle mr-1">event</mat-icon>
+            Основана: {{ company.createdAt | date:'d MMMM yyyy' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Vacancies -->
+      <div class="lg:col-span-2">
+        <div class="mb-6">
+          <h2 class="page-title">Вакансии</h2>
+          <p class="text-[var(--text-secondary)]">Открытые позиции в {{ company.name }}</p>
+        </div>
+
+        <div *ngIf="!vacanciesList || vacanciesList.length === 0" class="glass-card p-12 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center mx-auto mb-4">
+            <mat-icon class="text-3xl text-[var(--text-muted)]">work_off</mat-icon>
+          </div>
+          <h3 class="text-xl font-semibold text-[var(--text-primary)] mb-2">Нет открытых вакансий</h3>
+          <p class="text-[var(--text-secondary)]">У компании пока нет активных вакансий</p>
+        </div>
+
+        <div *ngIf="vacanciesList && vacanciesList.length > 0" class="grid md:grid-cols-2 gap-6">
+          <ng-container *ngFor="let vacancy of vacanciesList">
+            <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>
+          </ng-container>
+        </div>
+      </div>
     </div>
 
-    <div class="mt-6 space-y-4">
-      <h2 class="text-xl font-semibold text-gray-800">О компании</h2>
-      <p class="text-gray-700">{{ company.description }}</p>
-
-      <h2 class="text-xl font-semibold text-gray-800">Контактная информация</h2>
-      <ul class="space-y-2 text-gray-700">
-        <li><strong>Email:</strong> {{ company.email }}</li>
-        <li><strong>Телефон:</strong> {{ company.phone }}</li>
-        <li>
-          <strong>Сайт:</strong>
-          <a
-            [href]="company.webSite"
-            class="text-blue-600 underline hover:text-blue-800"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ company.webSite }}
-          </a>
-        </li>
-      </ul>
-
-      <h2 class="text-xl font-semibold text-gray-800">Местоположение</h2>
-      <p class="text-gray-700"><strong>Город:</strong> {{ company.city }}</p>
-      <p class="text-gray-700">
-        <strong>Адрес:</strong> {{ company.address }}
-      </p>
-
-      <h2 class="text-xl font-semibold text-gray-800">
-        Дополнительная информация
-      </h2>
-      <p class="text-gray-700">
-        <strong>Дата основания:</strong>
-        {{ company.createdAt | date : "mediumDate" }}
-      </p>
+    <!-- Loading State -->
+    <div *ngIf="!company" class="glass-card p-12 text-center">
+      <div class="animate-pulse">
+        <div class="w-24 h-24 rounded-2xl bg-[var(--bg-tertiary)] mx-auto mb-4"></div>
+        <div class="h-6 bg-[var(--bg-tertiary)] rounded-xl w-40 mx-auto mb-2"></div>
+        <div class="h-4 bg-[var(--bg-tertiary)] rounded-lg w-24 mx-auto"></div>
+      </div>
+      <p class="text-[var(--text-secondary)] mt-6">Загрузка...</p>
     </div>
   </div>
-
-  <div class="w-full">
-    <div class="flex flex-col items-center bg-[#e2e2e2]">
-      <h2 class="text-3xl font-arial text-center py-5">
-        Вакансии компании <i> {{ company?.name }} </i>
-      </h2>
-      <div *ngIf="!vacanciesList" class="text-xl text-red-500">
-        У компании пока нет вакансий
-      </div>
-      <div
-        *ngIf="vacanciesList"
-        class="vacancies-container flex flex-col w-[50vw]"
-      >
-        <ng-container *ngFor="let vacancy of vacanciesList; let i = index">
-          <app-compact-vacancy
-            class="mb-10"
-            [vacancy]="vacancy"
-          ></app-compact-vacancy>
-        </ng-container>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="!company" class="text-center py-10">
-  <p class="text-gray-600">Загрузка информации о компании...</p>
 </div>

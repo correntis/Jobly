@@ -1,52 +1,44 @@
-<div class="message">
+<div class="py-1 px-2">
+  <!-- User Message -->
   <div
     *ngIf="isUserMessage()"
-    class="p-2 rounded-lg flex"
-    [ngClass]="{
-      '': !isSender(),
-      'flex-row-reverse': isSender()
-    }"
+    class="flex"
+    [class.justify-end]="isSender()"
+    [class.justify-start]="!isSender()"
   >
     <div
-      class="px-4 py-3 rounded-lg"
-      [ngClass]="{
-        'bg-green-200 text-left': !isSender(),
-        'bg-gray-300 text-right ': isSender()
-      }"
+      class="max-w-[70%] px-4 py-3 rounded-2xl"
+      [class.bg-gradient-to-br]="isSender()"
+      [class.from-primary-500]="isSender()"
+      [class.to-accent-500]="isSender()"
+      [class.text-white]="isSender()"
+      [class.glass-card-subtle]="!isSender()"
+      [class.rounded-br-sm]="isSender()"
+      [class.rounded-bl-sm]="!isSender()"
     >
-      <p class="text-left max-w-[400px]">{{ message?.content }}</p>
-
-      <span class="text-xs text-gray-500"
-        >{{ message?.editedAt ? "Изменено," : "" }}
-      </span>
-      <span class="text-xs text-gray-500"
-        >{{ message?.isRead ? "Прочитано," : "Не прочитано," }}
-      </span>
-      <span class="text-xs text-gray-500">
-        {{ message?.sentAt | date : "HH:mm:ss" }}
-      </span>
+      <p class="text-sm leading-relaxed break-words">{{ message?.content }}</p>
+      
+      <div class="flex items-center gap-2 mt-2 text-xs" [class.justify-end]="isSender()">
+        <span *ngIf="message?.editedAt" class="opacity-70">изменено</span>
+        <span class="opacity-70">{{ message?.sentAt | date:'HH:mm' }}</span>
+        <mat-icon 
+          *ngIf="isSender()" 
+          class="text-sm"
+          [class.opacity-70]="!message?.isRead"
+        >
+          {{ message?.isRead ? 'done_all' : 'done' }}
+        </mat-icon>
+      </div>
     </div>
   </div>
 
-  <div
-    *ngIf="isCreationMessage()"
-    class="p-2 rounded-lg bg-red-200 text-center"
-  >
-    <div class="flex flex-col">
-      <div>
-        <p class="text-xl">{{ message?.content }}</p>
-      </div>
-
-      <div class="flex flex-row justify-center">
-        <div>
-          <span class="text-sm text-gray-500">Автоматическое сообщение</span>
-        </div>
-        <div>
-          <span class="text-sm text-gray-500 ml-5">{{
-            message?.sentAt | date : "dd:MM:YYYY HH:mm:ss"
-          }}</span>
-        </div>
-      </div>
+  <!-- System Message -->
+  <div *ngIf="isCreationMessage()" class="flex justify-center my-4">
+    <div class="glass-card-subtle px-6 py-3 rounded-full text-center">
+      <p class="text-sm text-[var(--text-primary)]">{{ message?.content }}</p>
+      <p class="text-xs text-[var(--text-muted)] mt-1">
+        {{ message?.sentAt | date:'d MMM yyyy, HH:mm' }}
+      </p>
     </div>
   </div>
 </div>

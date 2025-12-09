@@ -18,10 +18,6 @@ import { VacanciesFilter } from '../../../../core/models/vacancies/vacanciesFilt
 import Vacancy from '../../../../core/models/vacancies/vacancy';
 import { VacanciesService } from '../../../../core/services/vacancies.service';
 import { CompactVacancyComponent } from '../../../../shared/components/compact-vacancy/compact-vacancy.component';
-import { DynamicFormArrayComponent } from '../../../../shared/components/dynamic-form-array/dynamic-form-array.component';
-import { VacancyExperienceFormComponent } from '../../../vacancy-add/components/vacancy-experience-form/vacancy-experience-form.component';
-import { VacancyLanguagesFormComponent } from '../../../vacancy-add/components/vacancy-languages-form/vacancy-languages-form.component';
-import { VacancySalaryFormComponent } from '../../../vacancy-add/components/vacancy-salary-form/vacancy-salary-form.component';
 
 @Component({
   selector: 'app-filtered-vacancies',
@@ -34,18 +30,14 @@ import { VacancySalaryFormComponent } from '../../../vacancy-add/components/vaca
     MatIconModule,
     MatButtonModule,
     FormsModule,
-    MatIconModule,
     CompactVacancyComponent,
-    DynamicFormArrayComponent,
-    VacancyLanguagesFormComponent,
-    VacancyExperienceFormComponent,
-    VacancySalaryFormComponent,
   ],
   templateUrl: './filtered-vacancies.component.html',
 })
 export class FilteredVacanciesComponent {
   vacanciesFilterForm: FormGroup;
   vacanciesFilter: VacanciesFilter = {
+    title: null,
     requirements: [],
     skills: [],
     tags: [],
@@ -56,7 +48,7 @@ export class FilteredVacanciesComponent {
     languages: [],
     experience: null,
     salary: null,
-    pageSize: 12,
+    pageSize: 18,
     pageNumber: 1,
   };
 
@@ -70,6 +62,7 @@ export class FilteredVacanciesComponent {
     private vacanciesService: VacanciesService
   ) {
     this.vacanciesFilterForm = this.fb.group({
+      title: [''],
       requirements: this.fb.array([]),
       skills: this.fb.array([]),
       tags: this.fb.array([]),
@@ -122,8 +115,17 @@ export class FilteredVacanciesComponent {
   searchVacancies(): void {
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
+        const wasFirstLoad = !this.vacanciesList || this.vacanciesList.length === 0;
+        
+        // If returned empty array, no more data available
         if (vacancies.length === 0) {
           this.isFullLoaded = true;
+        } else if (!wasFirstLoad && vacancies.length < this.vacanciesFilter.pageSize) {
+          // If this is not the first load and we got less than pageSize, it's the last page
+          this.isFullLoaded = true;
+        } else {
+          // Otherwise, there might be more data
+          this.isFullLoaded = false;
         }
 
         if (this.vacanciesList) {
@@ -145,21 +147,20 @@ export class FilteredVacanciesComponent {
   addToArray(arrayName: string): void {
     const arrayControl = this.getFormArrayControls(arrayName);
 
-    if (arrayControl.controls.some((control) => control.hasError('required'))) {
-      arrayControl.markAllAsTouched();
-      return;
-    }
+    arrayControl.push(this.fb.group({ name: [''] }));
 
-    arrayControl.push(this.fb.control('', Validators.required));
+    this.cdRef.detectChanges();
+  }
+
+  removeFromArray(arrayName: string, index: number): void {
+    const arrayControl = this.getFormArrayControls(arrayName);
+    arrayControl.removeAt(index);
 
     this.cdRef.detectChanges();
   }
 
   removeFormArray(arrayName: string, index: number): void {
-    const arrayControl = this.getFormArrayControls(arrayName);
-    arrayControl.removeAt(index);
-
-    this.cdRef.detectChanges();
+    this.removeFromArray(arrayName, index);
   }
 
   addLanguage(): void {
@@ -187,7 +188,7 @@ export class FilteredVacanciesComponent {
 
     this.getDetailsKeys().map((keyName) => {
       const key = keyName as keyof VacanciesFilter;
-      this.vacanciesFilter[key] = this.parseFormArray(
+      (this.vacanciesFilter[key] as string[]) = this.parseFormArray(
         this.getFormArrayControls(key)
       );
     });
@@ -210,6 +211,11 @@ export class FilteredVacanciesComponent {
 
     this.vacanciesFilter.languages =
       this.getFormArrayControls('languages').value;
+
+    this.vacanciesFilter.title = this.vacanciesFilterForm.get('title')?.value || null;
+    if (this.vacanciesFilter.title === '') {
+      this.vacanciesFilter.title = null;
+    }
 
     this.vacanciesFilter.pageNumber = 1;
 

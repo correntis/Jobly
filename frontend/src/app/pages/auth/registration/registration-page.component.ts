@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserRoles } from '../../../core/enums/userRoles';
 import RegistrationRequest from '../../../core/requests/auth/registrationRequest';
@@ -44,6 +44,7 @@ type Role = {
     MatCardModule,
     MatRadioModule,
     FormsModule,
+    RouterModule,
   ],
   templateUrl: './registration-page.component.html',
 })

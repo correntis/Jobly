@@ -1,164 +1,197 @@
 <app-header />
 
-<div>
-  <div class="bg-gray-200">
-    <div class="min-h-screen flex flex-col items-center justify-start">
-      <div class="w-full max-w-3xl bg-[#e3e3e4] rounded-lg shadow-md p-8">
-        <h1 class="text-center text-3xl mb-5">Основная информация</h1>
-        <form
-          [formGroup]="vacancyForm"
-          (ngSubmit)="postVacancy()"
-          class="space-y-6"
-        >
-          <!-- title -->
-          <mat-form-field class="w-full" appearance="fill">
-            <mat-label>Название</mat-label>
-            <input
-              matInput
-              formControlName="title"
-              type="text"
-              placeholder="Введите название"
-              aria-describedby="titleError"
-              required
-            />
-            <mat-icon matSuffix>title</mat-icon>
+<div class="p-6">
+  <div class="max-w-3xl mx-auto">
+    <!-- Page Title -->
+    <div class="mb-8">
+      <h1 class="page-title">Новая вакансия</h1>
+      <p class="text-[var(--text-secondary)]">Заполните информацию о вакансии</p>
+    </div>
 
-            <mat-error id="titleError">
-              <ng-container
-                *ngIf="vacancyForm.get('title')?.hasError('required')"
-              >
-                Обязательно
-              </ng-container>
-            </mat-error>
-          </mat-form-field>
+    <!-- Form Card -->
+    <div class="glass-card p-6">
+      <form [formGroup]="vacancyForm" (ngSubmit)="postVacancy()" class="space-y-6">
+        
+        <!-- Basic Info Section -->
+        <div>
+          <h2 class="section-title flex items-center gap-2">
+            <mat-icon class="text-accent-500">info</mat-icon>
+            Основная информация
+          </h2>
 
-          <!-- type -->
-          <mat-form-field class="w-full" appearance="fill">
-            <mat-label>Тип занятости</mat-label>
-            <input
-              matInput
-              formControlName="employmentType"
-              type="text"
-              placeholder="Введите тип занятости"
-              required
-              aria-describedby="employmentTypeError"
-            />
-            <mat-icon matSuffix>type</mat-icon>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-[var(--text-primary)]">Название</label>
+              <input
+                type="text"
+                formControlName="title"
+                class="glass-input"
+                placeholder="Frontend Developer"
+              />
+            </div>
 
-            <mat-error id="employmentTypeError">
-              <ng-container
-                *ngIf="vacancyForm.get('employmentType')?.hasError('required')"
-              >
-                Обязательно
-              </ng-container>
-            </mat-error>
-          </mat-form-field>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-[var(--text-primary)]">Тип занятости</label>
+                <input
+                  type="text"
+                  formControlName="employmentType"
+                  class="glass-input"
+                  placeholder="Полная занятость"
+                />
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-[var(--text-primary)]">Дедлайн</label>
+                <input
+                  type="date"
+                  formControlName="deadlineAt"
+                  class="glass-input"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <!-- deadline -->
-          <mat-form-field color="primary" class="w-full" appearance="fill">
-            <mat-label>Дедлайн</mat-label>
+        <div class="glass-divider"></div>
 
-            <input
-              matInput
-              [matDatepicker]="deadlineAtDate"
-              formControlName="deadlineAt"
-              aria-describedby="deadlineAtError"
-              required
-              readonly
-            />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="deadlineAtDate"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #deadlineAtDate>
-              <mat-datepicker-actions>
-                <button mat-button matDatepickerCancel>Отмена</button>
-                <button mat-raised-button matDatepickerApply>Применить</button>
-              </mat-datepicker-actions>
-            </mat-datepicker>
+        <!-- Requirements Section -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Требования</label>
+            <button type="button" (click)="addRequirement()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+              <mat-icon class="text-sm">add</mat-icon> Добавить
+            </button>
+          </div>
+          <div formArrayName="requirements" class="space-y-2">
+            <div *ngFor="let ctrl of requirements.controls; let i = index" class="flex gap-2">
+              <input
+                [formControlName]="i"
+                class="glass-input text-sm py-2 flex-1"
+                placeholder="Требование..."
+              />
+              <button type="button" (click)="removeRequirement(i)" class="glass-btn-secondary p-2">
+                <mat-icon class="text-sm">close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
 
-            <mat-error id="deadlineAtError">
-              <ng-container
-                *ngIf="vacancyForm.get('deadlineAt')?.hasError('required')"
-              >
-                Выберите дату
-              </ng-container>
-            </mat-error>
-          </mat-form-field>
+        <div class="glass-divider"></div>
 
-          <!-- requirements -->
+        <!-- Skills & Technologies -->
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-sm font-semibold text-[var(--text-primary)]">Навыки</label>
+              <button type="button" (click)="addSkill()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+                <mat-icon class="text-sm">add</mat-icon>
+              </button>
+            </div>
+            <div formArrayName="skills" class="space-y-2">
+              <div *ngFor="let ctrl of skills.controls; let i = index" class="flex gap-2">
+                <input
+                  [formControlName]="i"
+                  class="glass-input text-sm py-2 flex-1"
+                  placeholder="Навык..."
+                />
+                <button type="button" (click)="removeSkill(i)" class="glass-btn-secondary p-2">
+                  <mat-icon class="text-sm">close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
 
-          <app-dynamic-form-array
-            formArrayName="requirements"
-            label="Требования"
-            placeholder="Требование"
-            [formArray]="requirements"
-          ></app-dynamic-form-array>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-sm font-semibold text-[var(--text-primary)]">Технологии</label>
+              <button type="button" (click)="addTechnology()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+                <mat-icon class="text-sm">add</mat-icon>
+              </button>
+            </div>
+            <div formArrayName="technologies" class="space-y-2">
+              <div *ngFor="let ctrl of technologies.controls; let i = index" class="flex gap-2">
+                <input
+                  [formControlName]="i"
+                  class="glass-input text-sm py-2 flex-1"
+                  placeholder="Технология..."
+                />
+                <button type="button" (click)="removeTechnology(i)" class="glass-btn-secondary p-2">
+                  <mat-icon class="text-sm">close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <app-dynamic-form-array
-            formArrayName="skills"
-            label="Навыки"
-            placeholder="Навык"
-            [formArray]="skills"
-          ></app-dynamic-form-array>
+        <div class="glass-divider"></div>
 
-          <app-dynamic-form-array
-            formArrayName="tags"
-            label="Теги"
-            placeholder="Тег"
-            [formArray]="tags"
-          ></app-dynamic-form-array>
+        <!-- Salary & Experience -->
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Experience -->
+          <div class="space-y-3">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Опыт (лет)</label>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="space-y-1">
+                <label class="text-xs text-[var(--text-muted)]">От</label>
+                <input
+                  type="number"
+                  [formControl]="$any(experience).controls.min"
+                  class="glass-input text-sm py-2"
+                  placeholder="0"
+                />
+              </div>
+              <div class="space-y-1">
+                <label class="text-xs text-[var(--text-muted)]">До</label>
+                <input
+                  type="number"
+                  [formControl]="$any(experience).controls.max"
+                  class="glass-input text-sm py-2"
+                  placeholder="10"
+                />
+              </div>
+            </div>
+          </div>
 
-          <app-dynamic-form-array
-            formArrayName="responsibilities"
-            label="Обязанности"
-            placeholder="Обязанность"
-            [formArray]="responsibilities"
-          ></app-dynamic-form-array>
+          <!-- Salary -->
+          <div class="space-y-3">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Зарплата</label>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="space-y-1">
+                <label class="text-xs text-[var(--text-muted)]">От</label>
+                <input
+                  type="number"
+                  [formControl]="$any(salary).controls.min"
+                  class="glass-input text-sm py-2"
+                  placeholder="50000"
+                />
+              </div>
+              <div class="space-y-1">
+                <label class="text-xs text-[var(--text-muted)]">До</label>
+                <input
+                  type="number"
+                  [formControl]="$any(salary).controls.max"
+                  class="glass-input text-sm py-2"
+                  placeholder="150000"
+                />
+              </div>
+            </div>
+            <select [formControl]="$any(salary).controls.currency" class="glass-select text-sm py-2">
+              <option value="">Валюта</option>
+              <option value="RUB">RUB ₽</option>
+              <option value="USD">USD $</option>
+              <option value="EUR">EUR €</option>
+            </select>
+          </div>
+        </div>
 
-          <app-dynamic-form-array
-            formArrayName="benefits"
-            label="Преимущества"
-            placeholder="Преимущество"
-            [formArray]="benefits"
-          ></app-dynamic-form-array>
+        <div class="glass-divider"></div>
 
-          <app-dynamic-form-array
-            formArrayName="education"
-            label="Образование"
-            placeholder="Образование"
-            [formArray]="education"
-          ></app-dynamic-form-array>
-
-          <app-dynamic-form-array
-            formArrayName="technologies"
-            label="Технологии"
-            placeholder="Технология"
-            [formArray]="technologies"
-          ></app-dynamic-form-array>
-
-          <app-vacancy-languages-form
-            formArrayName="languages"
-            [formArray]="languages"
-          >
-          </app-vacancy-languages-form>
-
-          <!-- experience -->
-          <app-vacancy-experience-form [jobExperiencesForm]="experience" />
-
-          <!-- salary -->
-          <app-vacancy-salary-form [salaryForm]="salary" />
-
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            class="w-full"
-          >
-            Опубликовать вакансию
-          </button>
-        </form>
-      </div>
+        <!-- Submit -->
+        <button type="submit" class="glass-btn w-full py-4 text-lg">
+          <mat-icon class="mr-2">publish</mat-icon>
+          Опубликовать
+        </button>
+      </form>
     </div>
   </div>
 </div>

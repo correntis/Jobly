@@ -23,7 +23,6 @@ import HashService from '../../../../core/services/hash.service';
 import MessagesService from '../../../../core/services/messages.service';
 import { UsersService } from '../../../../core/services/users.service';
 import { EnvService } from '../../../../environments/environment';
-import { SimpleInputFormComponent } from '../../../../shared/components/simple-input-form/simple-input-form.component';
 import { MessageContextMenuComponent } from '../message-context-menu/message-context-menu.component';
 import { MessageComponent } from '../message/message.component';
 
@@ -35,7 +34,6 @@ import { MessageComponent } from '../message/message.component';
     FormsModule,
     MessageComponent,
     MessageContextMenuComponent,
-    SimpleInputFormComponent,
     MatIconModule,
     RouterModule,
   ],
@@ -64,6 +62,7 @@ export class FullChatComponent {
   isEditing: boolean = false;
   selectedMessage?: Message;
   selectedMessageIndex: number = -1;
+  messageInput: string = '';
 
   ApplicationStatus = ApplicationStatus;
 
@@ -223,6 +222,7 @@ export class FullChatComponent {
         };
 
         this.messagesHub.sendMessage(sendMessageRequest);
+        this.messageInput = '';
       }
     }
   }
@@ -305,6 +305,7 @@ export class FullChatComponent {
     }
 
     this.isEditing = false;
+    this.messageInput = '';
     this.cdRef.detectChanges();
   }
 

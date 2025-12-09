@@ -1,201 +1,114 @@
-<mat-card
-  class="vacancy-card relative p-4 flex flex-col gap-4 border border-gray-200 rounded-lg bg-[#221818] shadow-md hover:shadow-lg hover:border-blue-400 transition-all duration-300 h-full hover:scale-[1.02]"
+<div
+  class="glass-card p-5 h-full flex flex-col cursor-pointer group"
+  (click)="redirectToVacancyPage()"
 >
-  <div class="absolute top-0 left-0 h-1 w-full bg-blue-500 rounded-t-lg"></div>
-
-  <div class="flex-1 flex flex-col gap-2">
-    <div class="flex justify-between">
-      <div *ngIf="vacancy?.archived">
-        <h3 class="tetx-xl font-bold text-red-500">В архиве</h3>
+  <!-- Header -->
+  <div class="flex items-start justify-between mb-4">
+    <div class="flex-1">
+      <div *ngIf="vacancy?.archived" class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-error-500/20 text-error-500 text-xs font-medium mb-2">
+        <mat-icon class="text-sm">archive</mat-icon>
+        В архиве
       </div>
-      <div class="flex justify-end gap-2">
-        <div
-          *ngIf="interaction?.type === InteractionType.Like"
-          class="text-green-500"
-        >
-          <mat-icon>favorite</mat-icon>
-        </div>
-
-        <div
-          *ngIf="interaction?.type === InteractionType.Dislike"
-          class="text-red-500"
-        >
-          <mat-icon>hide_source</mat-icon>
-        </div>
-
-        <div
-          *ngIf="interaction?.type === InteractionType.Click"
-          class="text-gray-500"
-        >
-          <mat-icon>visibility</mat-icon>
-        </div>
-
-        <div *ngIf="!interaction" class="text-gray-500">
-          <mat-icon>visibility_off</mat-icon>
-        </div>
+      <h3 class="text-lg font-semibold text-[var(--text-primary)] group-hover:text-gradient transition-all line-clamp-2">
+        {{ vacancy?.title }}
+      </h3>
+      <p class="text-sm text-[var(--text-secondary)] mt-1">{{ company?.name }}</p>
+    </div>
+    
+    <!-- Interaction Icon -->
+    <div class="ml-3 flex-shrink-0">
+      <div *ngIf="interaction?.type === InteractionType.Like" class="w-8 h-8 rounded-full bg-success-500/20 flex items-center justify-center">
+        <mat-icon class="text-success-500 text-base">favorite</mat-icon>
+      </div>
+      <div *ngIf="interaction?.type === InteractionType.Dislike" class="w-8 h-8 rounded-full bg-error-500/20 flex items-center justify-center">
+        <mat-icon class="text-error-500 text-base">thumb_down</mat-icon>
+      </div>
+      <div *ngIf="interaction?.type === InteractionType.Click" class="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center">
+        <mat-icon class="text-primary-500 text-base">visibility</mat-icon>
       </div>
     </div>
-    <div class="flex justify-between items-center">
-      <h3 class="text-lg font-semibold text-gray-800">{{ vacancy?.title }}</h3>
-      <span class="text-gray-600">{{ company?.name }}</span>
-    </div>
+  </div>
 
-    <div *ngIf="vacancy?.vacancyDetails?.experience">
-      <div
-        *ngIf="
-          vacancy?.vacancyDetails?.experience?.min ||
-          vacancy?.vacancyDetails?.experience?.max
-        "
+  <!-- Experience & Type -->
+  <div class="flex flex-wrap gap-2 mb-4">
+    <div *ngIf="vacancy?.vacancyDetails?.experience?.min || vacancy?.vacancyDetails?.experience?.max" 
+         class="glass-tag text-xs inline-flex items-center gap-1.5">
+      <mat-icon class="text-sm">work_history</mat-icon>
+      <span *ngIf="vacancy?.vacancyDetails?.experience?.min">от {{ vacancy?.vacancyDetails?.experience?.min }}</span><span *ngIf="vacancy?.vacancyDetails?.experience?.max"> до {{ vacancy?.vacancyDetails?.experience?.max }}</span> лет
+    </div>
+    <div class="glass-tag text-xs inline-flex items-center gap-1.5">
+      <mat-icon class="text-sm">schedule</mat-icon>
+      {{ vacancy?.employmentType }}
+    </div>
+  </div>
+
+  <!-- Salary -->
+  <div *ngIf="vacancy?.vacancyDetails?.salary" class="mb-4">
+    <div class="text-2xl font-bold text-gradient">
+      <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.min || vacancy?.vacancyDetails?.salary?.min">
+        {{ (vacancy?.vacancyDetails?.salary?.original?.min || vacancy?.vacancyDetails?.salary?.min) | number:'1.0-0' }}
+      </span>
+      <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.max || vacancy?.vacancyDetails?.salary?.max">
+        — {{ (vacancy?.vacancyDetails?.salary?.original?.max || vacancy?.vacancyDetails?.salary?.max) | number:'1.0-0' }}
+      </span>
+      <span class="text-lg font-medium text-[var(--text-secondary)] ml-1">
+        {{ vacancy?.vacancyDetails?.salary?.original?.currency || vacancy?.vacancyDetails?.salary?.currency }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Skills -->
+  <div *ngIf="vacancy?.vacancyDetails?.skills?.length" class="mb-4">
+    <div class="flex flex-wrap gap-1.5">
+      <span 
+        *ngFor="let skill of vacancy?.vacancyDetails?.skills | slice:0:4"
+        class="px-2 py-1 rounded-lg text-xs font-medium bg-primary-500/10 text-primary-500 dark:bg-primary-400/20 dark:text-primary-300"
       >
-        <p class="text-lg text-gray-700">
-          <span>Опыт </span>
-          <span *ngIf="vacancy?.vacancyDetails?.experience?.min">от </span>
-          <span
-            class="font-bold"
-            *ngIf="vacancy?.vacancyDetails?.experience?.min"
-            >{{ vacancy?.vacancyDetails?.experience?.min }}
-          </span>
-
-          <span *ngIf="vacancy?.vacancyDetails?.experience?.max">до </span>
-          <span
-            class="font-bold"
-            *ngIf="vacancy?.vacancyDetails?.experience?.max"
-            >{{ vacancy?.vacancyDetails?.experience?.max }}
-          </span>
-          <span> лет </span>
-        </p>
-      </div>
-    </div>
-
-    <div class="text-sm text-gray-600">
-      <p class="text-[17px] mb-1">
-        Тип:
-        <span class="text-[18px] text-gray-800">
-          {{ vacancy?.employmentType }}
-        </span>
-      </p>
-      <p class="text-[17px] mb-1">
-        Создано
-        <span class="text-[18px] text-gray-800">{{
-          vacancy?.createdAt | date : "longDate"
-        }}</span>
-      </p>
-      <p class="text-[17px] mb-1">
-        Дедлайн
-        <span class="text-[18px] text-gray-800">{{
-          vacancy?.deadlineAt | date : "longDate"
-        }}</span>
-      </p>
-    </div>
-
-    <div class="skills-container">
-      <h4 class="text-sm font-medium text-gray-700">Навыки</h4>
-      <div class="flex flex-wrap gap-1 mt-1">
-        <span
-          *ngFor="let skill of vacancy?.vacancyDetails?.skills"
-          class="bg-blue-100 text-blue-600 rounded-full px-3 py-2 text-sm"
-        >
-          {{ skill }}
-        </span>
-      </div>
-    </div>
-
-    <div *ngIf="vacancy?.vacancyDetails?.technologies?.length" class="mt-2">
-      <h4 class="text-sm font-medium text-gray-700">Технологии</h4>
-      <div class="flex flex-wrap gap-1 mt-1 overflow-hidden max-h-12">
-        <span
-          *ngFor="let tech of vacancy?.vacancyDetails?.technologies"
-          class="bg-green-100 text-green-600 rounded-full px-3 py-2 text-sm"
-        >
-          {{ tech }}
-        </span>
-      </div>
-    </div>
-
-    <div
-      *ngIf="
-        vacancy?.vacancyDetails?.salary &&
-        vacancy?.vacancyDetails?.salary?.original
-      "
-      class="mt-2"
-    >
-      <h4 class="text-sm font-medium text-gray-700">Зарплата</h4>
-      <p>
-        <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.min">От</span>
-        <span
-          *ngIf="vacancy?.vacancyDetails?.salary?.original?.min != null"
-          class="font-semibold text-xl text-gray-900"
-        >
-          {{
-            vacancy?.vacancyDetails?.salary?.original?.min | number : "1.0-2"
-          }}
-        </span>
-
-        <span *ngIf="vacancy?.vacancyDetails?.salary?.original?.max != null">
-          {{
-            vacancy?.vacancyDetails?.salary?.original?.max != null
-              ? " до "
-              : "До "
-          }}
-        </span>
-
-        <span
-          *ngIf="vacancy?.vacancyDetails?.salary?.original?.max != null"
-          class="font-semibold text-xl text-gray-900"
-        >
-          {{
-            vacancy?.vacancyDetails?.salary?.original?.max | number : "1.0-2"
-          }}
-        </span>
-        <span class="text-2xl italic font-medium text-gray-600">
-          {{ vacancy?.vacancyDetails?.salary?.original?.currency }}
-        </span>
-      </p>
-    </div>
-
-    <div
-      *ngIf="
-        vacancy?.vacancyDetails?.salary &&
-        !vacancy?.vacancyDetails?.salary?.original
-      "
-      class="mt-2"
-    >
-      <h4 class="text-sm font-medium text-gray-700">Зарплата</h4>
-      <p>
-        <span *ngIf="vacancy?.vacancyDetails?.salary?.min != null">От</span>
-        <span
-          *ngIf="vacancy?.vacancyDetails?.salary?.min != null"
-          class="font-semibold text-xl text-gray-900"
-        >
-          {{ vacancy?.vacancyDetails?.salary?.min | number : "1.0-2" }}
-        </span>
-
-        <span *ngIf="vacancy?.vacancyDetails?.salary?.max != null">
-          {{ vacancy?.vacancyDetails?.salary?.min != null ? " до " : "До " }}
-        </span>
-
-        <span
-          *ngIf="vacancy?.vacancyDetails?.salary?.max != null"
-          class="font-semibold text-xl text-gray-900"
-        >
-          {{ vacancy?.vacancyDetails?.salary?.max | number : "1.0-2" }}
-        </span>
-        <span class="text-2xl italic font-medium text-gray-600">
-          {{ vacancy?.vacancyDetails?.salary?.currency }}
-        </span>
-      </p>
+        {{ skill }}
+      </span>
+      <span 
+        *ngIf="(vacancy?.vacancyDetails?.skills?.length || 0) > 4"
+        class="px-2 py-1 rounded-lg text-xs font-medium bg-[var(--bg-tertiary)] text-[var(--text-muted)]"
+      >
+        +{{ (vacancy?.vacancyDetails?.skills?.length || 0) - 4 }}
+      </span>
     </div>
   </div>
 
-  <div class="mt-auto">
-    <button
-      type="submit"
-      mat-raised-button
-      color="primary"
-      (click)="redirectToVacancyPage()"
-      class="bg-blue-500 text-white font-medium w-full py-2 px-4 rounded-md hover:bg-blue-600 transition hover:scale-105"
-    >
-      Подробнее
-    </button>
+  <!-- Technologies -->
+  <div *ngIf="vacancy?.vacancyDetails?.technologies?.length" class="mb-4">
+    <div class="flex flex-wrap gap-1.5">
+      <span 
+        *ngFor="let tech of vacancy?.vacancyDetails?.technologies | slice:0:3"
+        class="px-2 py-1 rounded-lg text-xs font-medium bg-accent-500/10 text-accent-600 dark:bg-accent-400/20 dark:text-accent-300"
+      >
+        {{ tech }}
+      </span>
+      <span 
+        *ngIf="(vacancy?.vacancyDetails?.technologies?.length || 0) > 3"
+        class="px-2 py-1 rounded-lg text-xs font-medium bg-[var(--bg-tertiary)] text-[var(--text-muted)]"
+      >
+        +{{ (vacancy?.vacancyDetails?.technologies?.length || 0) - 3 }}
+      </span>
+    </div>
   </div>
-</mat-card>
+
+  <!-- Footer -->
+  <div class="mt-auto pt-4 border-t border-[var(--border-color)] relative">
+    <div class="flex items-center justify-between text-xs text-[var(--text-muted)] pr-8">
+      <span class="inline-flex items-center gap-1.5">
+        <mat-icon class="text-sm">calendar_today</mat-icon>
+        {{ vacancy?.createdAt | date:'d MMM' }}
+      </span>
+      <span class="inline-flex items-center gap-1.5">
+        <mat-icon class="text-sm">timer</mat-icon>
+        до {{ vacancy?.deadlineAt | date:'d MMM' }}
+      </span>
+    </div>
+    
+    <!-- Hover Arrow -->
+    <div class="absolute bottom-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+      <mat-icon class="text-gradient text-lg">arrow_forward</mat-icon>
+    </div>
+  </div>
+</div>

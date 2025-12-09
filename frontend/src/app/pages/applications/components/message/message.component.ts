@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { MessageType } from '../../../../core/enums/messageType';
 import Message from '../../../../core/models/message';
 
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './message.component.html',
 })
 export class MessageComponent {

@@ -22,11 +22,7 @@ import AddVacancyDetailsRequest from '../../core/requests/vacancies/addVacancyDe
 import { AddVacancyRequest } from '../../core/requests/vacancies/addVacancyRequest';
 import HashService from '../../core/services/hash.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
-import { DynamicFormArrayComponent } from '../../shared/components/dynamic-form-array/dynamic-form-array.component';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { VacancyExperienceFormComponent } from './components/vacancy-experience-form/vacancy-experience-form.component';
-import { VacancyLanguagesFormComponent } from './components/vacancy-languages-form/vacancy-languages-form.component';
-import { VacancySalaryFormComponent } from './components/vacancy-salary-form/vacancy-salary-form.component';
 
 @Component({
   selector: 'app-vacancy-add-page',
@@ -40,10 +36,6 @@ import { VacancySalaryFormComponent } from './components/vacancy-salary-form/vac
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    DynamicFormArrayComponent,
-    VacancyLanguagesFormComponent,
-    VacancyExperienceFormComponent,
-    VacancySalaryFormComponent,
     HeaderComponent,
   ],
   templateUrl: './vacancy-add-page.component.html',
@@ -211,7 +203,7 @@ export class VacancyAddPageComponent implements OnInit {
   }
 
   parseFormArray(formArray: FormArray) {
-    return formArray.value.map((value: { name: string }) => value.name);
+    return formArray.value.filter((v: any) => v && (typeof v === 'string' ? v.trim() : v.name?.trim()));
   }
 
   validateFormArrays() {
@@ -250,5 +242,30 @@ export class VacancyAddPageComponent implements OnInit {
 
   goToAccount() {
     this.router.navigate(['account/company']);
+  }
+
+  // Add/Remove methods for simple arrays
+  addRequirement() {
+    this.requirements.push(this.fb.control(''));
+  }
+
+  removeRequirement(index: number) {
+    this.requirements.removeAt(index);
+  }
+
+  addSkill() {
+    this.skills.push(this.fb.control(''));
+  }
+
+  removeSkill(index: number) {
+    this.skills.removeAt(index);
+  }
+
+  addTechnology() {
+    this.technologies.push(this.fb.control(''));
+  }
+
+  removeTechnology(index: number) {
+    this.technologies.removeAt(index);
   }
 }

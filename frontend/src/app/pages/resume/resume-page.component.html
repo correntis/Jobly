@@ -1,141 +1,180 @@
 <app-header />
 
-<div class="container mx-auto p-6 bg-gray-200 max-w-[50%] min-h-screen">
-  <div class="text-center mb-8">
-    <h1 class="text-4xl font-bold text-gray-800">
-      {{ user?.firstName }} {{ user?.lastName }}
-    </h1>
-    <p class="text-gray-600">{{ user?.email }}</p>
-    <p class="text-gray-600">{{ user?.phoneNumber }}</p>
-  </div>
-
-  <div *ngIf="!resume">
-    <h3 class="text-2xl text-red-500 text-center font-bold">
-      У пользователя пока нет резюме.
-    </h3>
-  </div>
-
-  <div *ngIf="resume" class="bg-white shadow-lg rounded-lg p-8">
-    <div class="mb-4">
-      <h2 class="text-3xl font-semibold text-gray-800">{{ resume.title }}</h2>
-      <p class="text-lg text-gray-600 mt-2 pl-2">
-        {{ resume.summary }}
-      </p>
-    </div>
-
-    <div class="mb-4">
-      <h3 class="text-xl font-semibold text-gray-800 mb-2">Навыки</h3>
-
-      <div class="flex flex-wrap gap-3 pl-5">
-        <span
-          *ngFor="let skill of resume.skills"
-          class="bg-blue-200 text-blue-800 px-4 py-2 rounded-full text-sm"
-        >
-          {{ skill }}
-        </span>
+<div class="p-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- No Resume -->
+    <div *ngIf="!resume" class="glass-card p-12 text-center">
+      <div class="w-20 h-20 rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center mx-auto mb-4">
+        <mat-icon class="text-4xl text-[var(--text-muted)]">description</mat-icon>
       </div>
+      <h2 class="text-2xl font-bold text-[var(--text-primary)] mb-2 font-display">Резюме не найдено</h2>
+      <p class="text-[var(--text-secondary)]">У этого пользователя пока нет резюме</p>
     </div>
 
-    <div class="mb-4">
-      <h3 class="text-xl font-semibold text-gray-800 mb-2">Теги</h3>
-
-      <div class="flex flex-wrap gap-3 pl-5">
-        <span
-          *ngFor="let tag of resume.tags"
-          class="bg-green-200 text-green-800 px-4 py-2 rounded-full text-sm"
-        >
-          {{ tag }}
-        </span>
-      </div>
-    </div>
-
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Опыт работы</h3>
-      <div *ngFor="let experience of resume.jobExperiences" class="mb-3 pl-5">
-        <h4 class="text-lg font-semibold text-gray-800">
-          {{ experience.jobTitle }} в {{ experience.companyName }}
-        </h4>
-        <p class="text-gray-600">
-          {{ experience.startDate | date }} -
-          {{ experience.endDate ? (experience.endDate | date) : "По настоящее время" }}
-        </p>
-        <ul class="list-disc list-inside text-gray-600 mt-1">
-          <li *ngFor="let responsibility of experience.responsibilities">
-            {{ responsibility }}
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Образование</h3>
-      <div *ngFor="let education of resume.educations" class="mb-3 pl-5">
-        <h4 class="text-lg font-semibold text-gray-800">
-          <span class="italic font-bold">{{ education.institution }}</span
-          >: {{ education.degree }}
-        </h4>
-        <p class="text-gray-600">
-          {{ education.startDate | date }} -
-          {{ education.endDate ? (education.endDate | date) : "По настоящее время" }}
-        </p>
-      </div>
-    </div>
-
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Сертификаты</h3>
-      <div
-        *ngFor="let certification of resume.certifications"
-        class="mb-3 pl-5"
-      >
-        <h4 class="text-lg font-semibold text-gray-800">
-          <span class="italic font-bold"> {{ certification.issuer }}</span
-          >: {{ certification.name }}
-        </h4>
-        <p class="text-gray-600">
-          Выдан {{ certification.issueDate | date }}
-        </p>
-      </div>
-    </div>
-
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Проекты</h3>
-      <div *ngFor="let project of resume.projects" class="mb-5 pl-5">
-        <div class="flex align-bottom items-end gap-3">
-          <h4 class="text-lg font-semibold text-gray-800">
-            {{ project.name }}
-          </h4>
-          <a
-            [href]="project.link"
-            target="_blank"
-            class="text-blue-500 hover:underline"
-          >
-            Смотреть проект
-          </a>
+    <!-- Resume Content -->
+    <div *ngIf="resume" class="space-y-6">
+      <!-- Header Card -->
+      <div class="glass-card p-8 text-center">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center mx-auto mb-4 shadow-glow">
+          <span class="text-white font-bold text-3xl font-display">
+            {{ user?.firstName?.charAt(0) }}{{ user?.lastName?.charAt(0) }}
+          </span>
         </div>
-        <p class="text-gray-600">{{ project.description }}</p>
+        <h1 class="text-3xl font-bold text-[var(--text-primary)] font-display">
+          {{ user?.firstName }} {{ user?.lastName }}
+        </h1>
+        <p *ngIf="user?.email" class="text-[var(--text-secondary)] mt-1">{{ user?.email }}</p>
+        <p *ngIf="user?.phoneNumber" class="text-[var(--text-muted)]">{{ user?.phoneNumber }}</p>
+        
+        <div *ngIf="resume.title" class="mt-4">
+          <h2 class="text-xl font-semibold text-gradient">{{ resume.title }}</h2>
+        </div>
+      </div>
 
-        <div class="flex flex-wrap gap-2 mt-2">
+      <!-- Summary -->
+      <div *ngIf="resume.summary" class="glass-card p-6">
+        <h3 class="section-title flex items-center gap-2">
+          <mat-icon class="text-accent-500">format_quote</mat-icon>
+          О себе
+        </h3>
+        <p class="text-[var(--text-secondary)] leading-relaxed">{{ resume.summary }}</p>
+      </div>
+
+      <!-- Skills -->
+      <div *ngIf="resume.skills?.length" class="glass-card p-6">
+        <h3 class="section-title flex items-center gap-2">
+          <mat-icon class="text-accent-500">psychology</mat-icon>
+          Навыки
+        </h3>
+        <div class="flex flex-wrap gap-2">
           <span
-            *ngFor="let tech of project.technologies"
-            class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm"
+            *ngFor="let skill of resume.skills"
+            class="px-4 py-2 rounded-xl text-sm font-medium bg-primary-500/10 text-primary-600 dark:bg-primary-400/20 dark:text-primary-300"
           >
-            {{ tech }}
+            {{ skill }}
           </span>
         </div>
       </div>
-    </div>
 
-    <div class="mb-8">
-      <h3 class="text-xl font-semibold text-gray-800 mb-4">Языки</h3>
-      <div class="flex gap-5 pl-5">
-        <div
-          *ngFor="let language of resume.languages"
-          class="mb-3 bg-purple-200 px-6 py-2 rounded-full"
-        >
-          <h4 class="text-xl font-semibold text-gray-800">
-            {{ language.name }}
-          </h4>
-          <p class="text-gray-600 mt-[-5px]">{{ language.level }}</p>
+      <!-- Tags -->
+      <div *ngIf="resume.tags?.length" class="glass-card p-6">
+        <h3 class="section-title flex items-center gap-2">
+          <mat-icon class="text-accent-500">label</mat-icon>
+          Теги
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          <span
+            *ngFor="let tag of resume.tags"
+            class="px-4 py-2 rounded-xl text-sm font-medium bg-accent-500/10 text-accent-600 dark:bg-accent-400/20 dark:text-accent-300"
+          >
+            {{ tag }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Job Experience -->
+      <div *ngIf="resume.jobExperiences?.length" class="glass-card p-6">
+        <h3 class="section-title flex items-center gap-2">
+          <mat-icon class="text-accent-500">work</mat-icon>
+          Опыт работы
+        </h3>
+        <div class="space-y-6">
+          <div *ngFor="let exp of resume.jobExperiences" class="relative pl-6 border-l-2 border-primary-500/30">
+            <div class="absolute left-[-5px] top-0 w-2 h-2 rounded-full bg-primary-500"></div>
+            <h4 class="text-lg font-semibold text-[var(--text-primary)]">{{ exp.jobTitle }}</h4>
+            <p class="text-[var(--text-secondary)]">{{ exp.companyName }}</p>
+            <p class="text-sm text-[var(--text-muted)] mt-1">
+              {{ exp.startDate | date:'MMM yyyy' }} — 
+              {{ exp.endDate ? (exp.endDate | date:'MMM yyyy') : 'По настоящее время' }}
+            </p>
+            <ul *ngIf="exp.responsibilities?.length" class="mt-3 space-y-1">
+              <li *ngFor="let resp of exp.responsibilities" class="text-sm text-[var(--text-secondary)] flex items-start gap-2">
+                <mat-icon class="text-accent-500 text-sm flex-shrink-0 mt-0.5">check</mat-icon>
+                {{ resp }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div *ngIf="resume.educations?.length" class="glass-card p-6">
+        <h3 class="section-title flex items-center gap-2">
+          <mat-icon class="text-accent-500">school</mat-icon>
+          Образование
+        </h3>
+        <div class="space-y-4">
+          <div *ngFor="let edu of resume.educations" class="glass-card-subtle p-4">
+            <h4 class="font-semibold text-[var(--text-primary)]">{{ edu.institution }}</h4>
+            <p class="text-[var(--text-secondary)]">{{ edu.degree }}</p>
+            <p class="text-sm text-[var(--text-muted)] mt-1">
+              {{ edu.startDate | date:'yyyy' }} — {{ edu.endDate ? (edu.endDate | date:'yyyy') : 'По настоящее время' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects -->
+      <div *ngIf="resume.projects?.length" class="glass-card p-6">
+        <h3 class="section-title flex items-center gap-2">
+          <mat-icon class="text-accent-500">rocket_launch</mat-icon>
+          Проекты
+        </h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div *ngFor="let project of resume.projects" class="glass-card-subtle p-4">
+            <div class="flex items-start justify-between mb-2">
+              <h4 class="font-semibold text-[var(--text-primary)]">{{ project.name }}</h4>
+              <a *ngIf="project.link" [href]="project.link" target="_blank" class="text-accent-500 hover:text-accent-600">
+                <mat-icon class="text-lg">open_in_new</mat-icon>
+              </a>
+            </div>
+            <p class="text-sm text-[var(--text-secondary)] mb-3">{{ project.description }}</p>
+            <div class="flex flex-wrap gap-1">
+              <span
+                *ngFor="let tech of project.technologies"
+                class="px-2 py-1 rounded-lg text-xs font-medium bg-accent-500/10 text-accent-600"
+              >
+                {{ tech }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certifications -->
+      <div *ngIf="resume.certifications?.length" class="glass-card p-6">
+        <h3 class="section-title flex items-center gap-2">
+          <mat-icon class="text-accent-500">verified</mat-icon>
+          Сертификаты
+        </h3>
+        <div class="space-y-3">
+          <div *ngFor="let cert of resume.certifications" class="flex items-center gap-4 glass-card-subtle p-4">
+            <div class="w-12 h-12 rounded-xl bg-success-500/20 flex items-center justify-center flex-shrink-0">
+              <mat-icon class="text-success-500">workspace_premium</mat-icon>
+            </div>
+            <div>
+              <h4 class="font-semibold text-[var(--text-primary)]">{{ cert.name }}</h4>
+              <p class="text-sm text-[var(--text-secondary)]">{{ cert.issuer }}</p>
+              <p class="text-xs text-[var(--text-muted)]">{{ cert.issueDate | date:'MMMM yyyy' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Languages -->
+      <div *ngIf="resume.languages?.length" class="glass-card p-6">
+        <h3 class="section-title flex items-center gap-2">
+          <mat-icon class="text-accent-500">translate</mat-icon>
+          Языки
+        </h3>
+        <div class="flex flex-wrap gap-3">
+          <div
+            *ngFor="let lang of resume.languages"
+            class="glass-card-subtle px-5 py-3 text-center"
+          >
+            <div class="font-semibold text-[var(--text-primary)]">{{ lang.name }}</div>
+            <div class="text-sm text-[var(--text-secondary)]">{{ lang.level }}</div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 export interface VacanciesFilter {
+  title: string | null;
   requirements: string[] | null;
   skills: string[] | null;
   tags: string[] | null;

@@ -1,123 +1,54 @@
-<section class="p-6 bg-gray-100 rounded-lg shadow-md mt-3">
-  <div class="flex justify-between">
-    <h2 class="text-2xl font-bold text-gray-700 mb-4">Сертификаты</h2>
-    <button
-      mat-fab
-      color="accent"
-      type="button"
-      (click)="addCertificaion()"
-      class="text-3xl transform scale-[0.55] align-middle"
-    >
-      <mat-icon matSuffix>add</mat-icon>
+<div class="glass-card p-6 mb-6">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="section-title mb-0 flex items-center gap-2">
+      <mat-icon class="text-accent-500">verified</mat-icon>
+      Сертификаты
+    </h2>
+    <button type="button" (click)="addCertificaion()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+      <mat-icon class="text-sm">add</mat-icon> Добавить
     </button>
   </div>
 
   <form [formGroup]="certificationForm" (ngSubmit)="saveCertifications()">
-    <ng-container formArrayName="certifications">
-      <hr
-        *ngIf="certifications.length > 0"
-        class="border-t-1 border-blue-300"
-      />
-
-      <ng-container
-        class="w-full"
-        *ngFor="let certificationForm of certifications.controls; let i = index"
+    <div formArrayName="certifications" class="space-y-4">
+      <div
+        *ngFor="let cert of certifications.controls; let i = index"
+        [formGroupName]="i"
+        class="glass-card-subtle p-4"
       >
-        <div class="flex flex-row align-middle">
-          <div [formGroupName]="i">
-            <span class="text-2xl font-bold">{{ i + 1 }}:</span>
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Название</mat-label>
-
-              <input
-                matInput
-                formControlName="name"
-                aria-describedby="certNameError-{{ i }}"
-                required
-              />
-
-              <mat-error id="certNameError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    certifications.controls[i].get('name')?.hasError('required')
-                  "
-                >
-                  Введите или удалите сертификат
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Издатель</mat-label>
-
-              <input
-                matInput
-                formControlName="issuer"
-                aria-describedby="certIssuerError-{{ i }}"
-                required
-              />
-
-              <mat-error id="certIssuerError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    certifications.controls[i]
-                      .get('issuer')
-                      ?.hasError('required')
-                  "
-                >
-                  Введите или удалите сертификат
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Дата выдачи</mat-label>
-
-              <input
-                matInput
-                [matDatepicker]="datepicker"
-                formControlName="issueDate"
-                aria-describedby="certIssueDateError-{{ i }}"
-                required
-                readonly
-              />
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="datepicker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #datepicker>
-                <mat-datepicker-actions>
-                  <button mat-button matDatepickerCancel>Отмена</button>
-                  <button mat-raised-button matDatepickerApply>Применить</button>
-                </mat-datepicker-actions>
-              </mat-datepicker>
-
-              <mat-error id="certIssueDateError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    certifications.controls[i]
-                      .get('issueDate')
-                      ?.hasError('required')
-                  "
-                >
-                  Выберите дату или удалите сертификат
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div
+        <div class="flex items-start justify-between mb-3">
+          <span class="text-sm font-semibold text-[var(--text-primary)]">Сертификат {{ i + 1 }}</span>
+          <button
+            type="button"
             (click)="removeCertification(i)"
-            class="hover:cursor-pointer hover:bg-red-400 rounded-xl flex align-middle items-center justify-center p-3 mb-[22px]"
+            class="text-[var(--text-muted)] hover:text-error-500 transition-colors"
           >
-            <mat-icon matSuffix> close</mat-icon>
-          </div>
+            <mat-icon class="text-lg">close</mat-icon>
+          </button>
         </div>
-      </ng-container>
-    </ng-container>
 
-    <button mat-raised-button color="primary" type="submit">
-      Сохранить сертификаты
+        <div class="space-y-3">
+          <input
+            formControlName="name"
+            class="glass-input text-sm py-2"
+            placeholder="Название"
+          />
+          <input
+            formControlName="issuer"
+            class="glass-input text-sm py-2"
+            placeholder="Организация"
+          />
+          <input
+            type="date"
+            formControlName="issueDate"
+            class="glass-input text-sm py-2"
+          />
+        </div>
+      </div>
+    </div>
+
+    <button *ngIf="certifications.length > 0" type="submit" class="glass-btn py-3 px-6 mt-4">
+      Сохранить
     </button>
   </form>
-</section>
+</div>

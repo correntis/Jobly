@@ -1,28 +1,71 @@
-<header
-  class="flex justify-between items-center p-4 h-16 bg-blue-900 text-white sticky top-0 z-50"
->
-  <div class="flex gap-10 items-center">
-    <div class="logo text-3xl font-semibold">
-      <a routerLink="/home">Jobly</a>
-    </div>
+<header class="fixed top-0 left-0 right-0 z-[60] px-6 py-3">
+  <div class="glass-card px-6 py-3 flex justify-between items-center" style="overflow: visible !important;">
+    <!-- Logo -->
+    <div class="flex items-center gap-8 overflow-visible">
+      <a routerLink="/home" class="flex items-center gap-2 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-glow">
+          <span class="text-white font-bold text-xl font-display">J</span>
+        </div>
+        <span class="text-2xl font-bold font-display text-gradient">Jobly</span>
+      </a>
 
-    <div>
+      <!-- Notifications -->
       <app-notifications-menu />
     </div>
-  </div>
-  <nav class="flex">
-    <div
-      (click)="goToRoute(route.path)"
-      *ngFor="let route of getHeaderLinksRoutes(); let i = index"
-      class="hover:cursor-pointer hover:scale-105 hover:text-[#cecece]"
-    >
-      <div *ngIf="route.condition" class="flex flex-row">
-        <p class="py-4">{{ route.name }}</p>
-        <div
-          *ngIf="i !== getHeaderLinksRoutes().length - 1"
-          class="w-[3px] bg-blue-500 rounded-xl mx-5"
-        ></div>
-      </div>
+
+    <!-- Navigation -->
+    <nav class="hidden md:flex items-center gap-2">
+      <ng-container *ngFor="let route of getHeaderLinksRoutes(); let i = index">
+        <a
+          *ngIf="route.condition"
+          (click)="goToRoute(route.path)"
+          class="nav-item"
+          [class.active]="isActiveRoute(route.path)"
+        >
+          {{ route.name }}
+        </a>
+      </ng-container>
+    </nav>
+
+    <!-- Right Section -->
+    <div class="flex items-center gap-4">
+      <!-- Theme Toggle -->
+      <button
+        (click)="toggleTheme()"
+        class="w-10 h-10 rounded-xl glass-card-subtle flex items-center justify-center transition-all duration-300 hover:scale-105"
+        [title]="isDarkTheme() ? 'Светлая тема' : 'Тёмная тема'"
+      >
+        <mat-icon *ngIf="isDarkTheme()" class="text-yellow-400">light_mode</mat-icon>
+        <mat-icon *ngIf="!isDarkTheme()" class="text-primary-600">dark_mode</mat-icon>
+      </button>
+
+      <!-- Mobile Menu Button -->
+      <button
+        class="md:hidden w-10 h-10 rounded-xl glass-card-subtle flex items-center justify-center"
+        (click)="toggleMobileMenu()"
+      >
+        <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
+      </button>
     </div>
-  </nav>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    *ngIf="isMobileMenuOpen"
+    class="md:hidden mt-2 glass-card p-4 space-y-2"
+  >
+    <ng-container *ngFor="let route of getHeaderLinksRoutes()">
+      <a
+        *ngIf="route.condition"
+        (click)="goToRoute(route.path); toggleMobileMenu()"
+        class="block nav-item w-full text-center"
+        [class.active]="isActiveRoute(route.path)"
+      >
+        {{ route.name }}
+      </a>
+    </ng-container>
+  </div>
 </header>
+
+<!-- Spacer for fixed header -->
+<div class="h-20"></div>

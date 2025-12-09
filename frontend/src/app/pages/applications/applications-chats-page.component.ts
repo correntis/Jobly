@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { UserRoles } from '../../core/enums/userRoles';
 import { ChatsHub } from '../../core/hubs/chats.hub';
@@ -24,6 +25,7 @@ import { FullChatComponent } from './components/full-chat/full-chat.component';
     CompactChatComponent,
     FullChatComponent,
     HeaderComponent,
+    MatIconModule,
   ],
   templateUrl: './applications-chats-page.component.html',
   styleUrl: './applications-chats-page.component.css',

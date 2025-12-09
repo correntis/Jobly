@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { HashedCookieService } from '../../../core/services/hashedCookie.service';
 import { Faker } from '../../../core/utils/faker';
@@ -31,6 +31,7 @@ import { EnvParams } from '../../../environments/environment';
     FormsModule,
     MatInputModule,
     MatButtonModule,
+    RouterModule,
   ],
   templateUrl: './login-page.component.html',
 })

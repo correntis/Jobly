@@ -1,271 +1,212 @@
 <app-header />
 
-<div class="vacancy-page p-6 bg-gray-100 flex flex-row justify-center">
-  <div
-    *ngIf="vacancy"
-    class="vacancy-details max-w-4xl mx-5 border-[1.7px] bg-white rounded-lg shadow"
-  >
-    <div class="border-[1.7px] border-black border-solid p-6 rounded-lg">
-      <div *ngIf="!isUserCreator" class="flex justify-between">
-        <div class="flex gap-2">
-          <div class="flex gap-2">
+<div class="p-6">
+  <div class="max-w-6xl mx-auto">
+    <div *ngIf="vacancy" class="grid lg:grid-cols-3 gap-6">
+      
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Header Card -->
+        <div class="glass-card p-8">
+          <!-- Archived Badge -->
+          <div *ngIf="vacancy.archived" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-error-500/20 text-error-500 text-sm font-medium mb-4">
+            <mat-icon class="text-lg">archive</mat-icon>
+            Вакансия в архиве
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-3xl lg:text-4xl font-bold text-[var(--text-primary)] mb-4 font-display">
+            {{ vacancy.title }}
+          </h1>
+
+          <!-- Salary -->
+          <div *ngIf="vacancy.vacancyDetails?.salary" class="mb-6">
+            <div class="text-3xl font-bold text-gradient">
+              <ng-container *ngIf="vacancy.vacancyDetails?.salary?.original; else regularSalary">
+                <span *ngIf="vacancy.vacancyDetails?.salary?.original?.min">
+                  {{ vacancy.vacancyDetails?.salary?.original?.min | number:'1.0-0' }}
+                </span>
+                <span *ngIf="vacancy.vacancyDetails?.salary?.original?.max">
+                  — {{ vacancy.vacancyDetails?.salary?.original?.max | number:'1.0-0' }}
+                </span>
+                <span class="text-xl font-medium text-[var(--text-secondary)] ml-2">
+                  {{ vacancy.vacancyDetails?.salary?.original?.currency }}
+                </span>
+              </ng-container>
+              <ng-template #regularSalary>
+                <span *ngIf="vacancy.vacancyDetails?.salary?.min">
+                  {{ vacancy.vacancyDetails?.salary?.min | number:'1.0-0' }}
+                </span>
+                <span *ngIf="vacancy.vacancyDetails?.salary?.max">
+                  — {{ vacancy.vacancyDetails?.salary?.max | number:'1.0-0' }}
+                </span>
+                <span class="text-xl font-medium text-[var(--text-secondary)] ml-2">
+                  {{ vacancy.vacancyDetails?.salary?.currency }}
+                </span>
+              </ng-template>
+            </div>
+          </div>
+
+          <!-- Meta Info -->
+          <div class="flex flex-wrap gap-3 mb-6">
+            <div *ngIf="vacancy.vacancyDetails?.experience" class="glass-tag inline-flex items-center gap-1.5">
+              <mat-icon class="text-sm">work_history</mat-icon>
+              Опыт:<span *ngIf="vacancy.vacancyDetails?.experience?.min"> от {{ vacancy.vacancyDetails?.experience?.min }}</span><span *ngIf="vacancy.vacancyDetails?.experience?.max"> до {{ vacancy.vacancyDetails?.experience?.max }}</span> лет
+            </div>
+            <div class="glass-tag inline-flex items-center gap-1.5">
+              <mat-icon class="text-sm">schedule</mat-icon>
+              {{ vacancy.employmentType }}
+            </div>
+            <div class="glass-tag inline-flex items-center gap-1.5">
+              <mat-icon class="text-sm">calendar_today</mat-icon>
+              {{ vacancy.createdAt | date:'d MMMM yyyy' }}
+            </div>
+            <div class="glass-tag inline-flex items-center gap-1.5">
+              <mat-icon class="text-sm">timer</mat-icon>
+              Дедлайн: {{ vacancy.deadlineAt | date:'d MMMM yyyy' }}
+            </div>
+          </div>
+
+          <!-- Interaction Buttons (for non-creators) -->
+          <div *ngIf="!isUserCreator" class="flex gap-3 mb-6">
             <button
-              class="hover:scale-110"
               (click)="onInteraction(InteractionType.Like)"
-              [ngClass]="{
-                'text-green-500 hover:text-green-600':
-                  interaction?.type === InteractionType.Like,
-                'text-gray-500 hover:text-gray-600':
-                  interaction?.type !== InteractionType.Like
-              }"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all"
+              [class]="interaction?.type === InteractionType.Like 
+                ? 'bg-success-500 text-white shadow-lg shadow-success-500/30' 
+                : 'glass-card-subtle hover:bg-success-500/10 text-[var(--text-secondary)]'"
             >
               <mat-icon>thumb_up</mat-icon>
+              <span>Нравится</span>
             </button>
-
             <button
-              class="hover:scale-110"
               (click)="onInteraction(InteractionType.Dislike)"
-              [ngClass]="{
-                'text-red-500 hover:text-red-600':
-                  interaction?.type === InteractionType.Dislike,
-                'text-gray-500 hover:text-gray-600':
-                  interaction?.type !== InteractionType.Dislike
-              }"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all"
+              [class]="interaction?.type === InteractionType.Dislike 
+                ? 'bg-error-500 text-white shadow-lg shadow-error-500/30' 
+                : 'glass-card-subtle hover:bg-error-500/10 text-[var(--text-secondary)]'"
             >
               <mat-icon>thumb_down</mat-icon>
+              <span>Не интересно</span>
+            </button>
+          </div>
+
+          <!-- Already Applied Notice -->
+          <div *ngIf="alreadyApplied" class="glass-card-subtle p-4 border-l-4 border-warning-500 mb-6">
+            <div class="flex items-center gap-2 text-warning-600 dark:text-warning-400">
+              <mat-icon>info</mat-icon>
+              <span class="font-medium">Вы уже откликнулись на эту вакансию</span>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <div *ngIf="!isUserCreator && !vacancy.archived">
+            <button (click)="apply()" class="glass-btn w-full py-4 text-lg">
+              <mat-icon class="mr-2">send</mat-icon>
+              Откликнуться
+            </button>
+          </div>
+
+          <div *ngIf="isUserCreator && !vacancy.archived">
+            <button (click)="archive()" class="glass-btn-danger w-full py-4 text-lg">
+              <mat-icon class="mr-2">archive</mat-icon>
+              В архив
             </button>
           </div>
         </div>
 
-        <div class="flex justify-end gap-2">
-          <div
-            *ngIf="interaction?.type === InteractionType.Like"
-            class="text-green-500"
-          >
-            <mat-icon>favorite</mat-icon>
-          </div>
-
-          <div
-            *ngIf="interaction?.type === InteractionType.Dislike"
-            class="text-red-500"
-          >
-            <mat-icon>hide_source</mat-icon>
-          </div>
-
-          <div
-            *ngIf="interaction?.type === InteractionType.Click"
-            class="text-gray-500"
-          >
-            <mat-icon>visibility</mat-icon>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="vacancy.archived">
-        <h2 class="text-xl font-bold text-red-500 text-center">
-          Вакансия в архиве
-        </h2>
-      </div>
-
-      <div class="header">
-        <h1 class="text-3xl font-bold text-gray-900">{{ vacancy.title }}</h1>
-      </div>
-
-      <div class="employment-details mb-3">
-        <div *ngIf="vacancy.vacancyDetails">
-          <div
-            *ngIf="
-              vacancy.vacancyDetails?.salary &&
-              vacancy.vacancyDetails.salary.original
-            "
-            class="salary-details"
-          >
-            <p class="text-xl">
-              <span *ngIf="vacancy.vacancyDetails?.salary?.original?.min">
-                От
-              </span>
+        <!-- Skills & Technologies -->
+        <div *ngIf="vacancy.vacancyDetails" class="glass-card p-8">
+          <!-- Skills -->
+          <div *ngIf="vacancy.vacancyDetails.skills?.length" class="mb-8">
+            <h2 class="section-title">Навыки</h2>
+            <div class="flex flex-wrap gap-2">
               <span
-                *ngIf="vacancy.vacancyDetails.salary.original.min"
-                class="font-semibold text-2xl text-green-700"
+                *ngFor="let skill of vacancy.vacancyDetails.skills"
+                class="px-4 py-2 rounded-xl text-sm font-medium bg-primary-500/10 text-primary-600 dark:bg-primary-400/20 dark:text-primary-300"
               >
-                {{
-                  vacancy.vacancyDetails.salary.original.min | number : "1.0-2"
-                }}
+                {{ skill }}
               </span>
-              <span *ngIf="vacancy.vacancyDetails?.salary?.original?.max">
-                до
-              </span>
-              <span class="font-semibold text-2xl text-green-700">
-                {{
-                  vacancy.vacancyDetails.salary.original.max | number : "1.0-2"
-                }}
-              </span>
-              <span class="italic"
-                >({{ vacancy.vacancyDetails.salary.original.currency }})</span
-              >
-            </p>
+            </div>
           </div>
 
-          <div
-            *ngIf="
-              vacancy.vacancyDetails?.salary &&
-              !vacancy.vacancyDetails.salary.original
-            "
-            class="salary-details"
-          >
-            <p class="text-xl">
-              <span *ngIf="vacancy.vacancyDetails?.salary?.min"> От </span>
+          <!-- Technologies -->
+          <div *ngIf="vacancy.vacancyDetails.technologies?.length" class="mb-8">
+            <h2 class="section-title">Технологии</h2>
+            <div class="flex flex-wrap gap-2">
               <span
-                *ngIf="vacancy.vacancyDetails.salary.min"
-                class="font-semibold text-2xl text-green-700"
+                *ngFor="let technology of vacancy.vacancyDetails.technologies"
+                class="px-4 py-2 rounded-xl text-sm font-medium bg-accent-500/10 text-accent-600 dark:bg-accent-400/20 dark:text-accent-300"
               >
-                {{ vacancy.vacancyDetails.salary.min | number : "1.0-2" }}
+                {{ technology }}
               </span>
-              <span *ngIf="vacancy.vacancyDetails?.salary?.max"> до </span>
-              <span class="font-semibold text-2xl text-green-700">
-                {{ vacancy.vacancyDetails.salary.max | number : "1.0-2" }}
-              </span>
-              <span class="italic"
-                >({{ vacancy.vacancyDetails.salary.currency }})</span
-              >
-            </p>
+            </div>
           </div>
 
-          <div *ngIf="vacancy.vacancyDetails?.experience">
-            <div *ngIf="vacancy.vacancyDetails.experience" class="mb-4">
-              <p class="text-xl text-gray-700">
-                <span>Опыт </span>
-                <span *ngIf="vacancy.vacancyDetails.experience.min">от </span>
-                <span
-                  class="font-bold"
-                  *ngIf="vacancy.vacancyDetails.experience.min"
-                  >{{ vacancy.vacancyDetails.experience.min }}
-                </span>
-
-                <span *ngIf="vacancy.vacancyDetails.experience.max">до </span>
-                <span
-                  class="font-bold"
-                  *ngIf="vacancy.vacancyDetails.experience.max"
-                  >{{ vacancy.vacancyDetails.experience.max }}
-                </span>
-                <span> лет </span>
-              </p>
+          <!-- Languages -->
+          <div *ngIf="vacancy.vacancyDetails.languages?.length">
+            <h2 class="section-title">Языки</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div
+                *ngFor="let language of vacancy.vacancyDetails.languages"
+                class="glass-card-subtle p-4 text-center"
+              >
+                <div class="font-semibold text-[var(--text-primary)]">{{ language.name }}</div>
+                <div class="text-sm text-[var(--text-secondary)]">{{ language.level }}</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <p class="text-[20px] leading-normal">
-          Тип занятости: {{ vacancy.employmentType }}
-        </p>
-        <p class="text-[20px] leading-normal">
-          Опубликовано {{ vacancy.createdAt | date : "longDate" }}
-        </p>
-        <p class="text-[20px] leading-normal">
-          Дедлайн {{ vacancy.deadlineAt | date : "longDate" }}
-        </p>
+        <!-- Details Sections -->
+        <div *ngIf="vacancy.vacancyDetails" class="glass-card p-8">
+          <ng-container *ngFor="let category of getDetailsKeys()">
+            <div *ngIf="hasDetails(category)" class="mb-8 last:mb-0">
+              <h2 class="section-title capitalize">{{ getCategoryTitle(category) }}</h2>
+              <ul class="space-y-2">
+                <li 
+                  *ngFor="let item of getDetails(category)"
+                  class="flex items-start gap-3 text-[var(--text-secondary)]"
+                >
+                  <mat-icon class="text-accent-500 text-lg flex-shrink-0 mt-0.5">check_circle</mat-icon>
+                  <span>{{ item }}</span>
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+        </div>
       </div>
 
-      <div *ngIf="vacancy.vacancyDetails">
-        <!-- Skills -->
-        <div *ngIf="vacancy.vacancyDetails.skills?.length" class="mb-4">
-          <h2 class="text-xl font-semibold">Навыки</h2>
-          <div class="flex flex-wrap gap-2">
-            <span
-              *ngFor="let skill of vacancy.vacancyDetails.skills"
-              class="bg-blue-100 text-blue-600 rounded-full px-3 py-2 text-sm"
-            >
-              {{ skill }}
-            </span>
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Company Card -->
+        <div *ngIf="company" class="glass-card p-6 lg:sticky lg:top-24">
+          <div class="text-center mb-4">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center mx-auto mb-3">
+              <span class="text-white font-bold text-2xl">{{ company.name?.charAt(0) }}</span>
+            </div>
+            <h3 class="text-xl font-bold text-[var(--text-primary)]">{{ company.name }}</h3>
           </div>
-        </div>
-
-        <!-- Technologies -->
-        <div *ngIf="vacancy.vacancyDetails.technologies?.length" class="mb-4">
-          <h2 class="text-xl font-semibold">Технологии</h2>
-          <div class="flex flex-wrap gap-2">
-            <span
-              *ngFor="let technology of vacancy.vacancyDetails.technologies"
-              class="bg-green-100 text-green-600 rounded-full px-3 py-2 text-sm"
-            >
-              {{ technology }}
-            </span>
+          
+          <div class="space-y-3 text-sm">
+            <div *ngIf="company.email" class="flex items-center gap-3 text-[var(--text-secondary)]">
+              <mat-icon class="text-lg">email</mat-icon>
+              <span>{{ company.email }}</span>
+            </div>
+            <div *ngIf="company.phone" class="flex items-center gap-3 text-[var(--text-secondary)]">
+              <mat-icon class="text-lg">phone</mat-icon>
+              <span>{{ company.phone }}</span>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div *ngIf="alreadyApplied">
-        <h3 class="text-xl text-red-500 text-center">Вы уже откликнулись</h3>
-      </div>
-
-      <div *ngIf="!isUserCreator && !vacancy.archived">
-        <button
-          mat-raised-button
-          color="primary"
-          class="w-full"
-          (click)="apply()"
-        >
-          Откликнуться
-        </button>
-      </div>
-
-      <div *ngIf="isUserCreator && !vacancy.archived">
-        <button
-          mat-raised-button
-          color="warn"
-          class="w-full"
-          (click)="archive()"
-        >
-          В архив
-        </button>
-      </div>
-    </div>
-
-    <div class="border-[1.7px] border-black border-solid p-6 rounded-lg mt-10">
-      <ng-container *ngIf="vacancy && vacancy.vacancyDetails">
-        <!-- Languages -->
-        <div *ngIf="vacancy.vacancyDetails.languages?.length" class="mb-4">
-          <h2 class="text-xl font-semibold">Языки</h2>
-          <ul class="list-disc pl-5">
-            <li *ngFor="let language of vacancy.vacancyDetails.languages">
-              {{ language.name }} - {{ language.level }}
-            </li>
-          </ul>
-        </div>
-
-        <div *ngFor="let category of getDetailsKeys()">
-          <div
-            *ngIf="vacancy?.vacancyDetails && hasDetails(category)"
-            class="mb-4"
+          <button 
+            (click)="goToCompany(company.id)" 
+            class="glass-btn-secondary w-full mt-6 py-3"
           >
-            <h2 class="text-xl font-semibold capitalize">{{ category }}</h2>
-
-            <ul class="list-disc pl-5">
-              <li *ngFor="let item of getDetails(category)">
-                {{ item }}
-              </li>
-            </ul>
-          </div>
+            Подробнее о компании
+          </button>
         </div>
-      </ng-container>
+      </div>
     </div>
   </div>
-
-  <div>
-    <div
-      *ngIf="company"
-      class="border-[1.7px] border-black border-solid mx-5 rounded-lg px-6 pt-6"
-    >
-      <p class="text-3xl font-semibold">{{ company.name }}</p>
-      <p class="text-sm text-gray-500 mt-2">{{ company.email }}</p>
-      <p class="text-sm text-gray-500">{{ company.phone }}</p>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="goToCompany(company.id)"
-        class="w-full mt-2 mb-5"
-      >
-        Подробнее о компании
-      </button>
-    </div>
-  </div>
-</div>
+<div>

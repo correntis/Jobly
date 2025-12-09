@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import Company from '../../core/models/company';
 import Vacancy from '../../core/models/vacancies/vacancy';
 import { CompaniesService } from '../../core/services/companies.service';
@@ -13,7 +14,7 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 @Component({
   selector: 'app-company-page',
   standalone: true,
-  imports: [CommonModule, CompactVacancyComponent, HeaderComponent],
+  imports: [CommonModule, CompactVacancyComponent, HeaderComponent, MatIconModule],
   templateUrl: './company-page.component.html',
 })
 export class CompanyPageComponent implements OnInit {

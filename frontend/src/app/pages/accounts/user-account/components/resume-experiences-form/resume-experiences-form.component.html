@@ -1,214 +1,92 @@
-<section class="p-6 bg-gray-100 rounded-lg shadow-md mt-3">
-  <div class="flex justify-between">
-    <h2 class="text-2xl font-bold text-gray-700 mb-4">Опыт работы</h2>
-    <button
-      mat-fab
-      color="accent"
-      type="button"
-      (click)="addJobExperience()"
-      class="text-3xl transform scale-[0.55] align-middle"
-    >
-      <mat-icon matSuffix>add</mat-icon>
+<div class="glass-card p-6 mb-6">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="section-title mb-0 flex items-center gap-2">
+      <mat-icon class="text-accent-500">work</mat-icon>
+      Опыт работы
+    </h2>
+    <button type="button" (click)="addJobExperience()" class="text-sm text-[var(--accent-primary)] hover:underline flex items-center gap-1">
+      <mat-icon class="text-sm">add</mat-icon> Добавить
     </button>
   </div>
 
   <form [formGroup]="jobExperiencesForm" (ngSubmit)="saveJobExperiences()">
-    <ng-container formArrayName="jobExperiences">
-      <hr
-        *ngIf="jobExperiences.length > 0"
-        class="border-t-1 border-blue-300"
-      />
-
-      <ng-container
-        class="w-full"
-        *ngFor="let jobExperienceForm of jobExperiences.controls; let i = index"
+    <div formArrayName="jobExperiences" class="space-y-4">
+      <div
+        *ngFor="let exp of jobExperiences.controls; let i = index"
+        [formGroupName]="i"
+        class="glass-card-subtle p-4"
       >
-        <div class="flex flex-row align-middle">
-          <div [formGroupName]="i">
-            <span class="text-2xl font-bold">{{ i + 1 }}:</span>
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Должность</mat-label>
+        <div class="flex items-start justify-between mb-3">
+          <span class="text-sm font-semibold text-[var(--text-primary)]">Опыт {{ i + 1 }}</span>
+          <button
+            type="button"
+            (click)="removeJobExperience(i)"
+            class="text-[var(--text-muted)] hover:text-error-500 transition-colors"
+          >
+            <mat-icon class="text-lg">close</mat-icon>
+          </button>
+        </div>
 
+        <div class="space-y-3">
+          <input
+            formControlName="jobTitle"
+            class="glass-input text-sm py-2"
+            placeholder="Должность"
+          />
+          <input
+            formControlName="companyName"
+            class="glass-input text-sm py-2"
+            placeholder="Компания"
+          />
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="text-xs text-[var(--text-muted)]">Начало</label>
               <input
-                matInput
-                formControlName="jobTitle"
-                aria-describedby="experiencejobTitleError-{{ i }}"
-                required
-              />
-
-              <mat-error id="experiencejobTitleError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    jobExperiences.controls[i]
-                      .get('jobTitle')
-                      ?.hasError('required')
-                  "
-                >
-                  Введите или удалите опыт работы
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Название компании</mat-label>
-
-              <input
-                matInput
-                formControlName="companyName"
-                aria-describedby="experienceCompanyNameError-{{ i }}"
-                required
-              />
-
-              <mat-error id="experienceCompanyNameError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    jobExperiences.controls[i]
-                      .get('companyName')
-                      ?.hasError('required')
-                  "
-                >
-                  Введите или удалите опыт работы
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Дата начала</mat-label>
-
-              <input
-                matInput
-                [matDatepicker]="experienceStartDate"
+                type="date"
                 formControlName="startDate"
-                aria-describedby="experienceStartDateError-{{ i }}"
-                required
-                readonly
+                class="glass-input text-sm py-2"
               />
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="experienceStartDate"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #experienceStartDate>
-                <mat-datepicker-actions>
-                  <button mat-button matDatepickerCancel>Отмена</button>
-                  <button mat-raised-button matDatepickerApply>Применить</button>
-                </mat-datepicker-actions>
-              </mat-datepicker>
-
-              <mat-error id="experienceStartDateError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    jobExperiences.controls[i]
-                      .get('startDate')
-                      ?.hasError('required')
-                  "
-                >
-                  Выберите дату или удалите опыт работы
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field color="primary" class="w-full" appearance="fill">
-              <mat-label>Дата окончания</mat-label>
-
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs text-[var(--text-muted)]">Окончание</label>
               <input
-                matInput
-                [matDatepicker]="experienceEndDate"
+                type="date"
                 formControlName="endDate"
-                aria-describedby="experienceEndDateError-{{ i }}"
-                required
-                readonly
+                class="glass-input text-sm py-2"
               />
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="experienceEndDate"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #experienceEndDate>
-                <mat-datepicker-actions>
-                  <button mat-button matDatepickerCancel>Отмена</button>
-                  <button mat-raised-button matDatepickerApply>Применить</button>
-                </mat-datepicker-actions>
-              </mat-datepicker>
+            </div>
+          </div>
 
-              <mat-error id="experienceEndDateError-{{ i }}">
-                <ng-container
-                  *ngIf="
-                    jobExperiences.controls[i]
-                      .get('endDate')
-                      ?.hasError('required')
-                  "
-                >
-                  Выберите дату или удалите опыт работы
-                </ng-container>
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Responsibilities -->
-            <div
-              formArrayName="responsibilities"
-              class="p-2 bg-gray-50 rounded-md"
-            >
-              <div class="flex justify-between">
-                <h3 class="text-lg font-medium">Обязанности</h3>
-
-                <button
-                  mat-fab
-                  color="accent"
-                  type="button"
-                  (click)="addResponsibility(i)"
-                  class="text-3xl transform scale-[0.55] align-middle"
-                >
-                  <mat-icon matSuffix>add</mat-icon>
-                </button>
-              </div>
-
+          <!-- Responsibilities -->
+          <div formArrayName="responsibilities" class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs text-[var(--text-muted)]">Обязанности</label>
+              <button type="button" (click)="addResponsibility(i)" class="text-xs text-[var(--accent-primary)] hover:underline">
+                + Добавить
+              </button>
+            </div>
+            <div class="space-y-2">
               <div
-                *ngFor="
-                  let techControl of getResponsibilities(i).controls;
-                  let j = index
-                "
-                class="flex space-x-2 items-center mt-2"
+                *ngFor="let resp of getResponsibilities(i).controls; let j = index"
+                class="flex items-center gap-2"
               >
-                <mat-form-field appearance="fill" class="flex-1">
-                  <mat-label>Обязанность {{ j + 1 }}</mat-label>
-                  <input
-                    matInput
-                    [formControlName]="j"
-                    required
-                    aria-describedby="experienceRespError-{{ i }}:{{ j }}"
-                  />
-
-                  <mat-error id="experienceRespError-{{ i }}:{{ j }}">
-                    <ng-container
-                      *ngIf="getResponsibilities(i).at(j)?.hasError('required')"
-                    >
-                      Введите или удалите опыт работы
-                    </ng-container>
-                  </mat-error>
-                </mat-form-field>
-                <button
-                  mat-icon-button
-                  color="warn"
-                  type="button"
-                  (click)="removeResponsibility(i, j)"
-                >
-                  <mat-icon>close</mat-icon>
+                <input
+                  [formControlName]="j"
+                  class="glass-input text-sm py-2 flex-1"
+                  placeholder="Обязанность"
+                />
+                <button type="button" (click)="removeResponsibility(i, j)" class="text-[var(--text-muted)] hover:text-error-500">
+                  <mat-icon class="text-sm">close</mat-icon>
                 </button>
               </div>
             </div>
           </div>
-
-          <div
-            (click)="removeJobExperience(i)"
-            class="hover:cursor-pointer hover:bg-red-400 rounded-xl flex align-middle items-center justify-center p-3 mb-[22px]"
-          >
-            <mat-icon matSuffix> close</mat-icon>
-          </div>
         </div>
-      </ng-container>
-    </ng-container>
+      </div>
+    </div>
 
-    <button mat-raised-button color="primary" type="submit">
-      Сохранить опыт работы
+    <button *ngIf="jobExperiences.length > 0" type="submit" class="glass-btn py-3 px-6 mt-4">
+      Сохранить
     </button>
   </form>
-</section>
+</div>

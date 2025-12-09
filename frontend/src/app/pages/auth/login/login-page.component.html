@@ -1,78 +1,75 @@
-<div class="min-h-screen flex items-center justify-center bg-red-100">
-  <div class="w-full max-w-xl bg-white rounded-lg shadow-md p-8">
-    <h2 class="text-2xl font-bold text-gray-800 text-center">Вход</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-6">
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Email</mat-label>
-        <input
-          matInput
-          formControlName="email"
-          type="email"
-          placeholder="Введите ваш email"
-          required
-          aria-describedby="emailError"
-        />
-        <mat-icon matSuffix>email</mat-icon>
-        <mat-error id="emailError" *ngIf="loginForm.get('email')?.errors">
-          <ng-container *ngIf="loginForm.get('email')?.hasError('required')">
-            Email обязателен.
-          </ng-container>
-          <ng-container *ngIf="loginForm.get('email')?.hasError('email')">
-            Неверный формат email.
-          </ng-container>
+<div class="min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-glow mb-4">
+        <span class="text-white font-bold text-3xl font-display">J</span>
+      </div>
+      <h1 class="text-3xl font-bold text-[var(--text-primary)] font-display">Добро пожаловать</h1>
+      <p class="text-[var(--text-secondary)] mt-2">Войдите в свой аккаунт</p>
+    </div>
 
-          <ng-container
-            *ngIf="loginForm.get('email')?.hasError('emailNotFound')"
-          >
-            Пользователь с таким email не найден.
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
+    <!-- Login Form -->
+    <div class="glass-card p-8">
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-5">
+        <!-- Email Field -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Email</label>
+          <input
+            type="email"
+            formControlName="email"
+            class="glass-input"
+            placeholder="Введите email"
+          />
+          <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="loginForm.get('email')?.hasError('required')">Email обязателен</span>
+            <span *ngIf="loginForm.get('email')?.hasError('email')">Неверный формат</span>
+            <span *ngIf="loginForm.get('email')?.hasError('emailNotFound')">Пользователь не найден</span>
+          </div>
+        </div>
 
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Пароль</mat-label>
-        <input
-          matInput
-          formControlName="password"
-          [type]="hidePassword ? 'password' : 'text'"
-          placeholder="Введите ваш пароль"
-          required
-          minlength="6"
-          pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!%&])[A-Za-z\d!%&]{6,}$"
-          aria-describedby="passwordError"
-        />
-        <mat-icon matSuffix (click)="togglePasswordVisibility()">
-          {{ hidePassword ? "visibility_off" : "visibility" }}
-        </mat-icon>
-        <mat-error id="passwordError" *ngIf="loginForm.get('password')?.errors">
-          <ng-container *ngIf="loginForm.get('password')?.hasError('required')">
-            Пароль обязателен.
-          </ng-container>
-          <ng-container
-            *ngIf="loginForm.get('password')?.hasError('minlength')"
-          >
-            Минимум 6 символов.
-          </ng-container>
-          <ng-container *ngIf="loginForm.get('password')?.hasError('pattern')">
-            Пароль должен содержать заглавную букву, цифру и спецсимвол (!%&).
-          </ng-container>
+        <!-- Password Field -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Пароль</label>
+          <div class="relative">
+            <input
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              class="glass-input pr-12"
+              placeholder="Введите пароль"
+            />
+            <button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+            >
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="loginForm.get('password')?.hasError('required')">Пароль обязателен</span>
+            <span *ngIf="loginForm.get('password')?.hasError('minlength')">Минимум 6 символов</span>
+            <span *ngIf="loginForm.get('password')?.hasError('pattern')">Заглавная буква, цифра, спецсимвол</span>
+            <span *ngIf="loginForm.get('password')?.hasError('invalidPassword')">Неверный пароль</span>
+          </div>
+        </div>
 
-          <ng-container
-            *ngIf="loginForm.get('password')?.hasError('invalidPassword')"
-          >
-            Неверный пароль
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
+        <!-- Submit Button -->
+        <button type="submit" class="glass-btn w-full py-4 text-lg">
+          Войти
+        </button>
 
-      <button
-        mat-raised-button
-        color="primary"
-        class="w-full py-2 rounded-lg hover:bg-blue-600"
-        type="submit"
-      >
-        Войти
-      </button>
-    </form>
+        <!-- Divider -->
+        <div class="glass-divider"></div>
+
+        <!-- Register Link -->
+        <p class="text-center text-[var(--text-secondary)]">
+          Нет аккаунта?
+          <a routerLink="/auth/registration" class="text-accent-500 font-semibold hover:underline">
+            Зарегистрироваться
+          </a>
+        </p>
+      </form>
+    </div>
   </div>
 </div>

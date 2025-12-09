@@ -1,346 +1,259 @@
-<div class="min-h-screen flex items-center justify-center bg-red-100">
-  <div
-    *ngIf="step === 1"
-    class="w-full max-w-xl bg-white rounded-lg shadow-md p-8"
-  >
-    <h2 class="text-2xl font-bold text-gray-800 text-center">
-      Создать аккаунт
-    </h2>
-    <form
-      [formGroup]="registrationForm"
-      (ngSubmit)="register()"
-      class="space-y-6"
-    >
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Имя</mat-label>
-        <input
-          matInput
-          formControlName="firstName"
-          type="text"
-          placeholder="Введите ваше имя"
-          required
-          aria-describedby="firstNameError"
-        />
-        <mat-icon matSuffix>email</mat-icon>
-        <mat-error
-          id="firstNameError"
-          *ngIf="registrationForm.get('firstName')?.errors"
-        >
-          <ng-container
-            *ngIf="registrationForm.get('firstName')?.hasError('required')"
-          >
-            Имя обязательно.
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Фамилия</mat-label>
-        <input
-          matInput
-          formControlName="lastName"
-          type="text"
-          placeholder="Введите вашу фамилию"
-          required
-          aria-describedby="lastNameError"
-        />
-        <mat-icon matSuffix>email</mat-icon>
-        <mat-error
-          id="lastNameError"
-          *ngIf="registrationForm.get('lastName')?.errors"
-        >
-          <ng-container
-            *ngIf="registrationForm.get('lastName')?.hasError('required')"
-          >
-            Фамилия обязательна.
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Email</mat-label>
-        <input
-          matInput
-          formControlName="email"
-          type="email"
-          placeholder="Введите ваш email"
-          required
-          aria-describedby="emailError"
-        />
-        <mat-icon matSuffix>email</mat-icon>
-        <mat-error
-          id="emailError"
-          *ngIf="registrationForm.get('email')?.errors"
-        >
-          <ng-container
-            *ngIf="registrationForm.get('email')?.hasError('required')"
-          >
-            Email обязателен.
-          </ng-container>
-          <ng-container
-            *ngIf="registrationForm.get('email')?.hasError('email')"
-          >
-            Неверный формат email.
-          </ng-container>
-
-          <ng-container
-            *ngIf="registrationForm.get('email')?.hasError('existingEmail')"
-          >
-            Пользователь с таким email уже существует.
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Пароль</mat-label>
-        <input
-          matInput
-          formControlName="password"
-          [type]="hidePassword ? 'password' : 'text'"
-          placeholder="Введите ваш пароль"
-          required
-          minlength="6"
-          pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!%&])[A-Za-z\d!%&]{6,}$"
-          aria-describedby="passwordError"
-        />
-        <mat-icon matSuffix (click)="togglePasswordVisibility()">
-          {{ hidePassword ? "visibility_off" : "visibility" }}
-        </mat-icon>
-        <mat-error
-          id="passwordError"
-          *ngIf="registrationForm.get('password')?.errors"
-        >
-          <ng-container
-            *ngIf="registrationForm.get('password')?.hasError('required')"
-          >
-            Пароль обязателен.
-          </ng-container>
-          <ng-container
-            *ngIf="registrationForm.get('password')?.hasError('minlength')"
-          >
-            Минимум 6 символов.
-          </ng-container>
-          <ng-container
-            *ngIf="registrationForm.get('password')?.hasError('pattern')"
-          >
-            Пароль должен содержать заглавную букву, цифру и спецсимвол (!%&).
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Подтвердите пароль</mat-label>
-        <input
-          matInput
-          formControlName="confirmPassword"
-          [type]="hideConfirmPassword ? 'password' : 'text'"
-          placeholder="Подтвердите ваш пароль"
-          required
-        />
-        <mat-icon matSuffix (click)="toggleConfirmPasswordVisibility()">
-          {{ hideConfirmPassword ? "visibility_off" : "visibility" }}
-        </mat-icon>
-        <mat-error
-          *ngIf="registrationForm.get('confirmPassword')?.hasError('mustMatch')"
-        >
-          Пароли должны совпадать.
-        </mat-error>
-        <mat-error
-          *ngIf="registrationForm.get('confirmPassword')?.hasError('required')"
-        >
-          Подтверждение пароля обязательно.
-        </mat-error>
-      </mat-form-field>
-
-      <div class="w-full">
-        <label id="example-radio-group-label" class="block mb-2 font-medium">
-          Выберите роль, которая лучше всего описывает цель использования
-          платформы:
-        </label>
-        <mat-radio-group
-          aria-labelledby="example-radio-group-label"
-          class="flex flex-col mb-4"
-          formControlName="choosedRole"
-        >
-          <mat-radio-button
-            *ngFor="let role of appRoles"
-            class="mb-2"
-            [value]="role.roleName"
-          >
-            {{ role.text }}
-          </mat-radio-button>
-
-          <mat-error
-            *ngIf="registrationForm.get('choosedRole')?.hasError('required')"
-          >
-            Выбор роли обязателен.
-          </mat-error>
-        </mat-radio-group>
+<div class="min-h-screen flex items-center justify-center p-6 py-12">
+  <div class="w-full max-w-lg">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-glow mb-4">
+        <span class="text-white font-bold text-3xl font-display">J</span>
       </div>
+      <h1 class="text-3xl font-bold text-[var(--text-primary)] font-display">
+        {{ step === 1 ? 'Создать аккаунт' : 'Создать компанию' }}
+      </h1>
+      <p class="text-[var(--text-secondary)] mt-2">
+        {{ step === 1 ? 'Заполните данные для регистрации' : 'Расскажите о вашей компании' }}
+      </p>
+    </div>
 
-      <button
-        mat-raised-button
-        color="primary"
-        class="w-full py-2 rounded-lg hover:bg-blue-600"
-        type="submit"
-      >
-        Зарегистрироваться
-      </button>
-    </form>
-  </div>
-
-  <!-- Company -->
-  <div
-    *ngIf="step === 2"
-    class="w-full max-w-xl bg-white rounded-lg shadow-md p-8"
-  >
-    <h2 class="text-2xl font-bold text-gray-800 text-center">
-      Создать компанию
-    </h2>
-    <form [formGroup]="companyForm" (ngSubmit)="register()" class="space-y-6">
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Название компании</mat-label>
-        <input
-          matInput
-          formControlName="companyName"
-          type="text"
-          placeholder="Введите название компании"
-          required
-          aria-describedby="companyNameError"
-        />
-        <mat-icon matSuffix>name</mat-icon>
-        <mat-error
-          id="companyNameError"
-          *ngIf="companyForm.get('companyName')?.errors"
-        >
-          <ng-container
-            *ngIf="companyForm.get('companyName')?.hasError('required')"
-          >
-            Название компании обязательно.
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Тип компании</mat-label>
-        <input
-          matInput
-          formControlName="companyType"
-          type="text"
-          placeholder="Введите тип компании"
-          required
-          aria-describedby="companyTypeError"
-        />
-        <mat-icon matSuffix>type</mat-icon>
-        <mat-error
-          id="companyTypeError"
-          *ngIf="companyForm.get('companyType')?.errors"
-        >
-          <ng-container
-            *ngIf="companyForm.get('companyType')?.hasError('required')"
-          >
-            Тип компании обязателен.
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Email компании</mat-label>
-        <input
-          matInput
-          formControlName="companyEmail"
-          type="email"
-          placeholder="Введите email компании"
-          email
-          aria-describedby="companyEmailError"
-        />
-        <mat-icon matSuffix>email</mat-icon>
-        <mat-error
-          id="companyEmailError"
-          *ngIf="companyForm.get('companyEmail')?.errors"
-        >
-          <ng-container
-            *ngIf="companyForm.get('companyEmail')?.hasError('email')"
-          >
-            Неверный email компании.
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Телефон компании</mat-label>
-        <input
-          matInput
-          formControlName="companyPhone"
-          type="tel"
-          pattern="/^\d{10}$/"
-          placeholder="Введите телефон компании"
-          aria-describedby="companyPhoneError"
-        />
-        <mat-icon matSuffix>phone</mat-icon>
-        <mat-error
-          id="companyPhoneError"
-          *ngIf="companyForm.get('companyPhone')?.errors"
-        >
-          <ng-container
-            *ngIf="companyForm.get('companyPhone')?.hasError('pattern')"
-          >
-            Неверный телефон компании.
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Город компании</mat-label>
-        <input
-          matInput
-          formControlName="companyCity"
-          type="text"
-          placeholder="Введите город компании"
-        />
-        <mat-icon matSuffix>city</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field class="w-full" appearance="fill">
-        <mat-label>Описание компании</mat-label>
-        <textarea
-          matInput
-          formControlName="companyDescription"
-          type="text"
-          placeholder="Введите описание компании"
-        ></textarea>
-        <mat-icon matSuffix>description</mat-icon>
-      </mat-form-field>
-
-      <div class="w-full">
-        <label class="mat-label">Логотип компании</label>
-        <input
-          type="file"
-          (change)="onFileSelect($event)"
-          placeholder="Выберите логотип компании"
-          class="custom-file-input"
-        />
+    <!-- Step Indicator -->
+    <div *ngIf="registrationForm.get('choosedRole')?.value === 'Company'" class="flex justify-center gap-3 mb-6">
+      <div class="flex items-center gap-2">
+        <div 
+          class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all"
+          [class]="step >= 1 ? 'bg-gradient-to-br from-primary-500 to-accent-500 text-white' : 'glass-card-subtle text-[var(--text-muted)]'"
+        >1</div>
+        <span class="text-sm text-[var(--text-secondary)]">Аккаунт</span>
       </div>
+      <div class="w-12 h-0.5 self-center bg-[var(--border-color)]"></div>
+      <div class="flex items-center gap-2">
+        <div 
+          class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all"
+          [class]="step >= 2 ? 'bg-gradient-to-br from-primary-500 to-accent-500 text-white' : 'glass-card-subtle text-[var(--text-muted)]'"
+        >2</div>
+        <span class="text-sm text-[var(--text-secondary)]">Компания</span>
+      </div>
+    </div>
 
-      <div class="flex align-middle justify-center">
-        <button
-          mat-raised-button
-          color="warn"
-          class="py-5 mr-5 rounded-lg hover:bg-gray-600"
-          type="button"
-          (click)="backToFirstStep()"
-        >
-          Назад
+    <!-- Registration Form Step 1 -->
+    <div *ngIf="step === 1" class="glass-card p-8">
+      <form [formGroup]="registrationForm" (ngSubmit)="register()" class="space-y-4">
+        <!-- Name Fields Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Имя</label>
+            <input
+              type="text"
+              formControlName="firstName"
+              class="glass-input"
+              placeholder="Имя"
+            />
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Фамилия</label>
+            <input
+              type="text"
+              formControlName="lastName"
+              class="glass-input"
+              placeholder="Фамилия"
+            />
+          </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Email</label>
+          <input
+            type="email"
+            formControlName="email"
+            class="glass-input"
+            placeholder="Email"
+          />
+          <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="registrationForm.get('email')?.hasError('existingEmail')">Email занят</span>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Пароль</label>
+          <div class="relative">
+            <input
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              class="glass-input pr-12"
+              placeholder="Пароль"
+            />
+            <button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+            >
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="registrationForm.get('password')?.hasError('pattern')">Заглавная буква, цифра, спецсимвол (!%&)</span>
+          </div>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Подтверждение</label>
+          <div class="relative">
+            <input
+              [type]="hideConfirmPassword ? 'password' : 'text'"
+              formControlName="confirmPassword"
+              class="glass-input pr-12"
+              placeholder="Повторите пароль"
+            />
+            <button
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+            >
+              <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="registrationForm.get('confirmPassword')?.touched && registrationForm.get('confirmPassword')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="registrationForm.get('confirmPassword')?.hasError('mustMatch')">Пароли не совпадают</span>
+          </div>
+        </div>
+
+        <!-- Role Selection -->
+        <div class="space-y-3">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Выберите роль</label>
+          <div class="grid gap-3">
+            <label
+              *ngFor="let role of appRoles"
+              class="glass-card-subtle p-4 cursor-pointer transition-all hover:border-primary-500"
+              [class.border-primary-500]="registrationForm.get('choosedRole')?.value === role.roleName"
+              [class.shadow-glow]="registrationForm.get('choosedRole')?.value === role.roleName"
+            >
+              <input
+                type="radio"
+                formControlName="choosedRole"
+                [value]="role.roleName"
+                class="hidden"
+              />
+              <span class="text-[var(--text-primary)]">{{ role.text }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="glass-btn w-full py-4 text-lg mt-6">
+          {{ registrationForm.get('choosedRole')?.value === 'Company' ? 'Далее' : 'Зарегистрироваться' }}
         </button>
-        <button
-          mat-raised-button
-          color="primary"
-          class="py-2 w-full rounded-lg hover:bg-blue-600"
-          type="submit"
-        >
-          Завершить регистрацию
-        </button>
-      </div>
-    </form>
+
+        <!-- Divider -->
+        <div class="glass-divider"></div>
+
+        <!-- Login Link -->
+        <p class="text-center text-[var(--text-secondary)]">
+          Уже есть аккаунт?
+          <a routerLink="/auth/login" class="text-accent-500 font-semibold hover:underline">
+            Войти
+          </a>
+        </p>
+      </form>
+    </div>
+
+    <!-- Company Form Step 2 -->
+    <div *ngIf="step === 2" class="glass-card p-8">
+      <form [formGroup]="companyForm" (ngSubmit)="register()" class="space-y-4">
+        <!-- Company Name -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Название</label>
+          <input
+            type="text"
+            formControlName="companyName"
+            class="glass-input"
+            placeholder="Компания"
+          />
+        </div>
+
+        <!-- Company Type -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Тип</label>
+          <input
+            type="text"
+            formControlName="companyType"
+            class="glass-input"
+            placeholder="IT, Финансы..."
+          />
+        </div>
+
+        <!-- Company Email & Phone Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Email</label>
+            <input
+              type="email"
+              formControlName="companyEmail"
+              class="glass-input"
+              placeholder="info@company.com"
+            />
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-[var(--text-primary)]">Телефон</label>
+            <input
+              type="tel"
+              formControlName="companyPhone"
+              class="glass-input"
+              placeholder="+7 999 123 45 67"
+            />
+          </div>
+        </div>
+
+        <!-- City -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Город</label>
+          <input
+            type="text"
+            formControlName="companyCity"
+            class="glass-input"
+            placeholder="Москва"
+          />
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Описание</label>
+          <textarea
+            formControlName="companyDescription"
+            class="glass-textarea"
+            placeholder="О компании..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <!-- Logo Upload -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">Логотип</label>
+          <label class="glass-card-subtle p-4 flex flex-col items-center justify-center cursor-pointer hover:border-primary-500 transition-all">
+            <mat-icon class="text-3xl text-[var(--text-muted)] mb-1">cloud_upload</mat-icon>
+            <span class="text-sm text-[var(--text-secondary)]">Загрузить</span>
+            <input
+              type="file"
+              (change)="onFileSelect($event)"
+              class="hidden"
+              accept="image/*"
+            />
+          </label>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 mt-6">
+          <button
+            type="button"
+            (click)="backToFirstStep()"
+            class="glass-btn-secondary flex-1 py-4"
+          >
+            Назад
+          </button>
+          <button type="submit" class="glass-btn flex-1 py-4">
+            Завершить
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

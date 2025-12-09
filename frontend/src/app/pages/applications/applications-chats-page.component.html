@@ -1,23 +1,30 @@
 <app-header />
 
-<div class="flex flex-row">
-  <div
-    class="relative flex h-[93vh] flex-col items-center justify-start px-[10px] py-2 bg-blue-600"
-  >
-    <h2 *ngIf="isForUser()" class="text-3xl font-semibold text-white mb-2">
-      Ваши отклики
-    </h2>
-    <h2 *ngIf="isForCompany()" class="text-3xl font-semibold text-white mb-2">
-      Кандидаты на вакансии
-    </h2>
-    <h3 class="text-xl text-red-300" *ngIf="chats.length === 0">
-      Чаты не найдены
-    </h3>
-    <div class="h-1 w-full bg-blue-500 rounded-lg mb-5"></div>
-    <div
-      class="chat-container scroll-mx-1 overflow-y-auto"
+<div class="flex h-[calc(100vh-5rem)] p-6 gap-4">
+  <!-- Sidebar with Chats -->
+  <aside class="w-80 lg:w-96 flex-shrink-0 glass-card flex flex-col">
+    <!-- Header -->
+    <div class="p-4 border-b border-[var(--border-color)]">
+      <h2 class="text-xl font-bold text-[var(--text-primary)] font-display">
+        {{ isForUser() ? 'Ваши отклики' : 'Кандидаты' }}
+      </h2>
+      <p class="text-sm text-[var(--text-secondary)]">
+        {{ chats.length }} {{ chats.length === 1 ? 'чат' : 'чатов' }}
+      </p>
+    </div>
+
+    <!-- Chat List -->
+    <div 
+      class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2"
       (scroll)="onChatsScroll($event)"
     >
+      <div *ngIf="chats.length === 0" class="text-center py-8">
+        <div class="w-16 h-16 rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center mx-auto mb-4">
+          <mat-icon class="text-3xl text-[var(--text-muted)]">chat_bubble_outline</mat-icon>
+        </div>
+        <p class="text-[var(--text-secondary)]">Чаты не найдены</p>
+      </div>
+
       <app-compact-chat
         *ngFor="let chat of chats; let i = index"
         (click)="openChat(chat)"
@@ -25,20 +32,29 @@
         [application]="chat?.application"
         [isActivated]="i === activeChatIndex"
         [forRole]="forRole"
+        class="block"
       />
     </div>
-  </div>
+  </aside>
 
-  <div class="w-[80vw]">
-    <div>
-      <app-full-chat
-        *ngIf="selectedChat"
-        [chat]="selectedChat"
-        [messages]="selectedChat.messages"
-        [forRole]="forRole"
-        [currentSenderId]="requestsId"
-        [currentRecipientId]="getSelectedChatRecipientId()"
-      />
+  <!-- Chat Area -->
+  <main class="flex-1">
+    <app-full-chat
+      *ngIf="selectedChat"
+      [chat]="selectedChat"
+      [messages]="selectedChat.messages"
+      [forRole]="forRole"
+      [currentSenderId]="requestsId"
+      [currentRecipientId]="getSelectedChatRecipientId()"
+    />
+
+    <!-- Empty State -->
+    <div *ngIf="!selectedChat" class="glass-card h-full flex flex-col items-center justify-center">
+      <div class="w-20 h-20 rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center mb-4">
+        <mat-icon class="text-4xl text-[var(--text-muted)]">forum</mat-icon>
+      </div>
+      <h3 class="text-xl font-semibold text-[var(--text-primary)] mb-2">Выберите чат</h3>
+      <p class="text-[var(--text-secondary)]">Нажмите на чат слева</p>
     </div>
-  </div>
+  </main>
 </div>
