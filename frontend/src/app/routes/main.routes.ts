@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { AuthGuard } from '../core/guards/auth.guard';
 import { CompanyPageComponent } from '../pages/company/company-page.component';
 import { HomePageComponent } from '../pages/home/home-page.component';
+import { MyVacanciesPageComponent } from '../pages/my-vacancies/my-vacancies-page.component';
 import { RecommendationsPageComponent } from '../pages/recommendations/recommendations-page.component';
 import { ResumePageComponent } from '../pages/resume/resume-page.component';
 import { VacancyPageComponent } from '../pages/vacancy/vacancy-page.component';
@@ -16,6 +17,11 @@ export const mainRoutes: Route[] = [
   {
     path: 'recommendations',
     component: RecommendationsPageComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'my-vacancies',
+    component: MyVacanciesPageComponent,
     canActivate: [AuthGuard],
   },
   {

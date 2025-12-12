@@ -1,0 +1,129 @@
+<div class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+  <app-header></app-header>
+
+  <div class="container mx-auto px-6 py-8">
+    <div class="mb-6">
+      <h1 class="page-title">Мои вакансии</h1>
+      <p class="text-[var(--text-secondary)]">Вакансии, с которыми вы взаимодействовали</p>
+    </div>
+
+    <mat-tab-group
+      [(selectedIndex)]="selectedTab"
+      (selectedIndexChange)="onTabChange($event)"
+      class="glass-card"
+      animationDuration="300ms"
+    >
+      <!-- Liked Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="flex items-center gap-2">
+            <mat-icon class="text-primary-500">favorite</mat-icon>
+            <span>Понравившиеся</span>
+            <span *ngIf="likedVacancies.length > 0" class="glass-tag text-xs ml-1">
+              {{ likedVacancies.length }}
+            </span>
+          </div>
+        </ng-template>
+
+        <div class="p-6">
+          <div *ngIf="likedVacancies.length === 0" class="glass-card p-12 text-center">
+            <mat-icon class="text-6xl text-[var(--text-muted)] mb-4">favorite_border</mat-icon>
+            <h3 class="text-xl font-semibold text-[var(--text-primary)] mb-2">Нет понравившихся вакансий</h3>
+            <p class="text-[var(--text-secondary)]">Начните лайкать вакансии, чтобы они появились здесь</p>
+          </div>
+
+          <div *ngIf="likedVacancies.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <ng-container *ngFor="let vacancy of likedVacancies">
+              <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>
+            </ng-container>
+          </div>
+
+          <div *ngIf="likedVacancies.length > 0 && !likedIsFullLoaded" class="flex justify-center mt-8">
+            <button
+              (click)="loadLikedVacancies()"
+              class="glass-btn-secondary px-8 py-3 flex items-center gap-2"
+            >
+              <mat-icon>refresh</mat-icon>
+              Загрузить ещё
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Disliked Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="flex items-center gap-2">
+            <mat-icon class="text-error-500">thumb_down</mat-icon>
+            <span>Не понравившиеся</span>
+            <span *ngIf="dislikedVacancies.length > 0" class="glass-tag text-xs ml-1">
+              {{ dislikedVacancies.length }}
+            </span>
+          </div>
+        </ng-template>
+
+        <div class="p-6">
+          <div *ngIf="dislikedVacancies.length === 0" class="glass-card p-12 text-center">
+            <mat-icon class="text-6xl text-[var(--text-muted)] mb-4">thumb_down_off_alt</mat-icon>
+            <h3 class="text-xl font-semibold text-[var(--text-primary)] mb-2">Нет не понравившихся вакансий</h3>
+            <p class="text-[var(--text-secondary)]">Вакансии, которые вам не понравились, появятся здесь</p>
+          </div>
+
+          <div *ngIf="dislikedVacancies.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <ng-container *ngFor="let vacancy of dislikedVacancies">
+              <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>
+            </ng-container>
+          </div>
+
+          <div *ngIf="dislikedVacancies.length > 0 && !dislikedIsFullLoaded" class="flex justify-center mt-8">
+            <button
+              (click)="loadDislikedVacancies()"
+              class="glass-btn-secondary px-8 py-3 flex items-center gap-2"
+            >
+              <mat-icon>refresh</mat-icon>
+              Загрузить ещё
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Viewed Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="flex items-center gap-2">
+            <mat-icon class="text-accent-500">visibility</mat-icon>
+            <span>Просмотренные</span>
+            <span *ngIf="viewedVacancies.length > 0" class="glass-tag text-xs ml-1">
+              {{ viewedVacancies.length }}
+            </span>
+          </div>
+        </ng-template>
+
+        <div class="p-6">
+          <div *ngIf="viewedVacancies.length === 0" class="glass-card p-12 text-center">
+            <mat-icon class="text-6xl text-[var(--text-muted)] mb-4">visibility_off</mat-icon>
+            <h3 class="text-xl font-semibold text-[var(--text-primary)] mb-2">Нет просмотренных вакансий</h3>
+            <p class="text-[var(--text-secondary)]">Вакансии, которые вы просмотрели, появятся здесь</p>
+          </div>
+
+          <div *ngIf="viewedVacancies.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <ng-container *ngFor="let vacancy of viewedVacancies">
+              <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>
+            </ng-container>
+          </div>
+
+          <div *ngIf="viewedVacancies.length > 0 && !viewedIsFullLoaded" class="flex justify-center mt-8">
+            <button
+              (click)="loadViewedVacancies()"
+              class="glass-btn-secondary px-8 py-3 flex items-center gap-2"
+            >
+              <mat-icon>refresh</mat-icon>
+              Загрузить ещё
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+

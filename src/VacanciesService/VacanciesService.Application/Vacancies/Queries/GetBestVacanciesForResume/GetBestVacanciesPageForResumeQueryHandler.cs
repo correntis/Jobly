@@ -79,6 +79,17 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
             var recommendedVacancies =
                 await LoadFullVacanciesAsync(vacanciesDetailsEntities, trainingData.Select(t => t.VacancyId), token);
 
+            if (recommendedVacancies.Count > 0)
+            {
+                var recommendedVacancyIds = recommendedVacancies.Select(v => v.Id).ToList();
+                var dislikedVacancyIds = await _readInteractionsRepository.GetDislikedVacancyIdsByUserAsync(
+                    resume.UserId, recommendedVacancyIds, token);
+                
+                recommendedVacancies = recommendedVacancies
+                    .Where(v => !dislikedVacancyIds.Contains(v.Id))
+                    .ToList();
+            }
+
             await CacheVacanciesAsync(resume.Id, recommendedVacancies, token);
 
             _logger.LogInformation(
@@ -98,7 +109,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResu
 
         private async Task CacheVacanciesAsync(string resumeId, List<Vacancy> vacancies, CancellationToken token)
         {
-            var expiresTime = DateTime.UtcNow.AddHours(BusinessRules.Vacancy.CacheExpiresHours);
+            var expiresTime = DateTime.UtcNow.AddMinutes(BusinessRules.Vacancy.CacheExpiresHours);
 
             await _cache.SetVacanciesAsync(resumeId, vacancies, expiresTime, token);
         }

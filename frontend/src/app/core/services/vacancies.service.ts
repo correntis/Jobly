@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiConfig } from '../../environments/api.config';
+import { InteractionType } from '../enums/interactionType';
 import Vacancy from '../models/vacancies/vacancy';
 import AddVacancyDetailsRequest from '../requests/vacancies/addVacancyDetailsRequest';
 import { AddVacancyRequest } from '../requests/vacancies/addVacancyRequest';
@@ -54,6 +55,17 @@ export class VacanciesService {
   ): Observable<Vacancy[]> {
     return this.httpClient.get<Vacancy[]>(
       `${this.basePath}/recommendations/${resumeId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+  }
+
+  getVacanciesByInteraction(
+    userId: string,
+    interactionType: InteractionType,
+    pageNumber: number,
+    pageSize: number
+  ): Observable<Vacancy[]> {
+    return this.httpClient.get<Vacancy[]>(
+      `${this.basePath}/interactions/${userId}&type=${interactionType}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
 }

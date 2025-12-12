@@ -4,6 +4,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using VacanciesService.Application.Abstractions;
+using VacanciesService.Domain.Abstractions.Repositories.Interactions;
 using VacanciesService.Domain.Abstractions.Repositories.Vacancies;
 using VacanciesService.Domain.Abstractions.Services;
 using VacanciesService.Domain.Constants;
@@ -20,6 +21,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacancies
         private readonly IMapper _mapper;
         private readonly IVacanciesDetailsRepository _detailsRepository;
         private readonly IReadVacanciesRepository _readVacanciesRepository;
+        private readonly IReadInteractionsRepository _readInteractionsRepository;
         private readonly ICurrencyApiService _currencyApi;
         private readonly ICurrencyConverter _currencyConverter;
 
@@ -28,6 +30,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacancies
             IMapper mapper,
             IVacanciesDetailsRepository detailsRepository,
             IReadVacanciesRepository readVacanciesRepository,
+            IReadInteractionsRepository readInteractionsRepository,
             ICurrencyApiService currencyApi,
             ICurrencyConverter currencyConverter)
         {
@@ -35,6 +38,7 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacancies
             _mapper = mapper;
             _detailsRepository = detailsRepository;
             _readVacanciesRepository = readVacanciesRepository;
+            _readInteractionsRepository = readInteractionsRepository;
             _currencyApi = currencyApi;
             _currencyConverter = currencyConverter;
         }
@@ -48,84 +52,56 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacancies
                 request.Filter.Salary = await CalculateSalaryAsync(request.Filter.Salary);
             }
 
-            var hasTitleFilter = !string.IsNullOrWhiteSpace(request.Filter.Title);
-            var fetchSize = hasTitleFilter 
-                ? request.Filter.PageSize * 5
-                : request.Filter.PageSize;
-            
-            var startPage = hasTitleFilter ? 1 : request.Filter.PageNumber;
+            var fetchSize = request.Filter.PageSize * 5;
+            var requiredCount = request.Filter.PageSize * request.Filter.PageNumber;
             var allFilteredVacancies = new List<Vacancy>();
+            var currentPage = 1;
+            const int maxPagesToFetch = 50;
+            var allDislikedVacancyIds = new HashSet<Guid>();
 
-            if (hasTitleFilter)
-            {
-                var currentPage = 1;
-                const int maxPagesToFetch = 50;
-                var requiredCount = request.Filter.PageSize * request.Filter.PageNumber;
-
-                while (allFilteredVacancies.Count < requiredCount && currentPage <= maxPagesToFetch)
-                {
-                    var detailsEntities = await _detailsRepository.GetFilteredPageAsync(
-                        request.Filter,
-                        currentPage,
-                        fetchSize,
-                        token);
-
-                    if (detailsEntities.Count == 0)
-                    {
-                        break;
-                    }
-
-                    var vacanciesIds = detailsEntities.Select(x => x.VacancyId).ToList();
-                    var detailsMap = detailsEntities.ToDictionary(d => d.VacancyId);
-
-                    var vacanciesEntities = await _readVacanciesRepository.GetAllIn(vacanciesIds, token);
-
-                    var filteredByTitle = vacanciesEntities
-                        .Where(v => v.Title.Contains(request.Filter.Title, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-
-                    var vacancies = _mapper.Map<List<Vacancy>>(filteredByTitle);
-
-                    foreach(var vacancy in vacancies)
-                    {
-                        if(detailsMap.TryGetValue(vacancy.Id, out VacancyDetailsEntity detailsEntity))
-                        {
-                            vacancy.VacancyDetails = _mapper.Map<VacancyDetails>(detailsEntity);
-                        }
-                    }
-
-                    allFilteredVacancies.AddRange(vacancies);
-
-                    if (detailsEntities.Count < fetchSize)
-                    {
-                        break;
-                    }
-
-                    currentPage++;
-                }
-
-                var skip = (request.Filter.PageNumber - 1) * request.Filter.PageSize;
-                var result = allFilteredVacancies.Skip(skip).Take(request.Filter.PageSize).ToList();
-                
-                _logger.LogInformation("Successfully handled {QueryName} with title filter. Fetched {Pages} pages, filtered to {FilteredCount}, returned {ResultCount}", 
-                    request.GetType().Name, currentPage - 1, allFilteredVacancies.Count, result.Count);
-                
-                return result;
-            }
-            else
+            while (allFilteredVacancies.Count < requiredCount && currentPage <= maxPagesToFetch)
             {
                 var detailsEntities = await _detailsRepository.GetFilteredPageAsync(
                     request.Filter,
-                    request.Filter.PageNumber,
-                    request.Filter.PageSize,
+                    currentPage,
+                    fetchSize,
                     token);
+
+                if (detailsEntities.Count == 0)
+                {
+                    break;
+                }
 
                 var vacanciesIds = detailsEntities.Select(x => x.VacancyId).ToList();
                 var detailsMap = detailsEntities.ToDictionary(d => d.VacancyId);
 
                 var vacanciesEntities = await _readVacanciesRepository.GetAllIn(vacanciesIds, token);
 
-                var vacancies = _mapper.Map<List<Vacancy>>(vacanciesEntities);
+                var filteredVacancies = vacanciesEntities.AsEnumerable();
+                
+                if (!string.IsNullOrWhiteSpace(request.Filter.Title))
+                {
+                    filteredVacancies = filteredVacancies
+                        .Where(v => v.Title.Contains(request.Filter.Title, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (request.UserId.HasValue && filteredVacancies.Any())
+                {
+                    var currentBatchVacancyIds = filteredVacancies.Select(v => v.Id).ToList();
+                    var dislikedIds = await _readInteractionsRepository.GetDislikedVacancyIdsByUserAsync(
+                        request.UserId.Value, currentBatchVacancyIds, token);
+                    
+                    foreach (var dislikedId in dislikedIds)
+                    {
+                        allDislikedVacancyIds.Add(dislikedId);
+                    }
+
+                    filteredVacancies = filteredVacancies
+                        .Where(v => !allDislikedVacancyIds.Contains(v.Id));
+                }
+
+                var filteredList = filteredVacancies.ToList();
+                var vacancies = _mapper.Map<List<Vacancy>>(filteredList);
 
                 foreach(var vacancy in vacancies)
                 {
@@ -135,10 +111,27 @@ namespace VacanciesService.Application.Vacancies.Queries.GetFilteredVacancies
                     }
                 }
 
-                _logger.LogInformation("Successfully handled {QueryName}", request.GetType().Name);
+                allFilteredVacancies.AddRange(vacancies);
 
-                return vacancies;
+                if (detailsEntities.Count < fetchSize)
+                {
+                    break;
+                }
+
+                currentPage++;
             }
+
+            var skip = (request.Filter.PageNumber - 1) * request.Filter.PageSize;
+            var result = allFilteredVacancies.Skip(skip).Take(request.Filter.PageSize).ToList();
+
+            _logger.LogInformation(
+                "Successfully handled {QueryName}. Fetched {Pages} pages, collected {CollectedCount} after filters, returned {ResultCount}", 
+                request.GetType().Name, 
+                currentPage - 1, 
+                allFilteredVacancies.Count, 
+                result.Count);
+
+            return result;
         }
 
         public async Task<SalaryFilter> CalculateSalaryAsync(SalaryFilter sourceFilter)

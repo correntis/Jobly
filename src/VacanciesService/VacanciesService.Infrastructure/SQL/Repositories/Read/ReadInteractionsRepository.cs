@@ -53,5 +53,26 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Read
                 .Where(i => i.UserId == userId && i.VacancyId == vacancyId)
                 .FirstOrDefaultAsync(token);
         }
+
+        public async Task<List<Guid>> GetDislikedVacancyIdsByUserAsync(Guid userId, List<Guid> vacanciesIds, CancellationToken token = default)
+        {
+            return await _vacanciesContext.Interactions
+                .Where(i => i.UserId == userId 
+                    && vacanciesIds.Contains(i.VacancyId) 
+                    && i.Type == (int)InteractionType.Dislike)
+                .Select(i => i.VacancyId)
+                .ToListAsync(token);
+        }
+
+        public async Task<List<Guid>> GetVacancyIdsByUserAndTypeAsync(Guid userId, InteractionType interactionType, int pageNumber, int pageSize, CancellationToken token = default)
+        {
+            return await _vacanciesContext.Interactions
+                .Where(i => i.UserId == userId && i.Type == (int)interactionType)
+                .OrderByDescending(i => i.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(i => i.VacancyId)
+                .ToListAsync(token);
+        }
     }
 }

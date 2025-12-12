@@ -43,6 +43,11 @@ export class HeaderComponent implements OnInit {
         condition: this.isUser(),
       },
       {
+        path: 'my-vacancies',
+        name: 'Мои вакансии',
+        condition: this.isUser(),
+      },
+      {
         path: this.getApplicationsRouteForRole(UserRoles.User),
         name: 'Мои отклики',
         condition: this.isUser(),

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Polly;
 using VacanciesService.Application.Vacancies.Commands.AddVacancy;
 using VacanciesService.Application.Vacancies.Commands.ArchiveVacancy;
 using VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResume;
@@ -10,6 +11,7 @@ using VacanciesService.Application.VacanciesDetails.Commands.AddVacancyDetails;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Domain.Filters.VacancyDetails;
 using VacanciesService.Domain.Models;
+using VacanciesService.Presentation.Helpers;
 using VacanciesService.Presentation.Middleware.Authorization;
 
 namespace VacanciesService.Presentation.Controllers
@@ -73,7 +75,9 @@ namespace VacanciesService.Presentation.Controllers
         [AuthorizeRole(Roles = BusinessRules.Roles.User)]
         public async Task<ActionResult<List<Vacancy>>> Search(VacancyDetailsFilter filter, CancellationToken token)
         {
-            return Ok(await _sender.Send(new GetFilteredVacanciesQuery(filter), token));
+            var userId = JwtTokenHelper.GetUserIdFromHttpContext(HttpContext);
+            
+            return Ok(await _sender.Send(new GetFilteredVacanciesQuery(filter, userId), token));
         }
 
         [HttpGet]
@@ -83,6 +87,15 @@ namespace VacanciesService.Presentation.Controllers
         public async Task<ActionResult<List<Vacancy>>> GetBestVacanciesPageForResume(string resumeId, int pageNumber, int pageSize, CancellationToken token)
         {
             return Ok(await _sender.Send(new GetBestVacanciesPageForResumeQuery(resumeId, pageNumber, pageSize), token));
+        }
+
+        [HttpGet]
+        [Route("interactions/{userId}&type={interactionType}&pageNumber={pageNumber}&pageSize={pageSize}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        public async Task<ActionResult<List<Vacancy>>> GetVacanciesByInteraction(Guid userId, int interactionType, int pageNumber, int pageSize, CancellationToken token)
+        {
+            var interactionTypeEnum = (Domain.Enums.InteractionType)interactionType;
+            return Ok(await _sender.Send(new Application.Vacancies.Queries.GetVacanciesByInteraction.GetVacanciesByInteractionQuery(userId, interactionTypeEnum, pageNumber, pageSize), token));
         }
     }
 }
