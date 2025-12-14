@@ -156,7 +156,10 @@
       <p class="text-[var(--text-secondary)]">Найдите работу вашей мечты</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <!-- Loader -->
+    <app-loader *ngIf="isLoading && (!vacanciesList || vacanciesList.length === 0)" message="Загрузка вакансий..."></app-loader>
+
+    <div *ngIf="!isLoading || (vacanciesList && vacanciesList.length > 0)" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       <ng-container *ngFor="let vacancy of vacanciesList; let i = index">
         <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>
       </ng-container>

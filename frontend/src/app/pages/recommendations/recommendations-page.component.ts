@@ -10,6 +10,7 @@ import { VacanciesService } from '../../core/services/vacancies.service';
 import { EnvService } from '../../environments/environment';
 import { CompactVacancyComponent } from '../../shared/components/compact-vacancy/compact-vacancy.component';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-recommendations-page',
@@ -20,6 +21,7 @@ import { HeaderComponent } from '../../shared/components/header/header.component
     MatButtonModule,
     MatIconModule,
     HeaderComponent,
+    LoaderComponent,
   ],
   templateUrl: './recommendations-page.component.html',
 })
@@ -33,6 +35,7 @@ export class RecommendationsPageComponent {
   pageSize: number = 15;
 
   isFullLoaded: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private resumesService: ResumesService,
@@ -62,6 +65,11 @@ export class RecommendationsPageComponent {
 
   loadRecommendations() {
     if (this.resumeId) {
+      const wasFirstLoad = !this.vacanciesList || this.vacanciesList.length === 0;
+      if (wasFirstLoad) {
+        this.isLoading = true;
+      }
+
       this.vacanciesService
         .getRecomendationsForResume(
           this.resumeId,
@@ -70,7 +78,7 @@ export class RecommendationsPageComponent {
         )
         .subscribe({
           next: (vacancies) => {
-            const wasFirstLoad = !this.vacanciesList || this.vacanciesList.length === 0;
+            this.isLoading = false;
             
             // If returned empty array, no more data available
             if (vacancies.length === 0) {
@@ -90,7 +98,10 @@ export class RecommendationsPageComponent {
             }
             this.pageNumber++;
           },
-          error: (err) => console.error(err),
+          error: (err) => {
+            this.isLoading = false;
+            console.error(err);
+          },
         });
     }
   }

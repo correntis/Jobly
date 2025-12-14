@@ -18,6 +18,7 @@ import { VacanciesFilter } from '../../../../core/models/vacancies/vacanciesFilt
 import Vacancy from '../../../../core/models/vacancies/vacancy';
 import { VacanciesService } from '../../../../core/services/vacancies.service';
 import { CompactVacancyComponent } from '../../../../shared/components/compact-vacancy/compact-vacancy.component';
+import { LoaderComponent } from '../../../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-filtered-vacancies',
@@ -31,6 +32,7 @@ import { CompactVacancyComponent } from '../../../../shared/components/compact-v
     MatButtonModule,
     FormsModule,
     CompactVacancyComponent,
+    LoaderComponent,
   ],
   templateUrl: './filtered-vacancies.component.html',
 })
@@ -55,6 +57,7 @@ export class FilteredVacanciesComponent {
   vacanciesList?: Vacancy[];
 
   isFullLoaded?: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -113,8 +116,15 @@ export class FilteredVacanciesComponent {
   }
 
   searchVacancies(): void {
+    const isFirstLoad = !this.vacanciesList || this.vacanciesList.length === 0;
+    if (isFirstLoad) {
+      this.isLoading = true;
+    }
+
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
+        this.isLoading = false;
+        
         if (vacancies.length === 0) {
           this.isFullLoaded = true;
         } else if (vacancies.length < this.vacanciesFilter.pageSize) {
@@ -131,7 +141,10 @@ export class FilteredVacanciesComponent {
 
         this.vacanciesFilter.pageNumber++;
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        this.isLoading = false;
+        console.error(err);
+      },
     });
   }
 
@@ -213,9 +226,11 @@ export class FilteredVacanciesComponent {
     }
 
     this.vacanciesFilter.pageNumber = 1;
+    this.isLoading = true;
 
     this.vacanciesService.search(this.vacanciesFilter).subscribe({
       next: (vacancies) => {
+        this.isLoading = false;
         this.vacanciesList = vacancies;
         
         if (vacancies.length < this.vacanciesFilter.pageSize) {
@@ -226,7 +241,10 @@ export class FilteredVacanciesComponent {
         
         this.vacanciesFilter.pageNumber++;
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        this.isLoading = false;
+        console.error(err);
+      },
     });
   }
 

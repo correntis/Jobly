@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
+import { ApplicationStatus } from '../../core/enums/applicationStatus';
 import { UserRoles } from '../../core/enums/userRoles';
 import { ChatsHub } from '../../core/hubs/chats.hub';
 import { MessagesHub } from '../../core/hubs/messages.hub';
@@ -46,6 +47,11 @@ export class ApplicationsChatsPageComponent {
 
   activeChatIndex?: number;
   selectedChat?: Chat;
+
+  // Filters
+  selectedStatus: ApplicationStatus | 'All' = 'All';
+  ApplicationStatus = ApplicationStatus;
+  allChats: Chat[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -153,12 +159,15 @@ export class ApplicationsChatsPageComponent {
             }
             this.loadChatsApplications(chats);
 
-            if (this.chats) {
-              this.chats = [...this.chats, ...chats];
+            // Update all chats for filtering
+            if (this.allChats && this.allChats.length > 0) {
+              this.allChats = [...this.allChats, ...chats];
             } else {
-              this.chats = chats;
+              this.allChats = [...chats];
             }
 
+            // Apply filters to update displayed chats
+            this.applyFilters();
             this.pageNumber++;
             this.isLoadingChats = false;
           },
@@ -202,13 +211,13 @@ export class ApplicationsChatsPageComponent {
   }
 
   handleReceivedMessage(message: Message) {
-    if (this.chats) {
-      const chatIndex = this.chats.findIndex(
+    if (this.allChats) {
+      const chatIndex = this.allChats.findIndex(
         (chat) => chat.id === message.chatId
       );
 
       if (chatIndex !== -1) {
-        const chat = this.chats[chatIndex];
+        const chat = this.allChats[chatIndex];
 
         if (chat.messages) {
           chat.messages = [message, ...chat.messages];
@@ -216,9 +225,10 @@ export class ApplicationsChatsPageComponent {
 
         chat.lastMessageAt = message.sentAt;
 
-        this.chats.splice(chatIndex, 1);
-        this.chats.unshift(chat);
+        this.allChats.splice(chatIndex, 1);
+        this.allChats.unshift(chat);
 
+        this.applyFilters();
         this.correctSelectedIndex();
 
         this.cdRef.detectChanges();
@@ -256,8 +266,8 @@ export class ApplicationsChatsPageComponent {
   }
 
   handleNewChat(chat: Chat) {
-    this.chats.unshift(chat);
-
+    this.allChats.unshift(chat);
+    this.applyFilters();
     this.correctSelectedIndex();
     this.loadChatsApplications([chat]);
     this.cdRef.detectChanges();
@@ -327,5 +337,44 @@ export class ApplicationsChatsPageComponent {
     }
 
     return undefined;
+  }
+
+  onStatusFilterChange(status: ApplicationStatus | 'All'): void {
+    this.selectedStatus = status;
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    if (this.selectedStatus === 'All') {
+      this.chats = [...this.allChats];
+    } else {
+      this.chats = this.allChats.filter(
+        (chat) => chat.application?.status === this.selectedStatus
+      );
+    }
+    this.correctSelectedIndex();
+    this.cdRef.detectChanges();
+  }
+
+  getFilteredChatsCount(): number {
+    return this.chats.length;
+  }
+
+  getStatusCount(status: ApplicationStatus | 'All'): number {
+    if (status === 'All') {
+      return this.allChats.length;
+    }
+    return this.allChats.filter(
+      (chat) => chat.application?.status === status
+    ).length;
+  }
+
+  onApplicationStatusChanged(chatId: string, newStatus: string): void {
+    const chatIndex = this.allChats.findIndex((chat) => chat.id === chatId);
+    if (chatIndex !== -1 && this.allChats[chatIndex].application) {
+      this.allChats[chatIndex].application!.status = newStatus;
+      this.applyFilters();
+      this.cdRef.detectChanges();
+    }
   }
 }

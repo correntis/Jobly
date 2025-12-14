@@ -3,8 +3,10 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -47,6 +49,7 @@ export class FullChatComponent {
   @Input() currentSenderId?: string;
   @Input() currentRecipientId?: string;
   @Input() forRole?: string;
+  @Output() statusChanged = new EventEmitter<{ chatId: string; newStatus: string }>();
 
   user?: User;
 
@@ -202,8 +205,9 @@ export class FullChatComponent {
         })
         .subscribe({
           next: (id) => {
-            if (this.chat?.application?.status) {
+            if (this.chat?.application?.status && this.chat?.id) {
               this.chat.application.status = status;
+              this.statusChanged.emit({ chatId: this.chat.id, newStatus: status });
             }
           },
           error: (err) => console.error(err),

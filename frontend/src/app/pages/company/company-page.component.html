@@ -18,7 +18,7 @@
             </div>
             <ng-template #defaultLogo>
               <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center mx-auto shadow-lg">
-                <span class="text-white font-bold text-4xl font-display">{{ company.name?.charAt(0) }}</span>
+                <span class="text-white font-bold text-4xl font-display">{{ company.name.charAt(0) }}</span>
               </div>
             </ng-template>
             
@@ -93,7 +93,11 @@
           <p class="text-[var(--text-secondary)]">Открытые позиции в {{ company.name }}</p>
         </div>
 
-        <div *ngIf="!vacanciesList || vacanciesList.length === 0" class="glass-card p-12 text-center">
+        <!-- Loader -->
+        <app-loader *ngIf="isLoadingVacancies" message="Загрузка вакансий..."></app-loader>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoadingVacancies && (!vacanciesList || vacanciesList.length === 0)" class="glass-card p-12 text-center">
           <div class="w-16 h-16 rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center mx-auto mb-4">
             <mat-icon class="text-3xl text-[var(--text-muted)]">work_off</mat-icon>
           </div>
@@ -101,7 +105,8 @@
           <p class="text-[var(--text-secondary)]">У компании пока нет активных вакансий</p>
         </div>
 
-        <div *ngIf="vacanciesList && vacanciesList.length > 0" class="grid md:grid-cols-2 gap-6">
+        <!-- Vacancies Grid -->
+        <div *ngIf="!isLoadingVacancies && vacanciesList && vacanciesList.length > 0" class="grid md:grid-cols-2 gap-6">
           <ng-container *ngFor="let vacancy of vacanciesList">
             <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>
           </ng-container>

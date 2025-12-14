@@ -38,8 +38,11 @@
       </button>
     </div>
 
+    <!-- Loader -->
+    <app-loader *ngIf="resumeExists && isLoading && (!vacanciesList || vacanciesList.length === 0)" message="Загрузка рекомендаций..."></app-loader>
+
     <!-- Vacancies Grid -->
-    <div *ngIf="resumeExists && vacanciesList && vacanciesList.length > 0">
+    <div *ngIf="resumeExists && !isLoading && vacanciesList && vacanciesList.length > 0">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <ng-container *ngFor="let vacancy of vacanciesList">
           <app-compact-vacancy [vacancy]="vacancy"></app-compact-vacancy>

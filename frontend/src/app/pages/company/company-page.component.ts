@@ -10,11 +10,12 @@ import { VacanciesService } from '../../core/services/vacancies.service';
 import { ApiConfig } from '../../environments/api.config';
 import { CompactVacancyComponent } from '../../shared/components/compact-vacancy/compact-vacancy.component';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-company-page',
   standalone: true,
-  imports: [CommonModule, CompactVacancyComponent, HeaderComponent, MatIconModule],
+  imports: [CommonModule, CompactVacancyComponent, HeaderComponent, MatIconModule, LoaderComponent],
   templateUrl: './company-page.component.html',
 })
 export class CompanyPageComponent implements OnInit {
@@ -22,6 +23,7 @@ export class CompanyPageComponent implements OnInit {
 
   company?: Company;
   vacanciesList?: Vacancy[];
+  isLoadingVacancies: boolean = false;
 
   resources: string = ApiConfig.resources;
 
@@ -58,11 +60,16 @@ export class CompanyPageComponent implements OnInit {
 
   loadVacancies() {
     if (this.companyId) {
+      this.isLoadingVacancies = true;
       this.vacanciesService.getByCompany(this.companyId).subscribe({
         next: (vacancies) => {
+          this.isLoadingVacancies = false;
           this.vacanciesList = vacancies;
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          this.isLoadingVacancies = false;
+          console.error(err);
+        },
       });
     }
   }
