@@ -13,6 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 import localeRu from '@angular/common/locales/ru';
 import { routes } from './app.routes';
 import { cookieInterceptor } from './core/interceptors/cookie.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 registerLocaleData(localeRu);
 
@@ -20,7 +21,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([cookieInterceptor])),
+    provideHttpClient(withInterceptors([cookieInterceptor, errorInterceptor])),
     importProvidersFrom(BrowserAnimationsModule),
     importProvidersFrom(CookieService),
     { provide: LOCALE_ID, useValue: 'ru' },

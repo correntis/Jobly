@@ -5,6 +5,7 @@ import { authRoutes } from './routes/auth.routes';
 import { mainRoutes } from './routes/main.routes';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   ...mainRoutes,
   ...authRoutes,
   ...accountRoutes,
