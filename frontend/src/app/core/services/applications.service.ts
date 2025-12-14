@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiConfig } from '../../environments/api.config';
 import Application from '../models/application';
+import ApplicationsStatusCounts from '../models/applicationsStatusCounts';
 import AddApplicationRequest from '../requests/applications/addApplicationRequest';
 import UpdateApplicationRequest from '../requests/applications/updateApplicationRequest';
 
@@ -51,6 +52,18 @@ export class ApplicationsService {
   getByUserAndVacancy(userId: string, vacancyId: string): Observable<Application | null> {
     return this.httpClient.get<Application | null>(
       `${this.basePath}/users/${userId}/vacancies/${vacancyId}`
+    );
+  }
+
+  getStatusCountsByUser(userId: string): Observable<ApplicationsStatusCounts> {
+    return this.httpClient.get<ApplicationsStatusCounts>(
+      `${this.basePath}/users/${userId}/status-counts`
+    );
+  }
+
+  getStatusCountsByCompany(companyId: string): Observable<ApplicationsStatusCounts> {
+    return this.httpClient.get<ApplicationsStatusCounts>(
+      `${this.basePath}/companies/${companyId}/status-counts`
     );
   }
 }

@@ -6,6 +6,8 @@ using VacanciesService.Application.Applications.Queries.GetApplicationsByIds;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByUser;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByVacancy;
 using VacanciesService.Application.Applications.Queries.GetApplicationByUserAndVacancy;
+using VacanciesService.Application.Applications.Queries.GetApplicationsStatusCounts;
+using VacanciesService.Application.Applications.Queries.GetApplicationsStatusCountsByCompany;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Presentation.Middleware.Authorization;
 
@@ -71,6 +73,24 @@ namespace VacanciesService.Presentation.Controllers
         {
             var application = await _sender.Send(new GetApplicationByUserAndVacancyQuery(userId, vacancyId), token);
             return Ok(application);
+        }
+
+        [HttpGet]
+        [Route("users/{userId}/status-counts")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        public async Task<IActionResult> GetStatusCountsByUser(Guid userId, CancellationToken token)
+        {
+            var counts = await _sender.Send(new GetApplicationsStatusCountsQuery(userId), token);
+            return Ok(counts);
+        }
+
+        [HttpGet]
+        [Route("companies/{companyId}/status-counts")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        public async Task<IActionResult> GetStatusCountsByCompany(Guid companyId, CancellationToken token)
+        {
+            var counts = await _sender.Send(new GetApplicationsStatusCountsByCompanyQuery(companyId), token);
+            return Ok(counts);
         }
     }
 }

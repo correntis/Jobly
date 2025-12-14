@@ -2,6 +2,6 @@
 {
     public static class MessagesTemplates
     {
-        public const string FirstApplicationResponse = "Response to vacancy";
+        public const string FirstApplicationResponse = "Отклик на вакансию";
     }
 }

@@ -80,5 +80,36 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Read
                 .Where(a => a.UserId == userId && a.Vacancy.Id == vacancyId)
                 .FirstOrDefaultAsync(token);
         }
+
+        public async Task<Domain.Models.ApplicationsStatusCounts> GetStatusCountsByUser(Guid userId, CancellationToken token = default)
+        {
+            var applications = await _vacanciesContext.Applications
+                .Where(a => a.UserId == userId)
+                .ToListAsync(token);
+
+            return new Domain.Models.ApplicationsStatusCounts
+            {
+                Total = applications.Count,
+                Unread = applications.Count(a => a.Status == "Unread"),
+                Accepted = applications.Count(a => a.Status == "Accepted"),
+                Rejected = applications.Count(a => a.Status == "Rejected")
+            };
+        }
+
+        public async Task<Domain.Models.ApplicationsStatusCounts> GetStatusCountsByCompany(Guid companyId, CancellationToken token = default)
+        {
+            var applications = await _vacanciesContext.Applications
+                .Include(a => a.Vacancy)
+                .Where(a => a.Vacancy.CompanyId == companyId)
+                .ToListAsync(token);
+
+            return new Domain.Models.ApplicationsStatusCounts
+            {
+                Total = applications.Count,
+                Unread = applications.Count(a => a.Status == "Unread"),
+                Accepted = applications.Count(a => a.Status == "Accepted"),
+                Rejected = applications.Count(a => a.Status == "Rejected")
+            };
+        }
     }
 }

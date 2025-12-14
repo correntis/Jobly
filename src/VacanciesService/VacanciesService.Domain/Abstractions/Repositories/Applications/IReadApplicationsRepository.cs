@@ -11,5 +11,7 @@ namespace VacanciesService.Domain.Abstractions.Repositories.Applications
         Task<List<ApplicationEntity>> GetByIdsIncludeVacancy(List<Guid> ids, CancellationToken token = default);
         Task<bool> ExistForUserAndVacancy(Guid userId, Guid vacancyId, CancellationToken token = default);
         Task<ApplicationEntity?> GetByUserAndVacancy(Guid userId, Guid vacancyId, CancellationToken token = default);
+        Task<Domain.Models.ApplicationsStatusCounts> GetStatusCountsByUser(Guid userId, CancellationToken token = default);
+        Task<Domain.Models.ApplicationsStatusCounts> GetStatusCountsByCompany(Guid companyId, CancellationToken token = default);
     }
 }

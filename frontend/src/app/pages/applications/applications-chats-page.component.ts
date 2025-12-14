@@ -13,6 +13,7 @@ import Message from '../../core/models/message';
 import { ApplicationsService } from '../../core/services/applications.service';
 import { ChatsService } from '../../core/services/chatsService';
 import { CompaniesService } from '../../core/services/companies.service';
+import ApplicationsStatusCounts from '../../core/models/applicationsStatusCounts';
 import HashService from '../../core/services/hash.service';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { CompactChatComponent } from './components/compact-chat/compact-chat.component';
@@ -52,6 +53,12 @@ export class ApplicationsChatsPageComponent {
   selectedStatus: ApplicationStatus | 'All' = 'All';
   ApplicationStatus = ApplicationStatus;
   allChats: Chat[] = [];
+  statusCounts: ApplicationsStatusCounts = {
+    total: 0,
+    unread: 0,
+    accepted: 0,
+    rejected: 0,
+  };
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -87,6 +94,7 @@ export class ApplicationsChatsPageComponent {
   loadData(): void {
     this.loadChats();
     this.loadConnections();
+    this.loadStatusCounts();
   }
 
   loadCompany(): void {
@@ -267,10 +275,30 @@ export class ApplicationsChatsPageComponent {
 
   handleNewChat(chat: Chat) {
     this.allChats.unshift(chat);
-    this.applyFilters();
-    this.correctSelectedIndex();
     this.loadChatsApplications([chat]);
-    this.cdRef.detectChanges();
+    
+    // Обновляем счетчики после загрузки application
+    // loadChatsApplications загружает application, поэтому используем setTimeout для ожидания
+    setTimeout(() => {
+      if (chat.application?.status) {
+        this.updateStatusCountsForNewChat(chat.application.status);
+      }
+      this.applyFilters();
+      this.correctSelectedIndex();
+      this.cdRef.detectChanges();
+    }, 200);
+  }
+
+  updateStatusCountsForNewChat(status: string): void {
+    this.statusCounts.total++;
+    
+    if (status === ApplicationStatus.Unread) {
+      this.statusCounts.unread++;
+    } else if (status === ApplicationStatus.Accepted) {
+      this.statusCounts.accepted++;
+    } else if (status === ApplicationStatus.Rejected) {
+      this.statusCounts.rejected++;
+    }
   }
 
   openChat(chat: Chat | undefined): void {
@@ -360,21 +388,82 @@ export class ApplicationsChatsPageComponent {
     return this.chats.length;
   }
 
+  loadStatusCounts(): void {
+    if (!this.requestsId) {
+      return;
+    }
+
+    if (this.forRole === UserRoles.User) {
+      this.applicationsService.getStatusCountsByUser(this.requestsId).subscribe({
+        next: (counts) => {
+          this.statusCounts = counts;
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+    } else if (this.forRole === UserRoles.Company && this.company?.id) {
+      this.applicationsService.getStatusCountsByCompany(this.company.id).subscribe({
+        next: (counts) => {
+          this.statusCounts = counts;
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+    }
+  }
+
   getStatusCount(status: ApplicationStatus | 'All'): number {
     if (status === 'All') {
-      return this.allChats.length;
+      return this.statusCounts.total;
     }
-    return this.allChats.filter(
-      (chat) => chat.application?.status === status
-    ).length;
+    
+    switch (status) {
+      case ApplicationStatus.Unread:
+        return this.statusCounts.unread;
+      case ApplicationStatus.Accepted:
+        return this.statusCounts.accepted;
+      case ApplicationStatus.Rejected:
+        return this.statusCounts.rejected;
+      default:
+        return 0;
+    }
   }
 
   onApplicationStatusChanged(chatId: string, newStatus: string): void {
     const chatIndex = this.allChats.findIndex((chat) => chat.id === chatId);
     if (chatIndex !== -1 && this.allChats[chatIndex].application) {
+      const oldStatus = this.allChats[chatIndex].application!.status;
       this.allChats[chatIndex].application!.status = newStatus;
+      
+      // Обновляем счетчики
+      this.updateStatusCounts(oldStatus, newStatus);
+      
       this.applyFilters();
       this.cdRef.detectChanges();
+    }
+  }
+
+  updateStatusCounts(oldStatus: string, newStatus: string): void {
+    // Уменьшаем счетчик старого статуса
+    if (oldStatus === ApplicationStatus.Unread) {
+      this.statusCounts.unread = Math.max(0, this.statusCounts.unread - 1);
+    } else if (oldStatus === ApplicationStatus.Accepted) {
+      this.statusCounts.accepted = Math.max(0, this.statusCounts.accepted - 1);
+    } else if (oldStatus === ApplicationStatus.Rejected) {
+      this.statusCounts.rejected = Math.max(0, this.statusCounts.rejected - 1);
+    }
+
+    // Увеличиваем счетчик нового статуса
+    if (newStatus === ApplicationStatus.Unread) {
+      this.statusCounts.unread++;
+    } else if (newStatus === ApplicationStatus.Accepted) {
+      this.statusCounts.accepted++;
+    } else if (newStatus === ApplicationStatus.Rejected) {
+      this.statusCounts.rejected++;
     }
   }
 }
