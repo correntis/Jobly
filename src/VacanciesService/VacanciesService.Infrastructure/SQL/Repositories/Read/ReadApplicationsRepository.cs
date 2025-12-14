@@ -72,5 +72,13 @@ namespace VacanciesService.Infrastructure.SQL.Repositories.Read
                .Where(a => a.UserId == userId && a.Vacancy.Id == vacancyId)
                .AnyAsync(token);
         }
+
+        public async Task<ApplicationEntity?> GetByUserAndVacancy(Guid userId, Guid vacancyId, CancellationToken token = default)
+        {
+            return await _vacanciesContext.Applications
+                .Include(a => a.Vacancy)
+                .Where(a => a.UserId == userId && a.Vacancy.Id == vacancyId)
+                .FirstOrDefaultAsync(token);
+        }
     }
 }

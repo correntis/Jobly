@@ -13,6 +13,7 @@ import { CompaniesService } from '../../../core/services/companies.service';
 import HashService from '../../../core/services/hash.service';
 import { EnvService } from '../../../environments/environment';
 import { InteractionsService } from './../../../core/services/interactions.service';
+import { ApplicationsService } from '../../../core/services/applications.service';
 
 @Component({
   selector: 'app-compact-vacancy',
@@ -25,6 +26,7 @@ export class CompactVacancyComponent implements OnInit {
 
   company?: Company;
   interaction?: Interaction;
+  hasApplied: boolean = false;
 
   InteractionType = InteractionType;
 
@@ -33,12 +35,14 @@ export class CompactVacancyComponent implements OnInit {
     private companiesService: CompaniesService,
     private envService: EnvService,
     private hashService: HashService,
-    private router: Router
+    private router: Router,
+    private applicationsService: ApplicationsService
   ) {}
 
   ngOnInit() {
     this.loadCompany();
     this.loadUserInteraction();
+    this.checkIfApplied();
   }
 
   loadUserInteraction() {
@@ -63,6 +67,22 @@ export class CompactVacancyComponent implements OnInit {
         error: (err: HttpErrorResponse) => console.error(err),
       });
     }
+  }
+
+  checkIfApplied(): void {
+    const userId = this.envService.getUserId();
+    if (!userId || !this.vacancy?.id) {
+      return;
+    }
+
+    this.applicationsService.getByUserAndVacancy(userId, this.vacancy.id).subscribe({
+      next: (application) => {
+        this.hasApplied = !!application;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 
   redirectToVacancyPage(): void {

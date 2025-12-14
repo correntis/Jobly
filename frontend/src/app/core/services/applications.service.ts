@@ -47,4 +47,10 @@ export class ApplicationsService {
       ...applicationsIds,
     ]);
   }
+
+  getByUserAndVacancy(userId: string, vacancyId: string): Observable<Application | null> {
+    return this.httpClient.get<Application | null>(
+      `${this.basePath}/users/${userId}/vacancies/${vacancyId}`
+    );
+  }
 }

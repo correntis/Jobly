@@ -5,6 +5,7 @@ using VacanciesService.Application.Applications.Commands.UpdateApplication;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByIds;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByUser;
 using VacanciesService.Application.Applications.Queries.GetApplicationsByVacancy;
+using VacanciesService.Application.Applications.Queries.GetApplicationByUserAndVacancy;
 using VacanciesService.Domain.Constants;
 using VacanciesService.Presentation.Middleware.Authorization;
 
@@ -60,6 +61,16 @@ namespace VacanciesService.Presentation.Controllers
         public async Task<IActionResult> GetByIds([FromBody] List<Guid> applicationsIds, CancellationToken token)
         {
             return Ok(await _sender.Send(new GetApplicationsByIdsQuery(applicationsIds), token));
+        }
+
+        [HttpGet]
+        [Route("users/{userId}/vacancies/{vacancyId}")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        public async Task<IActionResult> GetByUserAndVacancy(Guid userId, Guid vacancyId, CancellationToken token)
+        {
+            var application = await _sender.Send(new GetApplicationByUserAndVacancyQuery(userId, vacancyId), token);
+            return Ok(application);
         }
     }
 }

@@ -91,17 +91,19 @@
             </button>
           </div>
 
-          <!-- Already Applied Notice -->
-          <div *ngIf="alreadyApplied" class="glass-card-subtle p-4 border-l-4 border-warning-500 mb-6">
-            <div class="flex items-center gap-2 text-warning-600 dark:text-warning-400">
-              <mat-icon>info</mat-icon>
-              <span class="font-medium">Вы уже откликнулись на эту вакансию</span>
-            </div>
-          </div>
-
-          <!-- Action Button -->
+          <!-- Action Button or Already Applied Notice -->
           <div *ngIf="!isUserCreator && !vacancy.archived">
-            <button (click)="apply()" class="glass-btn w-full py-4 text-lg">
+            <div *ngIf="alreadyApplied" class="glass-card-subtle p-4 border-l-4 border-warning-500 mb-4">
+              <div class="flex items-center gap-2 text-warning-600 dark:text-warning-400 mb-3">
+                <mat-icon>check_circle</mat-icon>
+                <span class="font-medium">Вы уже откликнулись на эту вакансию</span>
+              </div>
+              <button (click)="goToApplication()" class="glass-btn-secondary w-full py-3 flex items-center justify-center gap-2">
+                <mat-icon>chat</mat-icon>
+                Перейти к отклику
+              </button>
+            </div>
+            <button *ngIf="!alreadyApplied" (click)="apply()" class="glass-btn w-full py-4 text-lg">
               <mat-icon class="mr-2">send</mat-icon>
               Откликнуться
             </button>

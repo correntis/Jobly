@@ -10,6 +10,8 @@ import Vacancy from '../../core/models/vacancies/vacancy';
 import VacancyDetails from '../../core/models/vacancies/vacancyDetails';
 import AddApplicationRequest from '../../core/requests/applications/addApplicationRequest';
 import { ApplicationsService } from '../../core/services/applications.service';
+import Application from '../../core/models/application';
+import { UserRoles } from '../../core/enums/userRoles';
 import HashService from '../../core/services/hash.service';
 import { InteractionsService } from '../../core/services/interactions.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
@@ -33,6 +35,7 @@ export class VacancyPageComponent {
   InteractionType = InteractionType;
 
   alreadyApplied: boolean = false;
+  application?: Application;
   isUserCreator: boolean = false;
   isClickInteractionSent: boolean = false;
 
@@ -79,6 +82,29 @@ export class VacancyPageComponent {
         this.vacancy = vacancy;
         this.loadInteraction(this.envService.getUserId(), vacancy.id);
         this.loadCompany(this.vacancy.companyId);
+        this.checkIfApplied();
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
+  checkIfApplied(): void {
+    const userId = this.envService.getUserId();
+    if (!userId || !this.vacancy?.id) {
+      return;
+    }
+
+    this.applicationService.getByUserAndVacancy(userId, this.vacancy.id).subscribe({
+      next: (application) => {
+        if (application) {
+          this.application = application;
+          this.alreadyApplied = true;
+        } else {
+          this.alreadyApplied = false;
+          this.application = undefined;
+        }
       },
       error: (err) => {
         console.error(err);
@@ -139,9 +165,16 @@ export class VacancyPageComponent {
         };
 
         this.applicationService.add(addApplicationRequest).subscribe({
+          next: (applicationId) => {
+            this.alreadyApplied = true;
+            // Перепроверяем, чтобы получить полный объект Application
+            this.checkIfApplied();
+          },
           error: (err: HttpErrorResponse) => {
             if (err.status === HttpStatusCode.Conflict) {
               this.alreadyApplied = true;
+              // Перепроверяем, чтобы получить полный объект Application
+              this.checkIfApplied();
             }
           },
         });
@@ -227,5 +260,16 @@ export class VacancyPageComponent {
       education: 'Образование',
     };
     return titles[category] || category;
+  }
+
+  goToApplication(): void {
+    const userId = this.envService.getUserId();
+    if (!userId) {
+      return;
+    }
+
+    const hashedUserId = this.hashService.encrypt(userId);
+    const hashedForRole = this.hashService.encrypt(UserRoles.User);
+    this.router.navigate(['/applications', hashedUserId, hashedForRole]);
   }
 }
