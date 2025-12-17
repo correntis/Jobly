@@ -44,7 +44,12 @@
               formControlName="firstName"
               class="glass-input"
               placeholder="Имя"
+              [class.border-error-500]="registrationForm.get('firstName')?.touched && registrationForm.get('firstName')?.invalid"
             />
+            <div *ngIf="registrationForm.get('firstName')?.touched && registrationForm.get('firstName')?.errors" class="text-error-500 text-xs">
+              <span *ngIf="registrationForm.get('firstName')?.hasError('required')">Имя обязательно</span>
+              <span *ngIf="registrationForm.get('firstName')?.hasError('serverError') && !registrationForm.get('firstName')?.hasError('required')">Некорректное имя</span>
+            </div>
           </div>
           <div class="space-y-2">
             <label class="text-sm font-semibold text-[var(--text-primary)]">Фамилия</label>
@@ -53,7 +58,12 @@
               formControlName="lastName"
               class="glass-input"
               placeholder="Фамилия"
+              [class.border-error-500]="registrationForm.get('lastName')?.touched && registrationForm.get('lastName')?.invalid"
             />
+            <div *ngIf="registrationForm.get('lastName')?.touched && registrationForm.get('lastName')?.errors" class="text-error-500 text-xs">
+              <span *ngIf="registrationForm.get('lastName')?.hasError('required')">Фамилия обязательна</span>
+              <span *ngIf="registrationForm.get('lastName')?.hasError('serverError') && !registrationForm.get('lastName')?.hasError('required')">Некорректная фамилия</span>
+            </div>
           </div>
         </div>
 
@@ -65,9 +75,12 @@
             formControlName="email"
             class="glass-input"
             placeholder="Email"
+            [class.border-error-500]="(registrationForm.get('email')?.touched || registrationForm.get('email')?.dirty) && registrationForm.get('email')?.invalid"
           />
-          <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.errors" class="text-error-500 text-xs">
-            <span *ngIf="registrationForm.get('email')?.hasError('existingEmail')">Email занят</span>
+          <div *ngIf="(registrationForm.get('email')?.touched || registrationForm.get('email')?.dirty) && registrationForm.get('email')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="registrationForm.get('email')?.hasError('existingEmail')">Email уже занят</span>
+            <span *ngIf="registrationForm.get('email')?.hasError('email') && !registrationForm.get('email')?.hasError('existingEmail')">Некорректный email</span>
+            <span *ngIf="registrationForm.get('email')?.hasError('required') && !registrationForm.get('email')?.hasError('existingEmail')">Email обязателен</span>
           </div>
         </div>
 
@@ -80,6 +93,7 @@
               formControlName="password"
               class="glass-input pr-12"
               placeholder="Пароль"
+              [class.border-error-500]="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid"
             />
             <button
               type="button"
@@ -90,7 +104,10 @@
             </button>
           </div>
           <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.errors" class="text-error-500 text-xs">
-            <span *ngIf="registrationForm.get('password')?.hasError('pattern')">Заглавная буква, цифра, спецсимвол (!%&)</span>
+            <span *ngIf="registrationForm.get('password')?.hasError('required')">Пароль обязателен</span>
+            <span *ngIf="registrationForm.get('password')?.hasError('minlength') && !registrationForm.get('password')?.hasError('required')">Пароль должен быть не менее 6 символов</span>
+            <span *ngIf="registrationForm.get('password')?.hasError('pattern') && !registrationForm.get('password')?.hasError('required') && !registrationForm.get('password')?.hasError('minlength')">Пароль должен содержать заглавную букву, цифру и спецсимвол (!%&)</span>
+            <span *ngIf="registrationForm.get('password')?.hasError('serverError') && !registrationForm.get('password')?.hasError('required') && !registrationForm.get('password')?.hasError('minlength') && !registrationForm.get('password')?.hasError('pattern')">Некорректный пароль</span>
           </div>
         </div>
 
@@ -103,6 +120,7 @@
               formControlName="confirmPassword"
               class="glass-input pr-12"
               placeholder="Повторите пароль"
+              [class.border-error-500]="registrationForm.get('confirmPassword')?.touched && registrationForm.get('confirmPassword')?.invalid"
             />
             <button
               type="button"
@@ -113,7 +131,8 @@
             </button>
           </div>
           <div *ngIf="registrationForm.get('confirmPassword')?.touched && registrationForm.get('confirmPassword')?.errors" class="text-error-500 text-xs">
-            <span *ngIf="registrationForm.get('confirmPassword')?.hasError('mustMatch')">Пароли не совпадают</span>
+            <span *ngIf="registrationForm.get('confirmPassword')?.hasError('required')">Подтверждение пароля обязательно</span>
+            <span *ngIf="registrationForm.get('confirmPassword')?.hasError('mustMatch') && !registrationForm.get('confirmPassword')?.hasError('required')">Пароли не совпадают</span>
           </div>
         </div>
 
@@ -125,6 +144,7 @@
               *ngFor="let role of appRoles"
               class="glass-card-subtle p-4 cursor-pointer transition-all hover:border-primary-500"
               [class.border-primary-500]="registrationForm.get('choosedRole')?.value === role.roleName"
+              [class.border-error-500]="registrationForm.get('choosedRole')?.touched && registrationForm.get('choosedRole')?.invalid"
               [class.shadow-glow]="registrationForm.get('choosedRole')?.value === role.roleName"
             >
               <input
@@ -135,6 +155,9 @@
               />
               <span class="text-[var(--text-primary)]">{{ role.text }}</span>
             </label>
+          </div>
+          <div *ngIf="registrationForm.get('choosedRole')?.touched && registrationForm.get('choosedRole')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="registrationForm.get('choosedRole')?.hasError('required')">Выберите роль</span>
           </div>
         </div>
 
@@ -167,7 +190,12 @@
             formControlName="companyName"
             class="glass-input"
             placeholder="Компания"
+            [class.border-error-500]="companyForm.get('companyName')?.touched && companyForm.get('companyName')?.invalid"
           />
+          <div *ngIf="companyForm.get('companyName')?.touched && companyForm.get('companyName')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="companyForm.get('companyName')?.hasError('required')">Название компании обязательно</span>
+            <span *ngIf="companyForm.get('companyName')?.hasError('serverError') && !companyForm.get('companyName')?.hasError('required')">Название компании обязательно</span>
+          </div>
         </div>
 
         <!-- Company Type -->
@@ -178,7 +206,12 @@
             formControlName="companyType"
             class="glass-input"
             placeholder="IT, Финансы..."
+            [class.border-error-500]="companyForm.get('companyType')?.touched && companyForm.get('companyType')?.invalid"
           />
+          <div *ngIf="companyForm.get('companyType')?.touched && companyForm.get('companyType')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="companyForm.get('companyType')?.hasError('required')">Тип компании обязателен</span>
+            <span *ngIf="companyForm.get('companyType')?.hasError('serverError') && !companyForm.get('companyType')?.hasError('required')">Тип компании обязателен</span>
+          </div>
         </div>
 
         <!-- Company Email & Phone Row -->
@@ -190,7 +223,12 @@
               formControlName="companyEmail"
               class="glass-input"
               placeholder="info@company.com"
+              [class.border-error-500]="companyForm.get('companyEmail')?.touched && companyForm.get('companyEmail')?.invalid"
             />
+            <div *ngIf="companyForm.get('companyEmail')?.touched && companyForm.get('companyEmail')?.errors" class="text-error-500 text-xs">
+              <span *ngIf="companyForm.get('companyEmail')?.hasError('email')">Некорректный email</span>
+              <span *ngIf="companyForm.get('companyEmail')?.hasError('serverError') && !companyForm.get('companyEmail')?.hasError('email')">Некорректный email</span>
+            </div>
           </div>
           <div class="space-y-2">
             <label class="text-sm font-semibold text-[var(--text-primary)]">Телефон</label>
@@ -198,8 +236,13 @@
               type="tel"
               formControlName="companyPhone"
               class="glass-input"
-              placeholder="+7 999 123 45 67"
+              placeholder="+375 29 123 45 67"
+              [class.border-error-500]="companyForm.get('companyPhone')?.touched && companyForm.get('companyPhone')?.invalid"
             />
+            <div *ngIf="companyForm.get('companyPhone')?.touched && companyForm.get('companyPhone')?.errors" class="text-error-500 text-xs">
+              <span *ngIf="companyForm.get('companyPhone')?.hasError('pattern')">Номер телефона должен состоять из 10 цифр</span>
+              <span *ngIf="companyForm.get('companyPhone')?.hasError('serverError') && !companyForm.get('companyPhone')?.hasError('pattern')">Некорректный номер телефона</span>
+            </div>
           </div>
         </div>
 
@@ -211,7 +254,32 @@
             formControlName="companyCity"
             class="glass-input"
             placeholder="Москва"
+            [class.border-error-500]="companyForm.get('companyCity')?.touched && companyForm.get('companyCity')?.invalid"
           />
+          <div *ngIf="companyForm.get('companyCity')?.touched && companyForm.get('companyCity')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="companyForm.get('companyCity')?.hasError('serverError')">Некорректное значение города</span>
+          </div>
+        </div>
+
+        <!-- UNP -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[var(--text-primary)]">УНП</label>
+          <input
+            type="text"
+            formControlName="companyUnp"
+            class="glass-input"
+            placeholder="193239702"
+            maxlength="9"
+            [class.border-error-500]="companyForm.get('companyUnp')?.touched && companyForm.get('companyUnp')?.invalid"
+          />
+          <div *ngIf="companyForm.get('companyUnp')?.touched && companyForm.get('companyUnp')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="companyForm.get('companyUnp')?.hasError('required')">УНП обязателен</span>
+            <span *ngIf="companyForm.get('companyUnp')?.hasError('pattern') && !companyForm.get('companyUnp')?.hasError('required')">УНП должен состоять из 9 цифр</span>
+            <span *ngIf="companyForm.get('companyUnp')?.hasError('invalidUnp') && !companyForm.get('companyUnp')?.hasError('required') && !companyForm.get('companyUnp')?.hasError('pattern')">
+              Компания с таким УНП не найдена в ЕГР или не является действующей
+            </span>
+          </div>
+          <p class="text-xs text-[var(--text-muted)]">Учетный номер плательщика (9 цифр)</p>
         </div>
 
         <!-- Description -->
@@ -222,7 +290,11 @@
             class="glass-textarea"
             placeholder="О компании..."
             rows="3"
+            [class.border-error-500]="companyForm.get('companyDescription')?.touched && companyForm.get('companyDescription')?.invalid"
           ></textarea>
+          <div *ngIf="companyForm.get('companyDescription')?.touched && companyForm.get('companyDescription')?.errors" class="text-error-500 text-xs">
+            <span *ngIf="companyForm.get('companyDescription')?.hasError('serverError')">Некорректное описание</span>
+          </div>
         </div>
 
         <!-- Logo Upload -->

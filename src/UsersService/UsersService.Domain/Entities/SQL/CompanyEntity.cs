@@ -12,6 +12,7 @@
         public string Phone { get; set; }
         public string WebSite { get; set; }
         public string Type { get; set; }
+        public string Unp { get; set; }
         public virtual UserEntity User { get; set; }
     }
 }

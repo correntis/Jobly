@@ -10,5 +10,6 @@ export default interface Company {
   phone: string;
   webSite: string;
   type: string;
+  unp: string;
   createdAt: Date;
 }

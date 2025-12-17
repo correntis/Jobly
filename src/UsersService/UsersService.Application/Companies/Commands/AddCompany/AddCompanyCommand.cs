@@ -13,5 +13,6 @@ namespace UsersService.Application.Companies.Commands.AddCompany
         string WebSite,
         string Type,
         string Description,
+        string Unp,
         IFormFile Image) : IRequest<Guid>;
 }

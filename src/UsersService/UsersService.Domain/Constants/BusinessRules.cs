@@ -30,6 +30,7 @@
             public const int MaxPhoneLength = 20;
             public const int MaxWebSiteLength = 50;
             public const int MaxTypeLength = 30;
+            public const int MaxUnpLength = 9;
         }
 
         public static class Token

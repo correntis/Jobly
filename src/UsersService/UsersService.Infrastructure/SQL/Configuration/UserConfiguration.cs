@@ -35,6 +35,10 @@ namespace UsersService.Infrastructure.SQL.Configuration
 
             builder.Property(u => u.PasswordHash)
                 .IsRequired();
+
+            builder.Property(u => u.IsFullRegistration)
+                .IsRequired()
+                .HasDefaultValue(true);
         }
     }
 }

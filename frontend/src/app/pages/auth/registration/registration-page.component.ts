@@ -54,6 +54,7 @@ export class RegistrationPageComponent {
   companyImage: File | null = null;
 
   step: number = 1;
+  tempUserId: string | null = null; // Временное хранение userId для компании
 
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
@@ -110,6 +111,7 @@ export class RegistrationPageComponent {
       companyPhone: ['', [Validators.pattern(/^\d{10}$/)]],
       companyCity: [''],
       companyDescription: [''],
+      companyUnp: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
     });
   }
 
@@ -143,9 +145,10 @@ export class RegistrationPageComponent {
 
   backToFirstStep() {
     this.step = 1;
+    this.tempUserId = null; // Сбрасываем временный userId при возврате на первый шаг
   }
 
-  performUserRegistration(): Observable<string> {
+  performUserRegistration(isFullRegistration: boolean = true): Observable<string> {
     const { choosedRole, firstName, lastName, email, password } =
       this.registrationForm.value;
 
@@ -155,6 +158,7 @@ export class RegistrationPageComponent {
       email,
       password,
       roles: [choosedRole],
+      isFullRegistration,
     };
 
     return this.authService.register(registrationRequest);
@@ -168,6 +172,7 @@ export class RegistrationPageComponent {
       companyEmail,
       companyDescription,
       companyCity,
+      companyUnp,
     } = this.companyForm.value;
 
     const addCompanyRequest: AddCompanyRequest = {
@@ -178,6 +183,7 @@ export class RegistrationPageComponent {
       email: companyEmail,
       description: companyDescription,
       city: companyCity,
+      unp: companyUnp,
     };
 
     return this.companiesService.add(addCompanyRequest, this.companyImage);
@@ -198,17 +204,167 @@ export class RegistrationPageComponent {
   }
 
   processEmailConflict() {
+    // Убеждаемся, что мы на первом шаге для отображения ошибки email
+    this.step = 1;
+    
     const emailControl = this.registrationForm.get('email');
     if (emailControl) {
-      emailControl.setErrors({ existingEmail: true });
-      emailControl.markAllAsTouched();
+      // Сохраняем существующие ошибки валидации, если они есть
+      const currentErrors = emailControl.errors || {};
+      emailControl.setErrors({ ...currentErrors, existingEmail: true });
+      emailControl.markAsTouched();
+      this.cdr.detectChanges();
+    }
+  }
+
+  processUserRegistrationError(err: HttpErrorResponse) {
+    // Убеждаемся, что мы на первом шаге для отображения ошибок
+    this.step = 1;
+    
+    if (err.status === HttpStatusCode.BadRequest) {
+      // Пытаемся получить ошибки валидации из ответа
+      try {
+        const errorDetails = err.error?.details || err.error;
+        if (errorDetails) {
+          let errors: any[] = [];
+          
+          // Если это массив ошибок валидации
+          if (Array.isArray(errorDetails)) {
+            errors = errorDetails;
+          }
+          // Если это строка с JSON
+          else if (typeof errorDetails === 'string') {
+            try {
+              const parsed = JSON.parse(errorDetails);
+              if (Array.isArray(parsed)) {
+                errors = parsed;
+              }
+            } catch (parseError) {
+              // Если не удалось распарсить, игнорируем
+            }
+          }
+          
+          // Обрабатываем все ошибки валидации
+          errors.forEach((error: any) => {
+            const propertyName = (error.propertyName || error.PropertyName || '').toLowerCase();
+            const errorMessage = error.errorMessage || error.ErrorMessage || 'Ошибка валидации';
+            
+            // Маппинг имен полей с бэкенда на имена контролов формы
+            const fieldMapping: { [key: string]: string } = {
+              'firstname': 'firstName',
+              'lastname': 'lastName',
+              'email': 'email',
+              'password': 'password',
+            };
+
+            const formControlName = fieldMapping[propertyName];
+            if (formControlName) {
+              const control = this.registrationForm.get(formControlName);
+              if (control) {
+                // Устанавливаем ошибку валидации
+                const currentErrors = control.errors || {};
+                control.setErrors({ ...currentErrors, serverError: true });
+                control.markAsTouched();
+              }
+            }
+          });
+          
+          this.cdr.detectChanges();
+        }
+      } catch (e) {
+        console.error('Error parsing validation errors:', e);
+      }
+    }
+  }
+
+  processCompanyRegistrationError(err: HttpErrorResponse) {
+    // Убеждаемся, что мы на втором шаге для отображения ошибок
+    this.step = 2;
+    
+    if (err.status === HttpStatusCode.BadRequest) {
+      // Пытаемся получить ошибки валидации из ответа
+      try {
+        const errorDetails = err.error?.details || err.error;
+        if (errorDetails) {
+          let errors: any[] = [];
+          
+          // Если это массив ошибок валидации
+          if (Array.isArray(errorDetails)) {
+            errors = errorDetails;
+          }
+          // Если это строка с JSON
+          else if (typeof errorDetails === 'string') {
+            try {
+              const parsed = JSON.parse(errorDetails);
+              if (Array.isArray(parsed)) {
+                errors = parsed;
+              }
+            } catch (parseError) {
+              // Если не удалось распарсить, игнорируем
+            }
+          }
+          
+          // Обрабатываем все ошибки валидации
+          errors.forEach((error: any) => {
+            const propertyName = (error.propertyName || error.PropertyName || '').toLowerCase();
+            const errorMessage = error.errorMessage || error.ErrorMessage || 'Ошибка валидации';
+            
+            // Обработка ошибки УНП
+            if (propertyName === 'unp') {
+              this.processUnpValidationError(errorMessage);
+            }
+            // Обработка других полей компании
+            else {
+              this.processCompanyFieldError(propertyName, errorMessage);
+            }
+          });
+        }
+      } catch (e) {
+        console.error('Error parsing validation errors:', e);
+      }
+    }
+  }
+
+  processCompanyFieldError(propertyName: string, message: string) {
+    // Убеждаемся, что мы на втором шаге для отображения ошибки
+    this.step = 2;
+    
+    // Маппинг имен полей с бэкенда на имена контролов формы и понятные сообщения
+    const fieldMapping: { [key: string]: { controlName: string; errorMessage: string } } = {
+      'name': { controlName: 'companyName', errorMessage: 'Название компании обязательно' },
+      'type': { controlName: 'companyType', errorMessage: 'Тип компании обязателен' },
+      'email': { controlName: 'companyEmail', errorMessage: 'Некорректный email' },
+      'phone': { controlName: 'companyPhone', errorMessage: 'Некорректный номер телефона' },
+      'city': { controlName: 'companyCity', errorMessage: 'Некорректное значение города' },
+      'description': { controlName: 'companyDescription', errorMessage: 'Некорректное описание' },
+    };
+
+    const fieldInfo = fieldMapping[propertyName];
+    if (fieldInfo) {
+      const control = this.companyForm.get(fieldInfo.controlName);
+      if (control) {
+        control.setErrors({ serverError: true });
+        control.markAllAsTouched();
+        this.cdr.detectChanges();
+      }
+    }
+  }
+
+  processUnpValidationError(message: string) {
+    // Убеждаемся, что мы на втором шаге для отображения ошибки
+    this.step = 2;
+    const unpControl = this.companyForm.get('companyUnp');
+    if (unpControl) {
+      unpControl.setErrors({ invalidUnp: true });
+      unpControl.markAllAsTouched();
       this.cdr.detectChanges();
     }
   }
 
   register() {
     if (!this.registrationForm.valid) {
-      alert('Please fill out the form correctly');
+      this.registrationForm.markAllAsTouched();
+      this.cdr.detectChanges();
       return;
     }
 
@@ -217,14 +373,19 @@ export class RegistrationPageComponent {
     switch (choosedRole) {
       case UserRoles.User:
         {
-          this.performUserRegistration().subscribe({
+          // Для обычного пользователя регистрация полная
+          this.performUserRegistration(true).subscribe({
             next: (id) => {
               this.hashUserInformation(id, UserRoles.User);
               this.router.navigate(['/home']);
             },
             error: (err: HttpErrorResponse) => {
+              // Убеждаемся, что мы на первом шаге для отображения ошибки
+              this.step = 1;
               if (err.status === HttpStatusCode.Conflict) {
                 this.processEmailConflict();
+              } else if (err.status === HttpStatusCode.BadRequest) {
+                this.processUserRegistrationError(err);
               }
             },
           });
@@ -233,27 +394,49 @@ export class RegistrationPageComponent {
       case UserRoles.Company:
         {
           if (this.step === 1) {
-            this.step = 2;
+            // На первом шаге создаем пользователя с неполной регистрацией
+            this.performUserRegistration(false).subscribe({
+              next: (userId) => {
+                // Сохраняем userId для следующего шага
+                this.tempUserId = userId;
+                this.step = 2;
+                this.cdr.detectChanges();
+              },
+              error: (err: HttpErrorResponse) => {
+                // При ошибке остаемся на первом шаге
+                this.step = 1;
+                if (err.status === HttpStatusCode.Conflict) {
+                  this.processEmailConflict();
+                } else if (err.status === HttpStatusCode.BadRequest) {
+                  this.processUserRegistrationError(err);
+                }
+              },
+            });
             break;
           }
-          this.backToFirstStep();
+          
+          // На втором шаге проверяем валидность формы компании перед отправкой
+          if (!this.companyForm.valid) {
+            this.companyForm.markAllAsTouched();
+            this.cdr.detectChanges();
+            return;
+          }
 
-          this.performUserRegistration().subscribe({
-            next: (userId) => {
-              this.performCompanyRegistration(userId).subscribe({
-                next: () => {
-                  this.router.navigate(['/home']);
-                },
-                error: (err) => console.error(err),
-              });
-              this.hashUserInformation(userId, UserRoles.Company);
-            },
-            error: (err: HttpErrorResponse) => {
-              if (err.status === HttpStatusCode.Conflict) {
-                this.processEmailConflict();
-              }
-            },
-          });
+          // Создаем компанию для уже созданного пользователя
+          if (this.tempUserId) {
+            const userId = this.tempUserId;
+            this.performCompanyRegistration(userId).subscribe({
+              next: () => {
+                this.hashUserInformation(userId, UserRoles.Company);
+                this.router.navigate(['/home']);
+              },
+              error: (err: HttpErrorResponse) => {
+                // При ошибке остаемся на втором шаге для отображения ошибок
+                this.step = 2;
+                this.processCompanyRegistrationError(err);
+              },
+            });
+          }
         }
         break;
     }

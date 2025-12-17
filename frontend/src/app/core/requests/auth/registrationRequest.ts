@@ -4,4 +4,5 @@ export default interface RegistrationRequest {
   email: string;
   password: string;
   roles: string[];
+  isFullRegistration?: boolean;
 }

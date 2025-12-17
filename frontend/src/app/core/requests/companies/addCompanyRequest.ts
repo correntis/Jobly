@@ -6,4 +6,5 @@ export default interface AddCompanyRequest {
   email: string | null;
   phone: string | null;
   type: string;
+  unp: string;
 }

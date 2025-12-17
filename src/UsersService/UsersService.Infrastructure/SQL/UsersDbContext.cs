@@ -36,6 +36,7 @@ namespace UsersService.Infrastructure.SQL
                     PasswordHash = "AQAAAAIAAYagAAAAEO2U87owvdt6cLGcTjrd0pM7Z5hm/5DFR1A8uPZjQh9wb7XCYWcKDxMfRSEmJ0ec6Q==",
                     ConcurrencyStamp = "4cac2a77-ba92-4925-8dc5-6ee76aefe20f",
                     SecurityStamp = "42JNKQDOFZBXPARN2I7WHT4MU236MCTK",
+                    IsFullRegistration = true,
                 },
                 new UserEntity
                 {
@@ -47,6 +48,7 @@ namespace UsersService.Infrastructure.SQL
                     PasswordHash = "AQAAAAIAAYagAAAAEO2U87owvdt6cLGcTjrd0pM7Z5hm/5DFR1A8uPZjQh9wb7XCYWcKDxMfRSEmJ0ec6Q==",
                     ConcurrencyStamp = "5cac2a77-ba92-4925-8dc5-6ee76aefe20f",
                     SecurityStamp = "52JNKQDOFZBXPARN2I7WHT4MU236MCTK",
+                    IsFullRegistration = true,
                 },
             ];
         }

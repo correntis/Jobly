@@ -17,7 +17,8 @@ namespace UsersService.Application.Users.Mapping
                 .ForMember(registrationEvent => registrationEvent.UserName, mapper => mapper.MapFrom(entity => entity.UserName));
 
             CreateMap<RegisterUserCommand, UserEntity>()
-                .ForMember(u => u.UserName, dest => dest.MapFrom(r => r.Email.Substring(0, r.Email.IndexOf('@'))));
+                .ForMember(u => u.UserName, dest => dest.MapFrom(r => r.Email.Substring(0, r.Email.IndexOf('@'))))
+                .ForMember(u => u.IsFullRegistration, dest => dest.MapFrom(r => r.IsFullRegistration));
             CreateMap<UpdateUserCommand, UserEntity>();
             CreateMap<RoleEntity, Role>().ReverseMap();
         }

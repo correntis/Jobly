@@ -3,6 +3,7 @@ using Hangfire;
 using Jobly.Brokers.Abstractions;
 using Jobly.Brokers.Models;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using UsersService.Application.Auth.Jobs;
 using UsersService.Domain.Abstractions.Repositories;
@@ -21,6 +22,7 @@ namespace UsersService.Application.Auth.Commands.RegisterUser
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBrokerProcuder _brokerProcuder;
         private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly UserManager<UserEntity> _userManager;
 
         public RegisterUserCommandHandler(
             ILogger<RegisterUserCommandHandler> logger,
@@ -28,7 +30,8 @@ namespace UsersService.Application.Auth.Commands.RegisterUser
             IMapper mapper,
             IUnitOfWork unitOfWork,
             IBrokerProcuder brokerProcuder,
-            IBackgroundJobClient backgroundJobClient)
+            IBackgroundJobClient backgroundJobClient,
+            UserManager<UserEntity> userManager)
         {
             _logger = logger;
             _authService = authService;
@@ -36,6 +39,7 @@ namespace UsersService.Application.Auth.Commands.RegisterUser
             _unitOfWork = unitOfWork;
             _brokerProcuder = brokerProcuder;
             _backgroundJobClient = backgroundJobClient;
+            _userManager = userManager;
         }
 
         public async Task<(Guid, Token)> Handle(RegisterUserCommand request, CancellationToken cancellationToken = default)
@@ -59,13 +63,32 @@ namespace UsersService.Application.Auth.Commands.RegisterUser
         {
             var existingUserEntity = await _unitOfWork.UsersRepository.GetByEmailAsync(request.Email);
 
-            if(existingUserEntity is not null)
+            // Если пользователь существует и имеет полную регистрацию, выбрасываем исключение
+            if(existingUserEntity is not null && existingUserEntity.IsFullRegistration)
             {
                 throw new EntityAlreadyExistsException($"User with email {request.Email} already exists");
             }
 
-            var userEntity = _mapper.Map<UserEntity>(request);
+            // Если пользователь существует, но регистрация неполная, удаляем его
+            if(existingUserEntity is not null && !existingUserEntity.IsFullRegistration)
+            {
+                _logger.LogInformation(
+                    "Found incomplete registration for email {Email}, deleting user {UserId}",
+                    request.Email,
+                    existingUserEntity.Id);
 
+                var deleteResult = await _unitOfWork.UsersRepository.DeleteAsync(existingUserEntity);
+                if(!deleteResult.Succeeded)
+                {
+                    _logger.LogWarning(
+                        "Failed to delete incomplete user {UserId}: {Errors}",
+                        existingUserEntity.Id,
+                        string.Join(", ", deleteResult.Errors.Select(e => e.Description)));
+                }
+            }
+
+            var userEntity = _mapper.Map<UserEntity>(request);
+            userEntity.IsFullRegistration = request.IsFullRegistration;
             userEntity.CreatedAt = DateTime.UtcNow;
 
             var identityResult = await _unitOfWork.UsersRepository.AddAsync(userEntity, request.Password);

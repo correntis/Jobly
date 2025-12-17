@@ -47,6 +47,9 @@ namespace UsersService.Infrastructure
             services.AddScoped<ITokensRepository, TokensRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
+            services.AddHttpClient();
+            services.AddScoped<Domain.Abstractions.Services.IUnpValidationService, Services.UnpValidationService>();
         }
 
         public static void UseInfrastructure(this WebApplication app)

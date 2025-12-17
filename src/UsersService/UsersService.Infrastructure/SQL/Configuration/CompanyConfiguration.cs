@@ -47,6 +47,10 @@ namespace UsersService.Infrastructure.SQL.Configuration
                 .HasMaxLength(BusinessRules.Company.MaxTypeLength)
                 .IsRequired();
 
+            builder.Property(c => c.Unp)
+                .HasMaxLength(BusinessRules.Company.MaxUnpLength)
+                .IsRequired();
+
             builder.HasOne(c => c.User)
                 .WithOne()
                 .HasForeignKey<CompanyEntity>();

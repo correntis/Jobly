@@ -8,5 +8,6 @@ namespace UsersService.Application.Auth.Commands.RegisterUser
         string LastName,
         string Email,
         string Password,
-        List<string> RolesNames) : IRequest<(Guid, Token)>;
+        List<string> RolesNames,
+        bool IsFullRegistration = true) : IRequest<(Guid, Token)>;
 }

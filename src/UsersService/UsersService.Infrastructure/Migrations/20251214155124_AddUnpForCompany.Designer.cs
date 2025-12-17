@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UsersService.Infrastructure.SQL;
 
@@ -11,9 +12,11 @@ using UsersService.Infrastructure.SQL;
 namespace UsersService.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251214155124_AddUnpForCompany")]
+    partial class AddUnpForCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,11 +281,6 @@ namespace UsersService.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("IsFullRegistration")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<string>("LastName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -346,7 +344,6 @@ namespace UsersService.Infrastructure.Migrations
                             Email = "user@example.com",
                             EmailConfirmed = false,
                             FirstName = "Maksim",
-                            IsFullRegistration = true,
                             LastName = "Rusetski",
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@EXAMPLE.COM",
@@ -364,7 +361,6 @@ namespace UsersService.Infrastructure.Migrations
                             Email = "company@example.com",
                             EmailConfirmed = false,
                             FirstName = "Maksim",
-                            IsFullRegistration = true,
                             LastName = "Rusetski",
                             LockoutEnabled = false,
                             NormalizedEmail = "COMPANY@EXAMPLE.COM",

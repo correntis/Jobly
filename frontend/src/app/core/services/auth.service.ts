@@ -14,13 +14,17 @@ export class AuthService {
   constructor(private httpClient: HttpClient) {}
 
   register(registrationRequest: RegistrationRequest): Observable<string> {
-    const registerBody = {
+    const registerBody: any = {
       firstName: registrationRequest.firstName,
       lastName: registrationRequest.lastName,
       email: registrationRequest.email,
       password: registrationRequest.password,
       rolesNames: registrationRequest.roles,
     };
+
+    if (registrationRequest.isFullRegistration !== undefined) {
+      registerBody.isFullRegistration = registrationRequest.isFullRegistration;
+    }
 
     return this.httpClient.post<string>(
       `${this.basePath}/register`,

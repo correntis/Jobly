@@ -42,6 +42,19 @@ namespace UsersService.Application.Companies.Commands.AddCompany
                 .MaximumLength(BusinessRules.Company.MaxEmailLength)
                 .WithMessage("Email is too long");
 
+            RuleFor(c => c.Unp)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage("UNP is required");
+
+            RuleFor(c => c.Unp)
+                .MaximumLength(BusinessRules.Company.MaxUnpLength)
+                .WithMessage("UNP is too long");
+
+            RuleFor(c => c.Unp)
+                .Matches(@"^\d{9}$")
+                .WithMessage("UNP must be 9 digits");
+
             RuleFor(c => c.Image)
                 .Must(IsCorrectImageExtension);
         }
