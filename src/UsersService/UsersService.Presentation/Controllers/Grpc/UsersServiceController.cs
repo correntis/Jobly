@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using UsersService.Application.Companies.Queries.IsCompanyExists;
 using UsersService.Application.Resumes.Queries.GetBestResumesForVacancy;
 using UsersService.Application.Resumes.Queries.GetResume;
+using UsersService.Application.Users.Commands.UpdateTelegramChatId;
 using UsersService.Application.Users.Queries.GetUser;
 using UsersService.Application.Users.Queries.IsUserExists;
 using UsersService.Domain.Exceptions;
@@ -131,6 +132,74 @@ namespace UsersService.Presentation.Controllers.Grpc
                     request.UserId);
 
                 return new GetUserNameResponse() { UserName = user.UserName };
+            }
+            catch (EntityNotFoundException)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"User with id {request.UserId} not found"));
+            }
+        }
+
+        public override async Task<UpdateTelegramChatIdResponse> UpdateTelegramChatId(UpdateTelegramChatIdRequest request, ServerCallContext context)
+        {
+            _logger.LogInformation(
+                "[GRPC] Start proccessing gRPC request {RequestName} for user with ID {UserId}",
+                request.GetType().Name,
+                request.UserId);
+
+            if (!Guid.TryParse(request.UserId, out Guid userId))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Invalid GUID {request.UserId}"));
+            }
+
+            try
+            {
+                await _sender.Send(new UpdateTelegramChatIdCommand(userId, request.TelegramChatId), context.CancellationToken);
+
+                _logger.LogInformation(
+                    "[GRPC] Successfully proccessed gRPC request {RequestName} for user with ID {UserId}",
+                    request.GetType().Name,
+                    request.UserId);
+
+                return new UpdateTelegramChatIdResponse { Success = true };
+            }
+            catch (EntityNotFoundException)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"User with id {request.UserId} not found"));
+            }
+        }
+
+        public override async Task<GetUserTelegramChatIdResponse> GetUserTelegramChatId(GetUserTelegramChatIdRequest request, ServerCallContext context)
+        {
+            _logger.LogInformation(
+                "[GRPC] Start proccessing gRPC request {RequestName} for user with ID {UserId}",
+                request.GetType().Name,
+                request.UserId);
+
+            if (!Guid.TryParse(request.UserId, out Guid userId))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Invalid GUID {request.UserId}"));
+            }
+
+            try
+            {
+                var user = await _sender.Send(new GetUserQuery(userId), context.CancellationToken);
+
+                _logger.LogInformation(
+                    "[GRPC] Successfully proccessed gRPC request {RequestName} for user with ID {UserId}",
+                    request.GetType().Name,
+                    request.UserId);
+
+                var response = new GetUserTelegramChatIdResponse
+                {
+                    HasTelegramChatId = user.TelegramChatId.HasValue
+                };
+
+                if (user.TelegramChatId.HasValue)
+                {
+                    response.TelegramChatId = user.TelegramChatId.Value;
+                }
+
+                return response;
             }
             catch (EntityNotFoundException)
             {

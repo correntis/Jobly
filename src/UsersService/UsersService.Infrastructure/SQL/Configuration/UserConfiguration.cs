@@ -39,6 +39,9 @@ namespace UsersService.Infrastructure.SQL.Configuration
             builder.Property(u => u.IsFullRegistration)
                 .IsRequired()
                 .HasDefaultValue(true);
+
+            builder.Property(u => u.TelegramChatId)
+                .IsRequired(false);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace MessagesService.Presentation
 
             services.AddSingleton<NotificationsService>();
             services.AddSingleton<ChatsService>();
+            services.AddSingleton<TelegramBotService>();
 
             services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
@@ -53,6 +54,7 @@ namespace MessagesService.Presentation
             services.AddHostedService<RecomendVacancyService>();
             services.AddHostedService<ResumeViewService>();
             services.AddHostedService<VacancyApplicationService>();
+            services.AddHostedService<TelegramBotHostedService>();
         }
     }
 }

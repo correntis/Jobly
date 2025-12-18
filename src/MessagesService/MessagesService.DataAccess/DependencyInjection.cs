@@ -1,4 +1,5 @@
 ﻿using Jobly.Protobufs.Authorization.Client;
+using Jobly.Protobufs.Users.Client;
 using MessagesService.DataAccess.Abstractions;
 using MessagesService.DataAccess.Configuration.Options;
 using MessagesService.DataAccess.Grpc;
@@ -29,9 +30,20 @@ namespace MessagesService.DataAccess
         internal static void AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IUsersService, Grpc.UsersService>();
 
             services
                 .AddGrpcClient<AuthorizationGrpcService.AuthorizationGrpcServiceClient>(options =>
+                {
+                    options.Address = new Uri(configuration["Jobly:UsersService"]);
+                })
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                });
+
+            services
+                .AddGrpcClient<UsersGrpcService.UsersGrpcServiceClient>(options =>
                 {
                     options.Address = new Uri(configuration["Jobly:UsersService"]);
                 })

@@ -14,5 +14,8 @@ namespace VacanciesService.Domain.Abstractions.Repositories.Vacancies
         Task<List<VacancyDetailsEntity>> GetFilteredAsync(VacancyDetailsFilter detailsFilter, CancellationToken cancellationToken = default);
         Task UpdateAsync(VacancyDetailsEntity entity, CancellationToken cancellationToken = default);
         Task UpdateByAsync<TValue>(string id, Expression<Func<VacancyDetailsEntity, object>> field, TValue value, CancellationToken cancellationToken = default);
+        Task<List<string>> GetDistinctRequirementsAsync(CancellationToken cancellationToken = default);
+        Task<List<string>> GetDistinctSkillsAsync(CancellationToken cancellationToken = default);
+        Task<List<string>> GetDistinctTechnologiesAsync(CancellationToken cancellationToken = default);
     }
 }

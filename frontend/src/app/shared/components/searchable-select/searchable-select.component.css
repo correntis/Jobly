@@ -1,0 +1,125 @@
+.searchable-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.options-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin-top: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.options-dropdown .max-h-60 {
+  border-radius: 8px;
+}
+
+.option-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  border-radius: 8px;
+  margin: 2px;
+  font-size: 0.875rem;
+}
+
+.option-item:hover {
+  background: var(--bg-tertiary);
+  transform: translateX(2px);
+}
+
+.option-item.add-new {
+  color: var(--accent-primary);
+  font-weight: 500;
+  border-top: 1px solid var(--border-color);
+  margin-top: 4px;
+  padding-top: 12px;
+}
+
+.option-item.add-new:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.option-item.add-new mat-icon {
+  color: var(--accent-primary);
+}
+
+.option-item.no-results {
+  color: var(--text-muted);
+  cursor: default;
+  font-style: italic;
+  justify-content: center;
+  padding: 16px;
+}
+
+.option-item.no-results:hover {
+  background-color: transparent;
+  transform: none;
+}
+
+.clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.clear-button:hover {
+  background: var(--bg-tertiary);
+}
+
+.clear-button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner ::ng-deep circle {
+  stroke: var(--accent-primary);
+}
+
+/* Error border override */
+:host ::ng-deep input.border-error-500 {
+  border-color: #ef4444 !important;
+}
+
+:host ::ng-deep input.border-error-500:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+

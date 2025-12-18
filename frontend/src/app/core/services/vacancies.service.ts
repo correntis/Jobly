@@ -68,4 +68,16 @@ export class VacanciesService {
       `${this.basePath}/interactions/${userId}&type=${interactionType}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
+
+  getDistinctRequirements(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.basePath}/distinct/requirements`);
+  }
+
+  getDistinctSkills(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.basePath}/distinct/skills`);
+  }
+
+  getDistinctTechnologies(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.basePath}/distinct/technologies`);
+  }
 }

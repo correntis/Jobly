@@ -24,4 +24,8 @@ export class UsersService {
   public delete(id: string): Observable<string> {
     return this.httpClient.delete<string>(`${this.basePath}/${id}`);
   }
+
+  public getTelegramConnectionLink(id: string): Observable<string> {
+    return this.httpClient.post<string>(`${this.basePath}/${id}/telegram/connect`, {});
+  }
 }

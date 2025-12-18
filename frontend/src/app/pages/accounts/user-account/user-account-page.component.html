@@ -9,6 +9,32 @@
       <p class="text-[var(--text-secondary)]">Управляйте своим профилем и резюме</p>
     </div>
 
+    <!-- Telegram Connection Card -->
+    <div class="glass-card p-6 mb-6">
+      <h2 class="section-title flex items-center gap-2 mb-4">
+        <mat-icon class="text-accent-500">telegram</mat-icon>
+        Уведомления в Telegram
+      </h2>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[var(--text-primary)] font-semibold mb-1">
+            {{ user?.telegramChatId ? '✅ Telegram подключен' : 'Telegram не подключен' }}
+          </p>
+          <p class="text-sm text-[var(--text-secondary)]">
+            {{ user?.telegramChatId ? 'Вы будете получать уведомления в Telegram' : 'Подключите Telegram для получения уведомлений' }}
+          </p>
+        </div>
+        <button 
+          *ngIf="!user?.telegramChatId"
+          (click)="connectTelegram()" 
+          class="glass-btn py-2 px-4 flex items-center gap-2"
+        >
+          <mat-icon class="text-sm">telegram</mat-icon>
+          Подключить Telegram
+        </button>
+      </div>
+    </div>
+
     <!-- Personal Info Card -->
     <div class="glass-card p-6 mb-6">
       <h2 class="section-title flex items-center gap-2">

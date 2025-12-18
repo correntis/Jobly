@@ -31,11 +31,13 @@
           <label class="text-sm font-semibold text-[var(--text-primary)]">Требования</label>
           <div class="space-y-2">
             <div *ngFor="let ctrl of getFormArrayControls('requirements').controls; let i = index" class="flex gap-2">
-              <input
-                [formControl]="$any(ctrl).controls.name"
-                class="glass-input text-sm py-2"
-                placeholder="Требование..."
-              />
+              <app-searchable-select
+                [control]="$any(ctrl).controls.name"
+                [options]="requirementsOptions"
+                [placeholder]="'Требование...'"
+                [allowCustom]="true"
+                class="flex-1"
+              ></app-searchable-select>
               <button type="button" (click)="removeFromArray('requirements', i)" class="glass-btn-secondary p-2">
                 <mat-icon class="text-sm">close</mat-icon>
               </button>
@@ -53,11 +55,13 @@
           <label class="text-sm font-semibold text-[var(--text-primary)]">Навыки</label>
           <div class="space-y-2">
             <div *ngFor="let ctrl of getFormArrayControls('skills').controls; let i = index" class="flex gap-2">
-              <input
-                [formControl]="$any(ctrl).controls.name"
-                class="glass-input text-sm py-2"
-                placeholder="Навык..."
-              />
+              <app-searchable-select
+                [control]="$any(ctrl).controls.name"
+                [options]="skillsOptions"
+                [placeholder]="'Навык...'"
+                [allowCustom]="true"
+                class="flex-1"
+              ></app-searchable-select>
               <button type="button" (click)="removeFromArray('skills', i)" class="glass-btn-secondary p-2">
                 <mat-icon class="text-sm">close</mat-icon>
               </button>
@@ -75,11 +79,13 @@
           <label class="text-sm font-semibold text-[var(--text-primary)]">Технологии</label>
           <div class="space-y-2">
             <div *ngFor="let ctrl of getFormArrayControls('technologies').controls; let i = index" class="flex gap-2">
-              <input
-                [formControl]="$any(ctrl).controls.name"
-                class="glass-input text-sm py-2"
-                placeholder="Технология..."
-              />
+              <app-searchable-select
+                [control]="$any(ctrl).controls.name"
+                [options]="technologiesOptions"
+                [placeholder]="'Технология...'"
+                [allowCustom]="true"
+                class="flex-1"
+              ></app-searchable-select>
               <button type="button" (click)="removeFromArray('technologies', i)" class="glass-btn-secondary p-2">
                 <mat-icon class="text-sm">close</mat-icon>
               </button>

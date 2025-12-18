@@ -4,6 +4,9 @@ using Polly;
 using VacanciesService.Application.Vacancies.Commands.AddVacancy;
 using VacanciesService.Application.Vacancies.Commands.ArchiveVacancy;
 using VacanciesService.Application.Vacancies.Queries.GetBestVacanciesForResume;
+using VacanciesService.Application.Vacancies.Queries.GetDistinctRequirements;
+using VacanciesService.Application.Vacancies.Queries.GetDistinctSkills;
+using VacanciesService.Application.Vacancies.Queries.GetDistinctTechnologies;
 using VacanciesService.Application.Vacancies.Queries.GetFilteredVacancies;
 using VacanciesService.Application.Vacancies.Queries.GetVacanciesByCompany;
 using VacanciesService.Application.Vacancies.Queries.GetVacancy;
@@ -96,6 +99,33 @@ namespace VacanciesService.Presentation.Controllers
         {
             var interactionTypeEnum = (Domain.Enums.InteractionType)interactionType;
             return Ok(await _sender.Send(new Application.Vacancies.Queries.GetVacanciesByInteraction.GetVacanciesByInteractionQuery(userId, interactionTypeEnum, pageNumber, pageSize), token));
+        }
+
+        [HttpGet]
+        [Route("distinct/requirements")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        public async Task<ActionResult<List<string>>> GetDistinctRequirements(CancellationToken token)
+        {
+            return Ok(await _sender.Send(new GetDistinctRequirementsQuery(), token));
+        }
+
+        [HttpGet]
+        [Route("distinct/skills")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        public async Task<ActionResult<List<string>>> GetDistinctSkills(CancellationToken token)
+        {
+            return Ok(await _sender.Send(new GetDistinctSkillsQuery(), token));
+        }
+
+        [HttpGet]
+        [Route("distinct/technologies")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        public async Task<ActionResult<List<string>>> GetDistinctTechnologies(CancellationToken token)
+        {
+            return Ok(await _sender.Send(new GetDistinctTechnologiesQuery(), token));
         }
     }
 }

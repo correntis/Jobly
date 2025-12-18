@@ -6,4 +6,5 @@ export default interface User {
   email: string;
   phoneNumber: string;
   roles: string[];
+  telegramChatId?: number;
 }

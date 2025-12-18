@@ -56,3 +56,21 @@ message LanguageMessage {
 	string name = 1;
 	string level = 2;
 }
+
+message UpdateTelegramChatIdRequest {
+	string userId = 1;
+	int64 telegramChatId = 2;
+}
+
+message UpdateTelegramChatIdResponse {
+	bool success = 1;
+}
+
+message GetUserTelegramChatIdRequest {
+	string userId = 1;
+}
+
+message GetUserTelegramChatIdResponse {
+	int64 telegramChatId = 1;
+	bool hasTelegramChatId = 2;
+}

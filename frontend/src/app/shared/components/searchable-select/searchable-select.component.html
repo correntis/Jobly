@@ -1,0 +1,73 @@
+<div class="searchable-select-container">
+  <div class="relative">
+    <input
+      type="text"
+      [formControl]="inputControl"
+      [placeholder]="placeholder"
+      (focus)="onInputFocus()"
+      (blur)="onInputBlur()"
+      (keydown.enter)="onInputEnter()"
+      autocomplete="off"
+      [disabled]="isLoading"
+      [class.border-error-500]="control.touched && control.invalid"
+      class="glass-input text-sm py-2 w-full pr-10"
+    />
+    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+      <mat-spinner
+        *ngIf="isLoading"
+        diameter="20"
+        class="loading-spinner"
+      ></mat-spinner>
+      <button
+        *ngIf="inputControl.value && !isLoading"
+        type="button"
+        (click)="clear()"
+        class="clear-button text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+      >
+        <mat-icon class="text-lg">close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isOpen" class="options-dropdown glass-card">
+    <div class="max-h-60 overflow-y-auto custom-scrollbar">
+      <div
+        *ngFor="let option of filteredOptions$ | async"
+        class="option-item"
+        (mousedown)="onOptionSelected(option)"
+      >
+        {{ option }}
+      </div>
+      <div
+        *ngIf="
+          allowCustom &&
+          inputControl.value &&
+          !(filteredOptions$ | async)?.includes(inputControl.value)
+        "
+        class="option-item add-new"
+        (mousedown)="onOptionSelected(inputControl.value)"
+      >
+        <mat-icon class="text-sm">add</mat-icon>
+        <span>Добавить "{{ inputControl.value }}"</span>
+      </div>
+      <div
+        *ngIf="isLoading"
+        class="option-item no-results"
+      >
+        Загрузка...
+      </div>
+      <div
+        *ngIf="!isLoading && (filteredOptions$ | async)?.length === 0 && !inputControl.value"
+        class="option-item no-results"
+      >
+        Нет результатов
+      </div>
+    </div>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="control.touched && control.hasError('required')" class="text-error-500 text-xs mt-1">
+    {{ label || 'Поле' }} обязательно
+  </div>
+</div>
+

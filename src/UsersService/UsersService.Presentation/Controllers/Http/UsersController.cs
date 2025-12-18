@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using UsersService.Application.Users.Commands.DeleteUser;
+using UsersService.Application.Users.Commands.UpdateTelegramChatId;
 using UsersService.Application.Users.Commands.UpdateUser;
 using UsersService.Application.Users.Queries.GetUser;
 using UsersService.Domain.Constants;
@@ -43,5 +45,17 @@ namespace UsersService.Presentation.Controllers.Http
         {
             return Ok(await _mediator.Send(new GetUserQuery(id), cancellationToken));
         }
+
+        [HttpPost("{id}/telegram/connect")]
+        [AuthorizeRole(Roles = BusinessRules.Roles.User)]
+        [AuthorizeRole(Roles = BusinessRules.Roles.Company)]
+        public ActionResult<string> GetTelegramConnectionLink(Guid id, [FromServices] IConfiguration configuration)
+        {
+            // Получаем username бота из конфигурации или используем значение по умолчанию
+            var botUsername = configuration["Telegram:BotUsername"] ?? "jobly_app_bot";
+            var link = $"https://t.me/{botUsername}?start={id}";
+            return Ok(link);
+        }
+
     }
 }

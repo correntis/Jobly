@@ -19,6 +19,7 @@ import Vacancy from '../../../../core/models/vacancies/vacancy';
 import { VacanciesService } from '../../../../core/services/vacancies.service';
 import { CompactVacancyComponent } from '../../../../shared/components/compact-vacancy/compact-vacancy.component';
 import { LoaderComponent } from '../../../../shared/components/loader/loader.component';
+import { SearchableSelectComponent } from '../../../../shared/components/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-filtered-vacancies',
@@ -33,6 +34,7 @@ import { LoaderComponent } from '../../../../shared/components/loader/loader.com
     FormsModule,
     CompactVacancyComponent,
     LoaderComponent,
+    SearchableSelectComponent,
   ],
   templateUrl: './filtered-vacancies.component.html',
 })
@@ -58,6 +60,10 @@ export class FilteredVacanciesComponent {
 
   isFullLoaded?: boolean = false;
   isLoading: boolean = false;
+
+  requirementsOptions: string[] = [];
+  skillsOptions: string[] = [];
+  technologiesOptions: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -112,7 +118,31 @@ export class FilteredVacanciesComponent {
   }
 
   ngOnInit() {
+    this.loadFilterOptions();
     this.searchVacancies();
+  }
+
+  loadFilterOptions(): void {
+    this.vacanciesService.getDistinctRequirements().subscribe({
+      next: (options) => {
+        this.requirementsOptions = options;
+      },
+      error: (err) => console.error('Error loading requirements:', err),
+    });
+
+    this.vacanciesService.getDistinctSkills().subscribe({
+      next: (options) => {
+        this.skillsOptions = options;
+      },
+      error: (err) => console.error('Error loading skills:', err),
+    });
+
+    this.vacanciesService.getDistinctTechnologies().subscribe({
+      next: (options) => {
+        this.technologiesOptions = options;
+      },
+      error: (err) => console.error('Error loading technologies:', err),
+    });
   }
 
   searchVacancies(): void {

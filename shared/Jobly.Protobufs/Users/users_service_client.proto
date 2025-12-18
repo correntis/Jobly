@@ -10,4 +10,6 @@ service UsersGrpcService {
 	rpc GetResume (GetResumeRequest) returns (GetResumeResponse);
 	rpc GetUserName (GetUserNameRequest) returns (GetUserNameResponse);
 	rpc GetBestResumes (GetBestResumesRequest) returns (GetBestResumesResponse);
+	rpc UpdateTelegramChatId (UpdateTelegramChatIdRequest) returns (UpdateTelegramChatIdResponse);
+	rpc GetUserTelegramChatId (GetUserTelegramChatIdRequest) returns (GetUserTelegramChatIdResponse);
 }

@@ -17,25 +17,35 @@ namespace VacanciesService.Infrastructure.NoSQL.Specifications
 
             if (salaryFilter.Min is not null || salaryFilter.Max is not null)
             {
-                var minFilter = Builders<VacancyDetailsEntity>.Filter.Or(
-                    Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Salary.Min, false),
-                    Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Salary.Min, salaryFilter.Min));
+                // Логика пересечения диапазонов:
+                // Вакансия [vacancyMin, vacancyMax] пересекается с фильтром [filterMin, filterMax]
+                // если: vacancyMin <= filterMax И vacancyMax >= filterMin
+                
+                var filters = new List<FilterDefinition<VacancyDetailsEntity>>();
 
-                var maxFilter = Builders<VacancyDetailsEntity>.Filter.Or(
-                    Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Salary.Max, false),
-                    Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Salary.Max, salaryFilter.Max));
+                if(salaryFilter.Min is not null)
+                {
+                    // Если фильтр требует минимум X, то вакансия должна предлагать зарплату >= X
+                    // Это значит: либо у вакансии нет Max (предлагает любую), либо Max вакансии >= Min фильтра
+                    var minFilter = Builders<VacancyDetailsEntity>.Filter.Or(
+                        Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Salary.Max, false),
+                        Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Salary.Max, salaryFilter.Min));
+                    filters.Add(minFilter);
+                }
 
-                if(salaryFilter.Min is not null && salaryFilter.Max is not null)
+                if(salaryFilter.Max is not null)
                 {
-                    filter &= Builders<VacancyDetailsEntity>.Filter.And(minFilter, maxFilter);
+                    // Если фильтр требует максимум X, то вакансия должна предлагать зарплату <= X
+                    // Это значит: либо у вакансии нет Min (предлагает любую), либо Min вакансии <= Max фильтра
+                    var maxFilter = Builders<VacancyDetailsEntity>.Filter.Or(
+                        Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Salary.Min, false),
+                        Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Salary.Min, salaryFilter.Max));
+                    filters.Add(maxFilter);
                 }
-                else if(salaryFilter.Min is not null)
+
+                if(filters.Count > 0)
                 {
-                    filter &= minFilter;
-                }
-                else if(salaryFilter.Max is not null)
-                {
-                    filter &= maxFilter;
+                    filter &= Builders<VacancyDetailsEntity>.Filter.And(filters);
                 }
             }
 

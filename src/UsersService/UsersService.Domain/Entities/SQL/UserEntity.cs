@@ -8,5 +8,6 @@ namespace UsersService.Domain.Entities.SQL
         public string LastName { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsFullRegistration { get; set; } = true;
+        public long? TelegramChatId { get; set; }
     }
 }

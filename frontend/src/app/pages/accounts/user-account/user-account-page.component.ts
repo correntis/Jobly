@@ -294,4 +294,19 @@ export class UserAccountPageComponent implements OnInit {
 
     this.router.navigate(['/resume', hashedId]);
   }
+
+  connectTelegram(): void {
+    if (!this.userId) {
+      return;
+    }
+
+    this.usersService.getTelegramConnectionLink(this.userId).subscribe({
+      next: (link: string) => {
+        window.open(link, '_blank');
+      },
+      error: (err) => {
+        console.error('Failed to get Telegram connection link', err);
+      },
+    });
+  }
 }

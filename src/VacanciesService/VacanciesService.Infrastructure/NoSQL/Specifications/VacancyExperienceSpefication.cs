@@ -17,25 +17,35 @@ namespace VacanciesService.Infrastructure.NoSQL.Specifications
 
             if(experienceLevelFilter.Min is not null || experienceLevelFilter.Max is not null)
             {
-                var minFilter = Builders<VacancyDetailsEntity>.Filter.Or(
-                    Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Experience.Min, false),
-                    Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Experience.Min, experienceLevelFilter.Min));
+                // Логика пересечения диапазонов:
+                // Вакансия [vacancyMin, vacancyMax] пересекается с фильтром [filterMin, filterMax]
+                // если: vacancyMin <= filterMax И vacancyMax >= filterMin
+                
+                var filters = new List<FilterDefinition<VacancyDetailsEntity>>();
 
-                var maxFilter = Builders<VacancyDetailsEntity>.Filter.Or(
-                    Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Experience.Max, false),
-                    Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Experience.Max, experienceLevelFilter.Max));
+                if(experienceLevelFilter.Min is not null)
+                {
+                    // Если фильтр требует минимум X лет, то вакансия должна принимать кандидатов с опытом >= X
+                    // Это значит: либо у вакансии нет Max (принимает всех), либо Max вакансии >= Min фильтра
+                    var minFilter = Builders<VacancyDetailsEntity>.Filter.Or(
+                        Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Experience.Max, false),
+                        Builders<VacancyDetailsEntity>.Filter.Gte(vd => vd.Experience.Max, experienceLevelFilter.Min));
+                    filters.Add(minFilter);
+                }
 
-                if(experienceLevelFilter.Min is not null && experienceLevelFilter.Max is not null)
+                if(experienceLevelFilter.Max is not null)
                 {
-                    filter &= Builders<VacancyDetailsEntity>.Filter.And(minFilter, maxFilter);
+                    // Если фильтр требует максимум X лет, то вакансия должна принимать кандидатов с опытом <= X
+                    // Это значит: либо у вакансии нет Min (принимает всех), либо Min вакансии <= Max фильтра
+                    var maxFilter = Builders<VacancyDetailsEntity>.Filter.Or(
+                        Builders<VacancyDetailsEntity>.Filter.Exists(vd => vd.Experience.Min, false),
+                        Builders<VacancyDetailsEntity>.Filter.Lte(vd => vd.Experience.Min, experienceLevelFilter.Max));
+                    filters.Add(maxFilter);
                 }
-                else if(experienceLevelFilter.Min is not null)
+
+                if(filters.Count > 0)
                 {
-                    filter &= minFilter;
-                }
-                else if(experienceLevelFilter.Max is not null)
-                {
-                    filter &= maxFilter;
+                    filter &= Builders<VacancyDetailsEntity>.Filter.And(filters);
                 }
             }
 
