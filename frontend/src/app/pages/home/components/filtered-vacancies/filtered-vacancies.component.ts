@@ -16,7 +16,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { VacanciesFilter } from '../../../../core/models/vacancies/vacanciesFilter';
 import Vacancy from '../../../../core/models/vacancies/vacancy';
+import Currency from '../../../../core/models/currency';
 import { VacanciesService } from '../../../../core/services/vacancies.service';
+import { CurrenciesService } from '../../../../core/services/currencies.service';
 import { CompactVacancyComponent } from '../../../../shared/components/compact-vacancy/compact-vacancy.component';
 import { LoaderComponent } from '../../../../shared/components/loader/loader.component';
 import { SearchableSelectComponent } from '../../../../shared/components/searchable-select/searchable-select.component';
@@ -64,11 +66,13 @@ export class FilteredVacanciesComponent {
   requirementsOptions: string[] = [];
   skillsOptions: string[] = [];
   technologiesOptions: string[] = [];
+  currencies: Currency[] = [];
 
   constructor(
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef,
-    private vacanciesService: VacanciesService
+    private vacanciesService: VacanciesService,
+    private currenciesService: CurrenciesService
   ) {
     this.vacanciesFilterForm = this.fb.group({
       title: [''],
@@ -119,7 +123,19 @@ export class FilteredVacanciesComponent {
 
   ngOnInit() {
     this.loadFilterOptions();
+    this.loadCurrencies();
     this.searchVacancies();
+  }
+
+  loadCurrencies(): void {
+    this.currenciesService.get().subscribe({
+      next: (currencies) => {
+        this.currencies = currencies;
+      },
+      error: (err) => {
+        console.error('Error loading currencies:', err);
+      },
+    });
   }
 
   loadFilterOptions(): void {

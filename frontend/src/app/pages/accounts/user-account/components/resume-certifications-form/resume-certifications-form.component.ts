@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import Certification from '../../../../../core/models/resumes/certification';
 import { ResumesService } from '../../../../../core/services/resumes.service';
+import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-resume-certifications-form',
@@ -45,7 +46,8 @@ export class ResumeCertificationsFormComponent {
   constructor(
     private resumesService: ResumesService,
     private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
     this.certificationForm = this.fb.group({
       certifications: this.fb.array([]),
@@ -131,7 +133,13 @@ export class ResumeCertificationsFormComponent {
       this.resumesService
         .updateCertifications(this.resumeId, certifications)
         .subscribe({
-          error: (err) => console.error(err),
+          next: () => {
+            this.toastService.success('Сертификаты успешно обновлены');
+          },
+          error: (err) => {
+            console.error(err);
+            this.toastService.error('Ошибка при обновлении сертификатов');
+          },
         });
     }
   }

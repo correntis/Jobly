@@ -1,0 +1,33 @@
+<div class="fixed top-24 right-6 z-[1000] flex flex-col gap-3">
+  <div
+    *ngFor="let toast of toasts"
+    class="glass-card px-6 py-4 rounded-2xl border-2 backdrop-blur-xl min-w-[300px] max-w-[400px] shadow-lg animate-slide-in overflow-hidden relative"
+    [ngClass]="getToastBgClass(toast.type)"
+  >
+    <!-- Progress Bar -->
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-[var(--bg-tertiary)]">
+      <div
+        class="h-full transition-all ease-linear"
+        [ngClass]="getProgressBarColorClass(toast.type)"
+        [style.width.%]="toast.progress"
+      ></div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex items-center gap-3 relative z-10">
+      <mat-icon [ngClass]="getToastColorClass(toast.type)" class="flex-shrink-0">
+        {{ getToastIcon(toast.type) }}
+      </mat-icon>
+      <p class="text-[var(--text-primary)] flex-1 text-sm font-medium">
+        {{ toast.message }}
+      </p>
+      <button
+        (click)="removeToast(toast)"
+        class="flex-shrink-0 w-6 h-6 rounded-lg hover:bg-[var(--bg-tertiary)] flex items-center justify-center transition-colors"
+      >
+        <mat-icon class="text-[var(--text-muted)] text-sm">close</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+

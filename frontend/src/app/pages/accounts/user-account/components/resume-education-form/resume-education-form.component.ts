@@ -21,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import Education from '../../../../../core/models/resumes/education';
 import { ResumesService } from '../../../../../core/services/resumes.service';
+import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-resume-education-form',
@@ -47,7 +48,8 @@ export class ResumeEducationFormComponent {
   constructor(
     private resumesService: ResumesService,
     private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
     this.educationForm = this.fb.group({
       educations: this.fb.array([]),
@@ -137,7 +139,13 @@ export class ResumeEducationFormComponent {
       this.resumesService
         .updateEducations(this.resumeId, educations)
         .subscribe({
-          error: (err) => console.error(err),
+          next: () => {
+            this.toastService.success('Образование успешно обновлено');
+          },
+          error: (err) => {
+            console.error(err);
+            this.toastService.error('Ошибка при обновлении образования');
+          },
         });
     }
   }

@@ -39,6 +39,38 @@
         <mat-icon *ngIf="!isDarkTheme()" class="text-primary-600">dark_mode</mat-icon>
       </button>
 
+      <!-- User Menu -->
+      <div class="relative z-[100]">
+        <button
+          #userMenuButton
+          (click)="toggleUserMenu()"
+          class="w-10 h-10 rounded-xl glass-card-subtle flex items-center justify-center transition-all duration-300 hover:scale-105 overflow-visible"
+          [title]="'Меню пользователя'"
+        >
+          <mat-icon class="text-[var(--text-primary)]">account_circle</mat-icon>
+        </button>
+
+        <!-- User Dropdown Menu -->
+        <div
+          *ngIf="isUserMenuOpen"
+          class="fixed top-20 right-6 w-56 overflow-hidden z-[200] rounded-2xl border-2 backdrop-blur-xl"
+          [style.background]="'var(--bg-secondary)'"
+          [style.opacity]="'0.98'"
+          [style.border-color]="'var(--border-color)'"
+          [style.box-shadow]="'0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.1)'"
+        >
+          <div class="p-2">
+            <button
+              (click)="logout()"
+              class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[var(--bg-tertiary)] transition-colors text-left"
+            >
+              <mat-icon class="text-[var(--text-primary)]">logout</mat-icon>
+              <span class="text-[var(--text-primary)] font-medium">Выйти</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Mobile Menu Button -->
       <button
         class="md:hidden w-10 h-10 rounded-xl glass-card-subtle flex items-center justify-center"

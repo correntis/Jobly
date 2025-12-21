@@ -16,6 +16,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { HashedCookieService } from '../../../core/services/hashedCookie.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Faker } from '../../../core/utils/faker';
 import { EnvParams } from '../../../environments/environment';
 
@@ -44,6 +45,7 @@ export class LoginPageComponent {
     private authService: AuthService,
     private router: Router,
     private hashedCookieService: HashedCookieService,
+    private toastService: ToastService,
     private fb: FormBuilder
   ) {
     this.loginForm = this.fb.group({
@@ -100,7 +102,7 @@ export class LoginPageComponent {
     this.authService.login(email, password).subscribe({
       next: (user) => {
         this.hashUserInformation(user.id, user.roles);
-
+        this.toastService.success('Вы успешно вошли в систему!');
         this.router.navigate(['/home']);
       },
       error: (err: HttpErrorResponse) => {

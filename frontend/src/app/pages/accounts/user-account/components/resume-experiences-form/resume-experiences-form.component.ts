@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import JobExperience from '../../../../../core/models/resumes/jobExperience';
 import { ResumesService } from '../../../../../core/services/resumes.service';
+import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-resume-experiences-form',
@@ -45,7 +46,8 @@ export class ResumeExperiencesFormComponent {
   constructor(
     private resumesService: ResumesService,
     private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
     this.jobExperiencesForm = this.fb.group({
       jobExperiences: this.fb.array([]),
@@ -179,7 +181,13 @@ export class ResumeExperiencesFormComponent {
       this.resumesService
         .updateJobExpiriences(this.resumeId, jobExperiences)
         .subscribe({
-          error: (err) => console.error(err),
+          next: () => {
+            this.toastService.success('Опыт работы успешно обновлен');
+          },
+          error: (err) => {
+            console.error(err);
+            this.toastService.error('Ошибка при обновлении опыта работы');
+          },
         });
     }
   }

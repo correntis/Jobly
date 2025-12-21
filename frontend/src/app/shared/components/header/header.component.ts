@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { UserRoles } from '../../../core/enums/userRoles';
 import HashService from '../../../core/services/hash.service';
 import { ThemeService } from '../../../core/services/theme.service';
-import { EnvService } from '../../../environments/environment';
+import { EnvService, EnvParams } from '../../../environments/environment';
+import { HashedCookieService } from '../../../core/services/hashedCookie.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { NotificationsMenuComponent } from '../notifications-menu/notifications-menu.component';
 
 type Route = {
@@ -22,13 +24,18 @@ type Route = {
 })
 export class HeaderComponent implements OnInit {
   isMobileMenuOpen = false;
+  isUserMenuOpen = false;
+
+  @ViewChild('userMenuButton', { static: false }) userMenuButton?: ElementRef;
 
   constructor(
     private envService: EnvService,
     private hashService: HashService,
     private router: Router,
     private cdRef: ChangeDetectorRef,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private hashedCookieService: HashedCookieService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -114,5 +121,55 @@ export class HeaderComponent implements OnInit {
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  toggleUserMenu(): void {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  logout(): void {
+    // Вызываем logout на бэке для очистки cookies
+    this.authService.logout().subscribe({
+      next: () => {
+        // Удаляем cookies на фронте (на всякий случай)
+        this.hashedCookieService.delete(EnvParams.UserIdCookieName);
+        this.hashedCookieService.delete(EnvParams.UserRoleCookieName);
+        
+        // Очищаем localStorage от токенов
+        if (typeof window !== 'undefined' && window.localStorage) {
+          const keysToRemove: string[] = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.toLowerCase().includes('token') || key.toLowerCase().includes('auth'))) {
+              keysToRemove.push(key);
+            }
+          }
+          keysToRemove.forEach(key => localStorage.removeItem(key));
+        }
+        
+        // Закрываем меню
+        this.isUserMenuOpen = false;
+        
+        // Перенаправляем на страницу входа
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        // Даже если запрос не удался, очищаем на фронте и перенаправляем
+        this.hashedCookieService.delete(EnvParams.UserIdCookieName);
+        this.hashedCookieService.delete(EnvParams.UserRoleCookieName);
+        this.isUserMenuOpen = false;
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.isUserMenuOpen && this.userMenuButton) {
+      const clickedInside = this.userMenuButton.nativeElement.contains(event.target);
+      if (!clickedInside) {
+        this.isUserMenuOpen = false;
+      }
+    }
   }
 }

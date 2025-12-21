@@ -39,6 +39,26 @@ namespace UsersService.Presentation.Controllers.Http
             return Ok(user);
         }
 
+        [HttpPost("logout")]
+        public ActionResult Logout()
+        {
+            DeleteTokenCookies();
+            return Ok();
+        }
+
+        private void DeleteTokenCookies()
+        {
+            var cookieOptions = new CookieOptions()
+            {
+                Expires = DateTime.UtcNow.AddDays(-1),
+                SameSite = SameSiteMode.None,
+                Secure = true,
+            };
+
+            HttpContext.Response.Cookies.Delete(BusinessRules.Token.AccessTokenName, cookieOptions);
+            HttpContext.Response.Cookies.Delete(BusinessRules.Token.RefreshTokenName, cookieOptions);
+        }
+
         private void AppendTokenToCookie(Token token)
         {
             AppendCookie(

@@ -17,6 +17,7 @@ import UpdateCompanyRequest from '../../../core/requests/companies/updateCompany
 import { CompaniesService } from '../../../core/services/companies.service';
 import HashService from '../../../core/services/hash.service';
 import { UsersService } from '../../../core/services/users.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { ApiConfig } from '../../../environments/api.config';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 
@@ -54,7 +55,8 @@ export class CompanyAccountPageComponent implements OnInit {
     private fb: FormBuilder,
     private usersService: UsersService,
     private companiesService: CompaniesService,
-    private hashService: HashService
+    private hashService: HashService,
+    private toastService: ToastService
   ) {
     this.companyForm = this.fb.group({
       name: [''],
@@ -128,7 +130,13 @@ export class CompanyAccountPageComponent implements OnInit {
       };
 
       this.companiesService.update(companyUpdateRequest, this.image).subscribe({
-        error: (err) => console.error(err),
+        next: () => {
+          this.toastService.success('Информация о компании успешно обновлена');
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastService.error('Ошибка при обновлении информации о компании');
+        },
       });
     }
   }

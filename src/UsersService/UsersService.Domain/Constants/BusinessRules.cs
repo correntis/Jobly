@@ -35,8 +35,8 @@
 
         public static class Token
         {
-            public const double AccessTokenExpiresDays = 1;
-            public const double RefreshTokenExpiresDays = 7;
+            public const double AccessTokenExpiresDays = 7;
+            public const double RefreshTokenExpiresDays = 30;
 
             public const string AccessTokenName = "AccessToken";
             public const string RefreshTokenName = "RefreshToken";

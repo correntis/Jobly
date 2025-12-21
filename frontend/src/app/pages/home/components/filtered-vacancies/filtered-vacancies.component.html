@@ -146,9 +146,9 @@
           </div>
           <select [formControl]="$any(salary).controls.currency" class="glass-select text-sm py-2">
             <option value="">Валюта</option>
-            <option value="RUB">RUB ₽</option>
-            <option value="USD">USD $</option>
-            <option value="EUR">EUR €</option>
+            <option *ngFor="let currency of currencies" [value]="currency.code">
+              {{ currency.code }} [{{ currency.symbolNative }}] ({{ currency.name }})
+            </option>
           </select>
         </div>
       </form>

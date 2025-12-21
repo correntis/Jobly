@@ -16,12 +16,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 import Language from '../../core/models/resumes/language';
+import Vacancy from '../../core/models/vacancies/vacancy';
 import ExperienceLevel from '../../core/models/vacancies/experienceLevel';
 import Salary from '../../core/models/vacancies/salary';
 import AddVacancyDetailsRequest from '../../core/requests/vacancies/addVacancyDetailsRequest';
 import { AddVacancyRequest } from '../../core/requests/vacancies/addVacancyRequest';
 import HashService from '../../core/services/hash.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
+import { ToastService } from '../../core/services/toast.service';
+import { CurrenciesService } from '../../core/services/currencies.service';
+import Currency from '../../core/models/currency';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 
 @Component({
@@ -44,18 +48,44 @@ export class VacancyAddPageComponent implements OnInit {
   companyId?: string;
 
   vacancyForm: FormGroup;
+  minDate: string = '';
+  companyVacancies: Vacancy[] = [];
+  isLoadingVacancies: boolean = false;
+  selectedVacancyId: string | null = null;
+  currencies: Currency[] = [];
+
+  ngOnInit(): void {
+    this.loadRouteParams();
+    // Устанавливаем минимальную дату как сегодня
+    const today = new Date();
+    this.minDate = today.toISOString().split('T')[0];
+    this.loadCurrencies();
+  }
+
+  loadCurrencies(): void {
+    this.currenciesService.get().subscribe({
+      next: (currencies) => {
+        this.currencies = currencies;
+      },
+      error: (err) => {
+        console.error('Failed to load currencies', err);
+      },
+    });
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private hashService: HashService,
     private vacanciesService: VacanciesService,
+    private toastService: ToastService,
+    private currenciesService: CurrenciesService,
     private fb: FormBuilder,
     private router: Router
   ) {
     this.vacancyForm = this.fb.group({
       title: ['', Validators.required],
       employmentType: ['', Validators.required],
-      deadlineAt: ['', Validators.required],
+      deadlineAt: ['', [Validators.required, this.futureDateValidator]],
       requirements: this.fb.array([]),
       skills: this.fb.array([]),
       tags: this.fb.array([]),
@@ -86,14 +116,123 @@ export class VacancyAddPageComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.loadRouteParams();
-  }
 
   loadRouteParams(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.companyId = this.hashService.decrypt(params['companyId']);
+      if (this.companyId) {
+        this.loadCompanyVacancies();
+      }
     });
+  }
+
+  loadCompanyVacancies(): void {
+    if (!this.companyId) {
+      return;
+    }
+
+    this.isLoadingVacancies = true;
+    this.vacanciesService.getByCompany(this.companyId).subscribe({
+      next: (vacancies) => {
+        this.isLoadingVacancies = false;
+        this.companyVacancies = vacancies;
+      },
+      error: (err) => {
+        this.isLoadingVacancies = false;
+        console.error('Failed to load company vacancies', err);
+      },
+    });
+  }
+
+  onVacancySelect(vacancyId: string): void {
+    if (!vacancyId || vacancyId === '') {
+      this.selectedVacancyId = null;
+      return;
+    }
+
+    this.selectedVacancyId = vacancyId;
+    
+    // Загружаем полную вакансию с деталями
+    this.vacanciesService.get(vacancyId).subscribe({
+      next: (vacancy) => {
+        this.copyVacancyToForm(vacancy);
+        this.toastService.success('Данные вакансии скопированы в форму');
+      },
+      error: (err) => {
+        console.error('Failed to load vacancy details', err);
+        this.toastService.error('Ошибка при загрузке данных вакансии');
+      },
+    });
+  }
+
+  copyVacancyToForm(vacancy: Vacancy): void {
+    // Основные поля
+    this.vacancyForm.patchValue({
+      title: vacancy.title,
+      employmentType: vacancy.employmentType,
+      deadlineAt: this.formatDateForInput(vacancy.deadlineAt),
+    });
+
+    // Копируем детали вакансии, если они есть
+    if (vacancy.vacancyDetails) {
+      const details = vacancy.vacancyDetails;
+
+      // Копируем массивы строк
+      this.copyStringArrayToFormArray(details.requirements, this.requirements);
+      this.copyStringArrayToFormArray(details.skills, this.skills);
+      this.copyStringArrayToFormArray(details.tags, this.tags);
+      this.copyStringArrayToFormArray(details.responsibilities, this.responsibilities);
+      this.copyStringArrayToFormArray(details.benefits, this.benefits);
+      this.copyStringArrayToFormArray(details.education, this.education);
+      this.copyStringArrayToFormArray(details.technologies, this.technologies);
+
+      // Копируем языки
+      if (details.languages && details.languages.length > 0) {
+        this.languages.clear();
+        details.languages.forEach((lang) => {
+          this.languages.push(
+            this.fb.group({
+              name: [lang.name, Validators.required],
+              level: [lang.level, Validators.required],
+            })
+          );
+        });
+      }
+
+      // Копируем опыт работы
+      if (details.experience) {
+        this.experience.patchValue({
+          min: details.experience.min,
+          max: details.experience.max,
+        });
+      }
+
+      // Копируем зарплату
+      if (details.salary) {
+        this.salary.patchValue({
+          currency: details.salary.currency,
+          min: details.salary.min,
+          max: details.salary.max,
+        });
+      }
+    }
+  }
+
+  copyStringArrayToFormArray(source: string[], targetFormArray: FormArray): void {
+    targetFormArray.clear();
+    if (source && source.length > 0) {
+      source.forEach((item) => {
+        targetFormArray.push(this.fb.control(item));
+      });
+    }
+  }
+
+  formatDateForInput(date: Date | string): string {
+    if (!date) {
+      return '';
+    }
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toISOString().split('T')[0];
   }
 
   postVacancy() {
@@ -110,12 +249,19 @@ export class VacancyAddPageComponent implements OnInit {
           const addVacancyDetailsRequest = this.getAddDetailsRequest(id);
           this.vacanciesService.addDetails(addVacancyDetailsRequest).subscribe({
             next: (id) => {
+              this.toastService.success('Вакансия успешно создана');
               this.goToAccount();
             },
-            error: (err) => console.error(err),
+            error: (err) => {
+              console.error(err);
+              this.toastService.error('Ошибка при создании деталей вакансии');
+            },
           });
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+          this.toastService.error('Ошибка при создании вакансии');
+        },
       });
     }
   }
@@ -235,6 +381,22 @@ export class VacancyAddPageComponent implements OnInit {
 
     if (min !== null && max !== null && min >= max) {
       return { minGreaterThanMax: true };
+    }
+
+    return null;
+  }
+
+  futureDateValidator(control: any): ValidationErrors | null {
+    if (!control.value) {
+      return null; // required validator will handle empty values
+    }
+
+    const selectedDate = new Date(control.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+
+    if (selectedDate < today) {
+      return { pastDate: true };
     }
 
     return null;

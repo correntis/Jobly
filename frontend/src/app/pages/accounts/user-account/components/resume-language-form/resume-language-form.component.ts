@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import Language from '../../../../../core/models/resumes/language';
 import { ResumesService } from '../../../../../core/services/resumes.service';
+import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-resume-language-form',
@@ -41,7 +42,8 @@ export class ResumeLanguageFormComponent {
   constructor(
     private resumesService: ResumesService,
     private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
     this.languagesForm = this.fb.group({
       languages: this.fb.array([]),
@@ -122,7 +124,13 @@ export class ResumeLanguageFormComponent {
 
     if (this.resumeLanguages && this.resumeId) {
       this.resumesService.updateLanguages(this.resumeId, languages).subscribe({
-        error: (err) => console.error(err),
+        next: () => {
+          this.toastService.success('Языки успешно обновлены');
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastService.error('Ошибка при обновлении языков');
+        },
       });
     }
   }

@@ -76,7 +76,7 @@ namespace VacanciesService.Infrastructure
             }
             else
             {
-                services.AddScoped<ICurrencyApiService, CurrencyApiServiceDevelopmentMock>();
+                services.AddScoped<ICurrencyApiService, CurrencyApiService>();
             }
         }
 

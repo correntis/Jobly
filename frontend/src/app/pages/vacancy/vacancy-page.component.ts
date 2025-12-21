@@ -15,6 +15,7 @@ import { UserRoles } from '../../core/enums/userRoles';
 import HashService from '../../core/services/hash.service';
 import { InteractionsService } from '../../core/services/interactions.service';
 import { VacanciesService } from '../../core/services/vacancies.service';
+import { ToastService } from '../../core/services/toast.service';
 import { EnvService } from '../../environments/environment';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { InteractionType } from './../../core/enums/interactionType';
@@ -47,7 +48,8 @@ export class VacancyPageComponent {
     private applicationService: ApplicationsService,
     private interactionsService: InteractionsService,
     private hashService: HashService,
-    private envService: EnvService
+    private envService: EnvService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -167,14 +169,18 @@ export class VacancyPageComponent {
         this.applicationService.add(addApplicationRequest).subscribe({
           next: (applicationId) => {
             this.alreadyApplied = true;
+            this.toastService.success('Отклик успешно отправлен!');
             // Перепроверяем, чтобы получить полный объект Application
             this.checkIfApplied();
           },
           error: (err: HttpErrorResponse) => {
             if (err.status === HttpStatusCode.Conflict) {
               this.alreadyApplied = true;
+              this.toastService.warning('Вы уже откликнулись на эту вакансию');
               // Перепроверяем, чтобы получить полный объект Application
               this.checkIfApplied();
+            } else {
+              this.toastService.error('Ошибка при отправке отклика');
             }
           },
         });
@@ -188,9 +194,13 @@ export class VacancyPageComponent {
         next: () => {
           if (this.vacancy) {
             this.vacancy.archived = true;
+            this.toastService.success('Вакансия успешно архивирована');
           }
         },
-        error: (err) => console.error(),
+        error: (err) => {
+          console.error(err);
+          this.toastService.error('Ошибка при архивации вакансии');
+        },
       });
     }
   }

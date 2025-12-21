@@ -40,4 +40,8 @@ export class AuthService {
 
     return this.httpClient.post<User>(`${this.basePath}/login`, loginBody);
   }
+
+  logout(): Observable<void> {
+    return this.httpClient.post<void>(`${this.basePath}/logout`, {});
+  }
 }

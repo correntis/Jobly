@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import Project from '../../../../../core/models/resumes/project';
 import { ResumesService } from '../../../../../core/services/resumes.service';
+import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-resume-projects-form',
@@ -41,7 +42,8 @@ export class ResumeProjectsFormComponent {
   constructor(
     private resumesService: ResumesService,
     private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
     this.projectsForm = this.fb.group({
       projects: this.fb.array([]),
@@ -162,7 +164,13 @@ export class ResumeProjectsFormComponent {
 
     if (this.resumeProjects && this.resumeId) {
       this.resumesService.updateProjects(this.resumeId, projects).subscribe({
-        error: (err) => console.error(err),
+        next: () => {
+          this.toastService.success('Проекты успешно обновлены');
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastService.error('Ошибка при обновлении проектов');
+        },
       });
     }
   }

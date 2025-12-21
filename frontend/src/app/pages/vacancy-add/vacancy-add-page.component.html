@@ -8,6 +8,28 @@
       <p class="text-[var(--text-secondary)]">Заполните информацию о вакансии</p>
     </div>
 
+    <!-- Copy from existing vacancy -->
+    <div *ngIf="companyVacancies.length > 0" class="glass-card p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-[var(--text-primary)] mb-1">Скопировать из существующей вакансии</h3>
+          <p class="text-sm text-[var(--text-secondary)]">Выберите вакансию для копирования структуры</p>
+        </div>
+      </div>
+      <div class="mt-4">
+        <select
+          (change)="onVacancySelect($any($event.target).value)"
+          [value]="selectedVacancyId || ''"
+          class="glass-select w-full"
+        >
+          <option value="">-- Выберите вакансию --</option>
+          <option *ngFor="let vacancy of companyVacancies" [value]="vacancy.id">
+            {{ vacancy.title }} {{ vacancy.archived ? '(В архиве)' : '' }}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <!-- Form Card -->
     <div class="glass-card p-6">
       <form [formGroup]="vacancyForm" (ngSubmit)="postVacancy()" class="space-y-6">
@@ -45,8 +67,14 @@
                 <input
                   type="date"
                   formControlName="deadlineAt"
+                  [min]="minDate"
                   class="glass-input"
+                  [class.error]="vacancyForm.get('deadlineAt')?.invalid && vacancyForm.get('deadlineAt')?.touched"
                 />
+                <div *ngIf="vacancyForm.get('deadlineAt')?.invalid && vacancyForm.get('deadlineAt')?.touched" class="text-error-500 text-xs mt-1">
+                  <span *ngIf="vacancyForm.get('deadlineAt')?.hasError('required')">Дедлайн обязателен для заполнения</span>
+                  <span *ngIf="vacancyForm.get('deadlineAt')?.hasError('pastDate')">Дедлайн не может быть в прошлом</span>
+                </div>
               </div>
             </div>
           </div>
@@ -177,9 +205,9 @@
             </div>
             <select [formControl]="$any(salary).controls.currency" class="glass-select text-sm py-2">
               <option value="">Валюта</option>
-              <option value="RUB">RUB ₽</option>
-              <option value="USD">USD $</option>
-              <option value="EUR">EUR €</option>
+              <option *ngFor="let currency of currencies" [value]="currency.code">
+                {{ currency.code }} [{{ currency.symbolNative }}] ({{ currency.name }})
+              </option>
             </select>
           </div>
         </div>

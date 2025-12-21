@@ -26,6 +26,7 @@ import { UpdateUserRequest } from '../../../core/requests/users/updateUserReques
 import HashService from '../../../core/services/hash.service';
 import { ResumesService } from '../../../core/services/resumes.service';
 import { UsersService } from '../../../core/services/users.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { ResumeCertificationsFormComponent } from './components/resume-certifications-form/resume-certifications-form.component';
 import { ResumeEducationFormComponent } from './components/resume-education-form/resume-education-form.component';
@@ -75,7 +76,8 @@ export class UserAccountPageComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private usersService: UsersService,
     private resumesService: ResumesService,
-    private hashService: HashService
+    private hashService: HashService,
+    private toastService: ToastService
   ) {
     this.userForm = this.fb.group({
       firstName: [null],
@@ -200,7 +202,13 @@ export class UserAccountPageComponent implements OnInit {
     };
 
     this.usersService.update(updateUserRequest).subscribe({
-      error: (err) => console.error(err),
+      next: () => {
+        this.toastService.success('Личная информация успешно обновлена');
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastService.error('Ошибка при обновлении личной информации');
+      },
     });
   }
 
@@ -226,8 +234,12 @@ export class UserAccountPageComponent implements OnInit {
       next: (resume) => {
         this.resume = resume;
         this.isNewResume = false;
+        this.toastService.success('Резюме успешно создано');
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.toastService.error('Ошибка при создании резюме');
+      },
     });
   }
 
@@ -249,8 +261,12 @@ export class UserAccountPageComponent implements OnInit {
       this.resumesService.update(updateResumeRequest).subscribe({
         next: (resume) => {
           this.resume = resume;
+          this.toastService.success('Резюме успешно обновлено');
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+          this.toastService.error('Ошибка при обновлении резюме');
+        },
       });
     }
   }

@@ -22,6 +22,7 @@ import RegistrationRequest from '../../../core/requests/auth/registrationRequest
 import AddCompanyRequest from '../../../core/requests/companies/addCompanyRequest';
 import { CompaniesService } from '../../../core/services/companies.service';
 import { HashedCookieService } from '../../../core/services/hashedCookie.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Faker } from '../../../core/utils/faker';
 import { EnvParams } from '../../../environments/environment';
 import { AuthService } from './../../../core/services/auth.service';
@@ -75,6 +76,7 @@ export class RegistrationPageComponent {
     private authService: AuthService,
     private companiesService: CompaniesService,
     private hashedCookieService: HashedCookieService,
+    private toastService: ToastService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
@@ -377,6 +379,7 @@ export class RegistrationPageComponent {
           this.performUserRegistration(true).subscribe({
             next: (id) => {
               this.hashUserInformation(id, UserRoles.User);
+              this.toastService.success('Регистрация прошла успешно! Добро пожаловать!');
               this.router.navigate(['/home']);
             },
             error: (err: HttpErrorResponse) => {
@@ -428,6 +431,7 @@ export class RegistrationPageComponent {
             this.performCompanyRegistration(userId).subscribe({
               next: () => {
                 this.hashUserInformation(userId, UserRoles.Company);
+                this.toastService.success('Регистрация компании прошла успешно! Добро пожаловать!');
                 this.router.navigate(['/home']);
               },
               error: (err: HttpErrorResponse) => {
